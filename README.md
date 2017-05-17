@@ -5,19 +5,37 @@ This repository aims to facilitate the transfer of knowledge and continued use o
 
 ***CAVEAT: this is not a black-box model and should accordingly be used with care and curiosity!***
 
-How to get started etc., is outlined below.
+How to get started with the source code and files is outlined below. There are some model-only and DA test cases to check things are up and running properly.
 
-For further implementation details etc., please read the pdf document.
+For further details, including what should be modified in the scripts for different experiemtnal set-ups, please see the pdf document (TO DO).
 
 ----
 
 ## Getting started
-Python version etc., including numpy, matplotlib ...
+All of the source code is written in Python and relies heavily on numpy, amongst others. The plotting routines require matplotlib. The versions used in the development are tabled below. Other versions may work, but should not be relied upon.
+
+Software      | Version
+------------- | -------------
+Python  | 2.7.7
+Matplotlib  | 1.3.1
+Numpy  | 1.8.1
+
+To check python version, from the terminal:
+```
+python --version
+```
+
+To check numpy version, open python in the terminal, import it and use the version attribute:
+```
+>>> import numpy
+>>> numpy.__version__
+```
+Same for Matplotlib.
 
 ## Test cases
 Have I implemented the code correctly?
 
-## Brief overview of scripts
+## Brief overview of files
 
 ```parameters.py```: List of all parameters pertaining to the model itself and the forecast-assimilation framework.
 
@@ -77,3 +95,12 @@ Have I implemented the code correctly?
     
 ```err_doub_hist.py```: Plots error doubling time histograms from saved data ```err_doub_Tn.npy```.
 
+### .npy data
+
+```U_tr_array.npy```: nature run for current set-up for U = [h,u,r].
+
+```B_tr.npy```: topography projected on to 'nature' resolution.
+
+```Q_offline.npy```: a static Q matrix for additive inflation, generated in ```offlineQ.py```.
+
+### Directories
