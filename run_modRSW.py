@@ -6,25 +6,46 @@ Given mesh, IC, time paramters, integrates modRSW and plots evolution.
 Useful first check of simulations before use in the EnKF.
 '''
 
-#%%%----- Modules used -----%%%'''
-#from math import *
+##################################################################
+# GENERIC MODULES REQUIRED
+##################################################################
+
 import numpy as np
 import scipy as sp
 import matplotlib.pyplot as plt
+import errno 
 
 ##################################################################
-#%%%----- Set up -----%%%'''
+# CUSTOM FUNCTIONS AND MODULES REQUIRED
 ##################################################################
 
-from parameters import * # module storing fixed parameters
+from parameters import * 
 from f_modRSW import step_forward_topog, time_step, make_grid, make_grid_2
 from init_cond_modRSW import init_cond_topog_cos, init_cond_topog
+
+
+# CHOOSE resolution
+Nk = 200
+# CHOOSE INITIAL PROFILE FROM init_cond_modRSW:
+ic = init_cond_topog_cos
+
+#################################################################
+# create directory for output
+#################################################################
+
+cwd = os.getcwd()
+dirname = str('/test')
+dirn = str(cwd+dirname)
+#check if dir exixts, if not make it
+try:
+    os.makedirs(dirn)
+except OSError as exception:
+    if exception.errno != errno.EEXIST:
+        raise
 
 ##################################################################    
 # Mesh generation for forecast and truth resolutions
 ##################################################################
-Nk = 200
-
 grid =  make_grid(Nk,L) # forecast
 Kk = grid[0]
 x = grid[1]
@@ -34,8 +55,7 @@ xc = grid[2]
 #'''%%%----- Apply initial conditions -----%%%'''
 ##################################################################
 
-# CHOOSE INITIAL PROFILE FROM init_cond_modRSW:
-U0, B = init_cond_topog_cos(x,Nk,Neq,H0,L,A,V)
+U0, B = ic(x,Nk,Neq,H0,L,A,V)
 
 ### 4 panel subplot for initial state of 4 vars
 fig, axes = plt.subplots(3, 1, figsize=(8,8))
@@ -52,8 +72,8 @@ axes[2].set_ylim([0,0.5])
 axes[2].set_xlabel('$x$',fontsize=18)
 #plt.interactive(True)
 plt.show() # use block=False?
-print('Done initial conditions')
 
+print('Done initial conditions')
 ##################################################################
 #'''%%%----- Define system arrays and time parameters------%%%'''
 ##################################################################
@@ -61,7 +81,7 @@ U = np.empty([Neq,Nk])
 U = U0
 tn = 0
 hour = 0.144
-Nmeas = 10.
+Nmeas = 5.
 tmax = Nmeas*hour
 dtmeasure = tmax/Nmeas
 tmeasure = dtmeasure
@@ -79,13 +99,14 @@ while tn < tmax:
 	dt = dt - (tn - tmeasure) + 1e-12
         tn = tmeasure + 1e-12
 
-    U = step_forward_topog(U,B,dt,tn,Nk,Kk) # U(n+1) = M(U(n))
+    U = step_forward_topog(U,B,dt,tn,Nk,Kk)
     print 't =',tn
 
     if tn > tmeasure:
 	
         print 'Plotting at time =',tmeasure
 
+# output other diagnostics here, e.g. covariances?
         tmeasure = tmeasure + dtmeasure
 
         fig, axes = plt.subplots(3, 1, figsize=(8,8))
@@ -123,5 +144,4 @@ print ' '
 ##################################################################
 #			END OF PROGRAM				 #
 ##################################################################
-
 
