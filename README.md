@@ -3,6 +3,8 @@
 
 This repository aims to facilitate the transfer of knowledge and continued use of the software developed by TK and deposited in the git repository. It should contain sufficient instruction for users to implement and adapt the source code (briefly comprising Python scripts for the numerical solver, idealised forecast-assimilation routines, plotting and data analysis). 
 
+The source code available here was developed during TK's PhD, a pdf is available [here](http://etheses.whiterose.ac.uk/17269/).
+
 ***CAVEAT: this is not a black-box model and should accordingly be used with care and curiosity!***
 
 How to get started with the source code and files is outlined below. There are some model-only and DA test cases to check things are up and running properly.
@@ -12,6 +14,7 @@ For further details, including what should be modified in the scripts for differ
 ----
 
 ## Getting started
+### Versions
 All of the source code is written in Python and relies heavily on numpy, amongst others. The plotting routines require matplotlib. The versions used in the development are tabled below. Other versions may work, but should not be relied upon.
 
 Software      | Version
@@ -31,6 +34,15 @@ To check numpy version, open python in the terminal, import it and use the versi
 >>> numpy.__version__
 ```
 Same for Matplotlib.
+
+### Downloading 
+Direct download: 
+* click on the download link on the repository homepage [https://github.com/tkent198/modRSW_EnKF](https://github.com/tkent198/modRSW_EnKF)
+Clone: 
+* the most up-to-date version is hosted here by github. From the command line
+```
+git clone 
+```
 
 ## Test cases
 Have I implemented the code correctly?
