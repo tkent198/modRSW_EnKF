@@ -129,11 +129,38 @@ python fname.py
 
 ### Model only: integration and dynamics
 
-Given a computational mesh, model parameters, and an initial condition, the model can be integrated to a finite time in the future. The ```run_modRSW.py``` script achieves this, using functions from ```f_modRSW.py```.
+Given a computational mesh, model parameters, and an initial condition, the model can be integrated to a specified finite time. The ```run_modRSW.py``` script achieves this, using functions from ```f_modRSW.py```, initial conditions from ```init_cond_modRSW.py``` and parameters from ```parameters.py```, plotting the model variables at given times.
+
+The default model parameters are:
+
+Parameter      | Values
+------------- | -------------
+Ro  | Inf
+Fr  | 1.1
+H0  | 1.0
+Hc  | 1.02
+Hr  | 1.05
+beta | 0.2
+alpha | 10
+c2  | 0.1Hr/(Fr)^2
+
+In  ```run_modRSW.py```, the user can specify the resoltion ```Nk```, initial condition ```ic```, and the number of "hours" to integrate ```Nmeas```. The routine then integrates the initial condition from ```tn=0``` to ```tmax``` and plots the ```Nmeas``` solutions, i.e., every hour.
+
+Default setting:
+
+Choice      | Values
+------------- | -------------
+Nk  | 200
+ic  | init_cond_topog_cos
+Nmeas  | 5
 
 To run this from the terminal:
 ```
 python run_modRSW.py
 ```
-To kill this at any point, press ```Ctrl+c```.
-### Simple forecast-assimilation experiment
+
+First, the initial conditon is generated and plotted (FIGURE?). After closing this manually, the integration starts.
+
+To kill at any point, press ```Ctrl+c```.
+
+### Idealised forecast-assimilation experiment
