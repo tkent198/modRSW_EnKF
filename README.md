@@ -1,9 +1,7 @@
 # modRSW_EnKF
 ## An idealised convective-scale forecast-assimilation framework
 
-This repository aims to facilitate the transfer of knowledge and continued use of a basic convective-scale forecast -assimilation system. The forecast component comes from an idealised fluid model of convective-scale Numerical Wather Prediction (modRSW; Kent et al. 2017) and the assimilation algorithm is the perturbed-observation Ensemble Kalman Filter (EnKF). This source code was developed during TK's PhD (Kent 2016), a pdf is available [here](http://etheses.whiterose.ac.uk/17269/).
-
-The following document should contain sufficient instruction for users to implement and adapt the source code (briefly comprising Python scripts for the numerical solver, idealised forecast-assimilation routines, plotting and data analysis). 
+This repository aims to facilitate the transfer of knowledge and continued use of a basic convective-scale forecast -assimilation system developed during TK's PhD (Kent 2016). The forecast component comes from an idealised fluid model of convective-scale Numerical Wather Prediction (modRSW; Kent et al. 2017) and the assimilation algorithm is the perturbed-observation Ensemble Kalman Filter (EnKF). The following document should contain sufficient instruction for users to download, implement and adapt the source code, which briefly comprises Python scripts for the numerical solver, idealised forecast-assimilation routines, plotting and data analysis. 
 
 ***CAVEAT: this is not a black-box model and should accordingly be used with care and curiosity!***
 
@@ -20,7 +18,7 @@ For further details, including what should be modified in the scripts for differ
 
 ## Getting started
 ### Versions
-All of the source code is written in Python and relies heavily on numpy, amongst others. The plotting routines require matplotlib. The versions used in the development are tabled below. Other versions may work, but should not be relied upon.
+All of the source code is written in Python and relies heavily on the numpy module, amongst others. The plotting routines require matplotlib. The versions used in this development are tabled below. Other versions may work, but should not be relied upon.
 
 Software      | Version
 ------------- | -------------
@@ -38,7 +36,7 @@ To check numpy version, open python in the terminal, import it and use the versi
 >>> import numpy
 >>> numpy.__version__
 ```
-Same for Matplotlib.
+Same for Matplotlib. 
 
 ### Downloading 
 Direct download: 
@@ -73,11 +71,11 @@ python fname.py
 ```init_cond_modRSW.py```: Functions for different initial conditions, detailed within.
 
 ```f_modRSW.py```: Functions required for the numerical integration of the modRSW model with and without topography.
-* make_grid()           : generates mesh for given length and gridcell number
-* NCPflux_topog()       : calculates numerical flux as per the theory of Kent et al., 2017
-* time_step()           : calculates stable time step for integration
-* step_forward_topog()  : integrates forward one time step (forward euler) using NCP-Audusse
-* heaviside()           : vector-aware implementation of heaviside (also works for scalars
+* ```make_grid()```           : generates mesh for given length and gridcell number
+* ```NCPflux_topog()```       : calculates numerical flux as per the theory of Kent et al., 2017
+* ```time_step()```           : calculates stable time step for integration
+* ```step_forward_topog()```  : integrates forward one time step (forward euler) using NCP-Audusse
+* ```heaviside()```           : vector-aware implementation of heaviside (also works for scalars
 
 ### Assimilation framework
 
@@ -93,9 +91,9 @@ python fname.py
 ```subr_enkf_modRSW_p.py```: Subroutine accessed by ```main_p``` for performing EnKF given outer-loop parameters in ```main_p```
 
 ```f_enkf_modRSW.py```: Collection of functions related to the assimilation specifically, incl.:
-* generate_truth()      : simulates truth trajectory at given resolution and stores run at given observing times.
-* analysis_step_enkf()  : performs perturbed obs. enkf analysis step, returns updated ensemble and output data for saving.
-* gasp_cohn()           : Gaspari-Cohn taper function for ensemble localisation.
+* ```generate_truth()```      : simulates truth trajectory at given resolution and stores run at given observing times.
+* ```analysis_step_enkf()```  : performs perturbed obs. enkf analysis step, returns updated ensemble and output data for saving.
+* ```gasp_cohn()```           : Gaspari-Cohn taper function for ensemble localisation.
 
 
 ```localisation.py```: Initial investigations and calculation of localisation taper function and matrices using ```gasp_cohn```.
