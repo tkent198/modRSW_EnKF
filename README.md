@@ -5,7 +5,7 @@ This repository aims to facilitate the transfer of knowledge and continued use o
 
 ***CAVEAT: this is not a black-box model and should accordingly be used with care and curiosity!***
 
-How to get started with the source code and files is outlined below. There are some model-only and DA test cases to check things are up and running properly.
+How to get started with the source code and files is outlined below. A breif overview of each file is given and there are some model-only and forecast-assimilation test cases to check things are up and running properly.
 
 For further details, including what should be modified in the scripts for different experiemtnal set-ups, please see the pdf document (TO DO).
 
@@ -57,13 +57,6 @@ To run a script (e.g., `fname.py`) from the terminal:
 ```
 python fname.py
 ```
-
-## Test cases
-
-### Model only: integration and dynamics
-
-### Simple forecast-assimilation experiment
-
 ## Brief overview of files
 
 ```parameters.py```: List of all parameters pertaining to the model itself and the forecast-assimilation framework.
@@ -132,4 +125,15 @@ python fname.py
 
 ```Q_offline.npy```: a static Q matrix for additive inflation, generated in ```offlineQ.py```.
 
-### Directories
+## Test cases
+
+### Model only: integration and dynamics
+
+Given a computational mesh, model parameters, and an initial condition, the model can be integrated to a finite time in the future. The ```run_modRSW.py``` script achieves this, using functions from ```f_modRSW.py```.
+
+To run this from the terminal:
+```
+python run_modRSW.py
+```
+To kill this at any point, press ```Ctrl+c```.
+### Simple forecast-assimilation experiment
