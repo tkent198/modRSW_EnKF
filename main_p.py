@@ -1,17 +1,16 @@
 #######################################################################
-# Perturbed obs EnKF for 1.5D SWEs with rain variable and topography
-#               (T. Kent: mmtk@leeds.ac.uk)
+# Perturbed obs. EnKF for 1.5D SWEs with rain variable and topography
+#               (T. Kent: tkent198@gmail.com)
 #######################################################################
 
 '''
-4/2/2016: 
-main run script for batch-processing of EnKF jobs. 
+May 2017
+Main run script for batch-processing of EnKF jobs. 
 Define outer-loop through parameter space and run the EnKF subroutine for each case.
-
-p: 
-> truth generated outside of outer loop as this is the same for all experiments (as in v2)
-> make use of pars_enkf (as in v2)
+Summary:
+> truth generated outside of outer loop as this is the same for all experiments 
 > uses subroutine <subr_enkf_modRSW_p> that parallelises ensemble forecasts using multiprocessing module
+> Data saved to automatically-generated directories and subdirectories with accompanying readme.txt file.
 '''
 
 ##################################################################
@@ -47,9 +46,8 @@ except OSError as exception:
 
 # parameters for outer loop
 loc = [1e-10, 1., 2.5, 4.]
-add_inf = [0.2, 0.3, 0.4, 0.5, 0.6, 0.7,0.8]
+add_inf = [0.2, 0.4, 0.6]
 inf = [1.01, 1.05, 1.1]
-
 
 
 #################################################################
@@ -87,7 +85,7 @@ except:
 print ' '
 print ' ------- ENTERING EnKF OUTER LOOP ------- '  
 print ' '
-for i in range(3,len(loc)):
+for i in range(0,len(loc)):
     for j in range(0,len(add_inf)):
         for k in range(0,len(inf)):
             run_enkf(i,j,k, loc[i], add_inf[j], inf[k] , ic , U_tr_array, dirname)
