@@ -1,12 +1,12 @@
 #######################################################################
 # Collection of functions used in EnKF scripts
-# (T. Kent: mmtk@leeds.ac.uk)
+# (T. Kent: tkent198@gmail.com)
 #######################################################################
 '''
 Functions:
-        > generate_truth(): simulates truth trajectory at refined resolution and stores run at given observing times.
-        > gasp_cohn(): gaspari cohn localisation matrix 
-        >  analysis_step_enkf(): updates ensemble given observations from truth, returns analysis ensemble and forecast ensemble.
+> generate_truth(): generates nature run at refined resolution (Nk_tr) and saves run at given observing times (assim_time)
+> gasp_cohn(): gaspari cohn taper function
+>  analysis_step_enkf(): updates ensemble given observations from truth, returns analysis ensemble and forecast ensemble.
 '''
 import math as m
 import numpy as np
@@ -14,7 +14,7 @@ from parameters import *
 import os
 
 ##################################################################
-#------------------ Compute truth trajectories ------------------
+#------------------ Compute nature run ------------------
 ##################################################################
 
 
@@ -76,6 +76,24 @@ def gaspcohn(r):
                     + 4.0 - 2.0 / (3.0 * rr), taper)
     return taper    
 
+##################################################################
+# GASPARI-COHN matrix using taper function
+################################################################ 
+def gaspcohn_matrix(loc_rho,Nk_fc):
+    # construct localisation matrix rho based on Gaspari Cohn function
+    
+    rr = np.arange(0,loc_rho,loc_rho/Nk_fc) 
+    vec = gaspcohn(rr)
+    
+    rho = np.zeros((Nk_fc,Nk_fc))
+    
+    for i in range(Nk_fc):
+        for j in range(Nk_fc):
+            rho[i,j] = vec[np.min([abs(i-j),abs(i+Nk_fc-j),abs(i-Nk_fc-j)])]
+    
+    rho = np.tile(rho, (Neq,Neq))
+    
+    return rho    
 
 ##################################################################
 #'''------------------ ANALYSIS STEP ------------------'''
@@ -83,9 +101,11 @@ def gaspcohn(r):
 
 def analysis_step_enkf(U_fc, U_tr, tmeasure, dtmeasure, index, pars_ob, pars_enda):
     '''
+    (Steps refer to algorithm on page 121 of thesis, as do eq. numbers)
+    
     INPUTS
-    U_fc: ensemble trajectories , shape (Neq,Nk_fc,n_ens)
-    U_tr: truth trajectory, shape (Neq,Nk_tr,Nmeas+1)
+    U_fc: ensemble trajectories in U space, shape (Neq,Nk_fc,n_ens)
+    U_tr: truth trajectory in U space, shape (Neq,Nk_tr,Nmeas+1)
     tmeasure: time of assimilation
     dtmeasure: length of window
     pars_ob: vector of parameter values relating to obs (density and error)
@@ -122,7 +142,10 @@ def analysis_step_enkf(U_fc, U_tr, tmeasure, dtmeasure, index, pars_ob, pars_end
     for i in range(0,Nk_fc):
         U_tmp[:,i] = U_tr[:,i*dres:(i+1)*dres,index+1].mean(axis=-1)
     U_tr = U_tmp
-
+    
+    '''
+    step 1.(c)
+    '''
     # for assimilation, work with [h,u,r]
     U_fc[1:,:,:] = U_fc[1:,:,:]/U_fc[0,:,:]
     U_tr[1:,:] = U_tr[1:,:]/U_tr[0,:]
@@ -135,20 +158,20 @@ def analysis_step_enkf(U_fc, U_tr, tmeasure, dtmeasure, index, pars_ob, pars_end
     for N in range(0,n_ens):
         X[:,N] = U_fc[:,:,N].flatten()
 
+    # ADDITIVE INFLATION (Gordon: NEEDS MOVING after analysis...)
+    cwd = os.getcwd()
+    Q = np.load(str(cwd+'/Q_offline.npy'))
+    print 'max Q value: ', np.max(Q)
+    print 'min Q value: ', np.min(Q)
 
-    #### CALCULATE KALMAN GAIN, INNOVATIONS, AND ANALYSIS STATES ####
+    q = add_inf*np.random.multivariate_normal(np.zeros(n_d), Q, n_ens)
+    q = q.T
+    Xan = Xan + q # x(t+1) = M(x(t)) + q  (eq. 6.5)      
     
-    ONE = np.ones([n_ens,n_ens])
-    ONE = ONE/n_ens # NxN array with elements equal to 1/N
-    Xbar = np.dot(X,ONE) # mean
-    Xdev = X - Xbar # deviations
-
-    # covariance matrix
-    Pf = np.dot(Xdev, Xdev.T)
-    Pf = Pf/(n_ens - 1)
-    Cf = np.corrcoef(Xdev) # correlation matrix
-    
-    # make pseudo-obs by perturbing the truth.
+    '''
+    Step 2.(a)
+    '''
+    # make pseudo-obs by defining observation operator and adding perturbations
     n_obs = n_d/obs_dens # no. of observations
     print 'Total no. of obs. =', n_obs
     # observation operator
@@ -161,22 +184,33 @@ def analysis_step_enkf(U_fc, U_tr, tmeasure, dtmeasure, index, pars_ob, pars_end
     ob_noise = np.repeat(ob_noise,n_obs/Neq) 
     obs_pert = ob_noise[:,None]*np.random.randn(n_obs,n_ens)
     print 'obs_pert shape =', np.shape(obs_pert)
+    
     Y_obs = np.empty([n_obs,n_ens])
     Y_mod = np.dot(H, X_tr)
-    print 'Y_mod shape =', np.shape(Y_mod)    
-    Y_obs = Y_mod + obs_pert #y_o = y_m + e_o
+    print 'Y_mod shape =', np.shape(Y_mod)
     
+    Y_obs = Y_mod + obs_pert #y_o = y_m + e_o (eq. 6.6)
+    
+    '''
+    Step 2.(b)
+    '''
+    #### CALCULATE KALMAN GAIN, INNOVATIONS, AND ANALYSIS STATES ####
+    ONE = np.ones([n_ens,n_ens])
+    ONE = ONE/n_ens # NxN array with elements equal to 1/N
+    Xbar = np.dot(X,ONE) # mean
+    Xdev = X - Xbar # deviations
 
+    # covariance matrix
+    Pf = np.dot(Xdev, Xdev.T)
+    Pf = Pf/(n_ens - 1)
+    Cf = np.corrcoef(Xdev) # correlation matrix
+        
+    '''
+    Step 2.(c)
+    '''
     # construct localisation matrix rho based on Gaspari Cohn function
     loc_rho = pars_enda[1] # loc_rho is form of lengthscale.
-    rr = np.arange(0,loc_rho,loc_rho/Nk_fc) 
-    vec = gaspcohn(rr)
-    
-    rho = np.zeros((Nk_fc,Nk_fc))
-    for i in range(Nk_fc):
-        for j in range(Nk_fc):
-            rho[i,j] = vec[np.min([abs(i-j),abs(i+Nk_fc-j),abs(i-Nk_fc-j)])]
-    rho = np.tile(rho, (Neq,Neq))
+    rho = gaspcohn_matrix(loc_rho,Nk_fc)
     print 'loc matrix rho shape: ', np.shape(rho)
 
     # construct K
@@ -197,8 +231,8 @@ def analysis_step_enkf(U_fc, U_tr, tmeasure, dtmeasure, index, pars_ob, pars_end
     Pa = Pa/(n_ens - 1) # analysis covariance matrix
     Ca = np.corrcoef(Xandev) # analysis correlation matrix
 
-
-    ### ADDITIVE INFLATION ...### (NEEDS MOVING after analysis...)
+    '''
+    ### ADDITIVE INFLATION ...### (NEEDS MOVING after analysis... here?????)
     cwd = os.getcwd()
     Q = np.load(str(cwd+'/Q_offline.npy'))
     print 'max Q value: ', np.max(Q)
@@ -207,9 +241,8 @@ def analysis_step_enkf(U_fc, U_tr, tmeasure, dtmeasure, index, pars_ob, pars_end
     q = add_inf*np.random.multivariate_normal(np.zeros(n_d), Q, n_ens)
     q = q.T
     Xan = Xan + q # x(t+1) = M(x(t)) + q
-
-
-
+    '''
+    
     # masks for locating model variables in state vector
     h_mask = range(0,Nk_fc)
     hu_mask = range(Nk_fc,2*Nk_fc)
@@ -269,6 +302,7 @@ def analysis_step_enkf(U_fc, U_tr, tmeasure, dtmeasure, index, pars_ob, pars_end
 
     print ' '
     print '--------- CHECK SHAPE OF MATRICES: ---------'
+    print ' '
     print 'U_fc shape   :', np.shape(U_fc)
     print 'U_tr shape   :', np.shape(U_tr)
     print 'X_truth shape:', np.shape(X_tr), '( NOTE: should be', n_d,' by 1 )'
@@ -288,12 +322,16 @@ def analysis_step_enkf(U_fc, U_tr, tmeasure, dtmeasure, index, pars_ob, pars_end
     ## observational influence diagnostics
     print ' '
     print '--------- OBSERVATIONAL INFLUENCE DIAGNOSTICS:---------'
+    print ' ' 
+    print ' Benchmark: global NWP has an average OI of ~0.18... '
+    print ' ... high-res. NWP less clear but should be 0.15 - 0.4'
+    print 'Check below: '
     HK = np.dot(H,K)
     HKd = np.diag(HK)
     OI = np.trace(HK)/n_obs
-    OI_h = Neq*np.sum(HKd[h_obs_mask])/n_obs
-    OI_hu = Neq*np.sum(HKd[hu_obs_mask])/n_obs
-    OI_hr = Neq*np.sum(HKd[hr_obs_mask])/n_obs
+    OI_h = np.sum(HKd[h_obs_mask])/n_obs
+    OI_hu = np.sum(HKd[hu_obs_mask])/n_obs
+    OI_hr = np.sum(HKd[hr_obs_mask])/n_obs
     OI_vec = np.array([OI , OI_h , OI_hu , OI_hr])
 
     np.set_printoptions(formatter={'float': '{: 0.4f}'.format})
