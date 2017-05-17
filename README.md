@@ -12,7 +12,7 @@ How to get started with the source code and files is outlined below. There are s
 For further details, including what should be modified in the scripts for different experiemtnal set-ups, please see the pdf document (TO DO).
 
 ## References
-* Kent, T. (2016) An idealised fluid model of Numerical Weather Prediction: dynamics and data assimilation. *PhD thesis, University of Leeds*.
+* Kent, T. (2016) An idealised fluid model of Numerical Weather Prediction: dynamics and data assimilation. *PhD thesis, University of Leeds*. Available at [http://etheses.whiterose.ac.uk/17269/](http://etheses.whiterose.ac.uk/17269/).
 
 * Kent, T., Bokhove, O., Tobias, S.M. (2017): Dynamics of an idealised fluid model for investigating convective-scale data assimilation. *Tellus A: in review*.
 
