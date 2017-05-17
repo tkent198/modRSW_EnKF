@@ -1,6 +1,7 @@
 #######################################################################
-# Create readme.txt file for summarising experiments, output saved in <dirn> to accompany outputted data from main run script and EnKF subroutine.
-# (T. Kent: mmtk@leeds.ac.uk)
+# Create readme.txt file for summarising each experiment, output saved in 
+# <dirn> to accompany outputted data from main run script and EnKF subroutine.
+# (T. Kent: tkent198@gmail.com)
 #######################################################################
 
 from parameters import *
@@ -16,7 +17,7 @@ def create_readme(dirn , PARS , ic):
     > ic = initial condition
         
     OUTPUT:
-    > fname.txt file saved as dirn
+    > fname.txt file saved in dirn
     '''   
         
     fname = str(dirn+'/readme.txt')
