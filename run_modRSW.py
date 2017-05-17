@@ -1,8 +1,9 @@
 #######################################################################
-# 1.5D rotating SWEs with rain variable (T. Kent: mmtk@leeds.ac.uk)
+# modRSW with topography (T. Kent: tkent198@gmail.com)
 #######################################################################
 '''
-Given mesh, IC, time paramters, integrates modRSW and plots evolution. Useful first check of simulations before use in the EnKF.
+Given mesh, IC, time paramters, integrates modRSW and plots evolution. 
+Useful first check of simulations before use in the EnKF.
 '''
 
 #%%%----- Modules used -----%%%'''
@@ -15,7 +16,6 @@ import matplotlib.pyplot as plt
 #%%%----- Set up -----%%%'''
 ##################################################################
 
-#from pars_modRSW import * # module storing fixed parameters
 from parameters import * # module storing fixed parameters
 from f_modRSW import step_forward_topog, time_step, make_grid, make_grid_2
 from init_cond_modRSW import init_cond_topog_cos, init_cond_topog
@@ -35,13 +35,6 @@ xc = grid[2]
 ##################################################################
 
 # CHOOSE INITIAL PROFILE FROM init_cond_modRSW:
-#1> sinusiodal waves in h and/or u, zero v and r.
-#2>Exact step in h, zero u, v, and r.
-#3> Smoothed step in h, zero u, v, and r.
-#4> Single jet in v, flat h profile, zero u and r.
-#5> Double jet in v, flat h profile, zero u and r.
-#6> Quadrupel jet in v, flat h profile, zero u and r.
-# ADD NEW ICS TO init_cond_modRSW AND LIST HERE
 U0, B = init_cond_topog_cos(x,Nk,Neq,H0,L,A,V)
 
 ### 4 panel subplot for initial state of 4 vars
@@ -59,8 +52,8 @@ axes[2].set_ylim([0,0.5])
 axes[2].set_xlabel('$x$',fontsize=18)
 #plt.interactive(True)
 plt.show() # use block=False?
-
 print('Done initial conditions')
+
 ##################################################################
 #'''%%%----- Define system arrays and time parameters------%%%'''
 ##################################################################
@@ -86,14 +79,13 @@ while tn < tmax:
 	dt = dt - (tn - tmeasure) + 1e-12
         tn = tmeasure + 1e-12
 
-    U = step_forward_topog(U,B,dt,tn,Nk,Kk)
+    U = step_forward_topog(U,B,dt,tn,Nk,Kk) # U(n+1) = M(U(n))
     print 't =',tn
 
     if tn > tmeasure:
 	
         print 'Plotting at time =',tmeasure
 
-# output other diagnostics here, e.g. covariances?
         tmeasure = tmeasure + dtmeasure
 
         fig, axes = plt.subplots(3, 1, figsize=(8,8))
