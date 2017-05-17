@@ -1,13 +1,20 @@
 # modRSW_EnKF
 ## An idealised convective-scale forecast-assimilation framework
 
-This repository aims to facilitate the transfer of knowledge and continued use of an idelaised convective-scale forecast -assimilation system. It should contain sufficient instruction for users to implement and adapt the source code (briefly comprising Python scripts for the numerical solver, idealised forecast-assimilation routines, plotting and data analysis). This source code was developed during TK's PhD, a pdf is available [here](http://etheses.whiterose.ac.uk/17269/).
+This repository aims to facilitate the transfer of knowledge and continued use of a basic convective-scale forecast -assimilation system. The forecast component comes from an idealised fluid model of convective-scale Numerical Wather Prediction (modRSW; Kent et al. 2017) and the assimilation algorithm is the perturbed-observation Ensemble Kalman Filter (EnKF). This source code was developed during TK's PhD (Kent 2016), a pdf is available [here](http://etheses.whiterose.ac.uk/17269/).
+
+The following document should contain sufficient instruction for users to implement and adapt the source code (briefly comprising Python scripts for the numerical solver, idealised forecast-assimilation routines, plotting and data analysis). 
 
 ***CAVEAT: this is not a black-box model and should accordingly be used with care and curiosity!***
 
 How to get started with the source code and files is outlined below. There are some model-only and DA test cases to check things are up and running properly.
 
 For further details, including what should be modified in the scripts for different experiemtnal set-ups, please see the pdf document (TO DO).
+
+## References
+* Kent, T. (2016) An idealised fluid model of Numerical Weather Prediction: dynamics and data assimilation. *PhD thesis, University of Leeds*.
+
+* Kent, T., Bokhove, O., Tobias, S.M. (2017): Dynamics of an idealised fluid model for investigating convective-scale data assimilation. *Tellus A: in review*.
 
 ----
 
