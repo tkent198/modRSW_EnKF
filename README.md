@@ -1,7 +1,79 @@
 # modRSW_EnKF
-An idealised convective-scale forecast-assimilation framework
+## An idealised convective-scale forecast-assimilation framework
 
 This repository aims to facilitate the transfer of knowledge and continued use of the software developed by TK and deposited in the git repository. It should contain sufficient instruction for users to implement and adapt the source code (briefly comprising Python scripts for the numerical solver, idealised forecast-assimilation routines, plotting and data analysis). 
 
-CAVEAT: this is not a black-box model and should accordingly be used with care and curiosity!
+***CAVEAT: this is not a black-box model and should accordingly be used with care and curiosity!***
+
+How to get started etc., is outlined below.
+
+For further implementation details etc., please read the pdf document.
+
+----
+
+## Getting started
+Python version etc., including numpy, matplotlib ...
+
+## Test cases
+Have I implemented the code correctly?
+
+## Brief overview of scripts
+
+```parameters.py```: List of all parameters pertaining to the model itself and the forecast-assimilation framework.
+
+### Model only
+
+```run_modRSW.py```: Runs modRSW with no assimilation, plotting at given intervals. Use to check model-only dynamics.
+
+```init_cond_modRSW.py```: Functions for different initial conditions, detailed within.
+
+```f_modRSW.py```: Functions required for the numerical integration of the modRSW model with and without topography.
+* make_grid()           : generates mesh for given length and gridcell number
+* NCPflux_topog()       : calculates numerical flux as per the theory of Kent et al., 2017
+* time_step()           : calculates stable time step for integration
+* step_forward_topog()  : integrates forward one time step (forward euler) using NCP-Audusse
+* heaviside()           : vector-aware implementation of heaviside (also works for scalars
+
+### Assimilation framework
+
+```main_p.py```: main run script for idealised forecast-assimilation experiments
+* specifies outer loop parameters, generates truth , make relevant directory `dirname` etc., and ...
+* Enter EnKF outer loop using ```subr_enkf_modRSW_p.py```
+
+
+```create_readme.py```: function creates readme.txt file for summarising experiments, saved in `dirname` to accompany outputted data from main run script and EnKF subroutine.
+
+
+
+```subr_enkf_modRSW_p.py```: Subroutine accessed by ```main_p``` for performing EnKF given outer-loop parameters in ```main_p```
+
+```f_enkf_modRSW.py```: Collection of functions related to the assimilation specifically, incl.:
+* generate_truth()      : simulates truth trajectory at given resolution and stores run at given observing times.
+* analysis_step_enkf()  : performs perturbed obs. enkf analysis step, returns updated ensemble and output data for saving.
+* gasp_cohn()           : Gaspari-Cohn taper function for ensemble localisation.
+
+
+```localisation.py```: Initial investigations and calculation of localisation taper function and matrices using ```gasp_cohn```.
+
+```model_error_Q.py```: Initial investigations of additive inflation and model error, incl Q matrix computation and sampling
+
+### Plotting and data analysis
+
+```plot_truth.py```: A few checks on characteristics of the nature run: plot all trajectories, e.g., check height and rain extremes.
+
+```plot_func_x.py```: Plotting routine: loads saved data in specific directories and produces domain plots at a given assimilation time. To use, specify (1) `dir_name`, (2) combination of parameters `ijk`, (3) time level ```T = time_vec[ii]```, i.e., choose ```ii```.
+
+```plot_func_t.py```: Produces domain-averaged error, CPRS, and OI plots as a function of time.  To use, specify (1) `dir_name`, (2) combination of parameters `ijk`.
+
+```analysis_diag_stats.py```: > ave_stats: function calculates summary statistics `DIAGS.npy` for each experiment `ijk` in given `dirname` and returns averaged spread, error, crps, OI for forecast and analysis ensembles.
+
+```compare_stats.py```: Each directory has i*j*k experiments with different parameter combinations. This script looops through ave_stats `ijk` and plots 2d summary matrix a la Poterjoy and Zhang for comparison. If `DIAGS.npy` exists, straight to plotting. If not, calculate statistics and save before plotting.
+
+```crps_calc_fun.py```: Function: calculate the CRPS of an on ensemble of forecast variables following the theory of Hersbach (2000), and as applied in Bowler et al (2016) and DAESR5.
+    
+```run_modRSW_EFS.py```: Script runs ensemble forecasts of length Tfc, initialised from analysed ensembles at a given time T0. Saves forecasts as `X_EFS_array_Tn.npy` for n = T0, to be used e.g. to calculate error growth statistics.
+    
+```EFS_stats.py```: Computes and plots error growth, crps for the EFS data produced in ```run_modRSW_EFS.py```. Also computes and saves error doubling times, to be used in ```err_doub_hist```.
+    
+```err_doub_hist.py```: Plots error doubling time histograms from saved data ```err_doub_Tn.npy```.
 
