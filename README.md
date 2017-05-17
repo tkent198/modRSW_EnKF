@@ -49,9 +49,11 @@ To run a script (e.g., `fname.py`) from the terminal:
 python fname.py
 ```
 
-
 ## Test cases
-Have I implemented the code correctly?
+
+### Model only: integration and dynamics
+
+### Simple forecast-assimilation experiment
 
 ## Brief overview of files
 
