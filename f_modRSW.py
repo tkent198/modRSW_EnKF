@@ -3,15 +3,16 @@
 #######################################################################
 
 '''
-AUTHOR: T. Kent (mmtk@leeds.ac.uk)
+AUTHOR: T. Kent (tkent198@gmail.com)
 
 Module contains numerous functions for the numerical inegration of the modRSW model:
-> make_grid            : makes FV mesh for given length and gridcell number
-> NCPflux4d             : calculates intercell FV flux as per the theory of Rhebergen et al., 2008.
+> make_grid            : makes mesh for given length and gridcell number
+> NCPflux4d             : calculates numerical flux as per the theory of Kent et al. 2017
 > NCPflux_topog         : calcualtes flux for flow over topography
 > time_step            : calculates stable time step for integration
 > step_forward_modRSW   : integrates forward one time step (forward euler) using NCPflux4d 
 > heaviside             : vector-aware implementation of heaviside (also works for scalars).
+> ens_forecast_topog    : for use in parallel ensemble forecasting
 '''
     
 import math as m
@@ -511,8 +512,6 @@ def ens_forecast(N, U, Nk_fc, Kk_fc, assim_time, index, tmeasure):
     
     tn = assim_time[index]
     
-    #print 'Integrating ensemble member N =', N+1, 'of', n_ens, 'from time =', assim_time[index],' to',assim_time[index+1]
-
     while tn < tmeasure:
         
         dt = time_step(U[:,:,N],Kk_fc,cfl_fc) # compute stable time step
@@ -531,9 +530,7 @@ def ens_forecast(N, U, Nk_fc, Kk_fc, assim_time, index, tmeasure):
 def ens_forecast_topog(N, U, B, Nk_fc, Kk_fc, assim_time, index, tmeasure):
     
     tn = assim_time[index]
-    
-    #print 'Integrating ensemble member N =', N+1, 'of', n_ens, 'from time =', assim_time[index],' to',assim_time[index+1]
-    
+       
     while tn < tmeasure:
         
         dt = time_step(U[:,:,N],Kk_fc,cfl_fc) # compute stable time step
@@ -548,8 +545,7 @@ def ens_forecast_topog(N, U, B, Nk_fc, Kk_fc, assim_time, index, tmeasure):
     return U[:,:,N]
 
 ##################################################################
-#                       END OF PROGRAM                           #
-##################################################################
+
 
 
 
