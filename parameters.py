@@ -2,17 +2,16 @@
 ## 			 FIXED PARAMETERS   			  ##
 ####################################################################
 '''
-    Author: T. Kent  (mmtk@leeds.ac.uk)
-    List of fixed parameters for model integration and EnKF.
-    
+Author: T. Kent  (tkent198@gmail.com)
+List of fixed parameters for model integration and EnKF.
 '''
 
 import numpy as np
 
-############# MODEL PARAMETERS #############
+''' MODEL PARAMETERS '''
 
-Neq = 3 # number of equations in system
-L = 1.0 # length of domain
+Neq = 3 # number of equations in system (3 with topography, 4 with rotation_
+L = 1.0 # length of domain (non-dim.)
 
 Nk_fc = 200                                 # forecast resolution
 dres = 4                                     # refinement factor for truth gridsize
@@ -38,7 +37,7 @@ alpha2 = 10
 c2 = g*Hr
 cc2 = 4*0.025*c2
 
-############# FILTERING PARAMETERS #############
+''' FILTER PARAMETERS '''
 
 n_ens = 40                              # number of ensembles
 Nmeas = 48                               # number of cycles
@@ -55,10 +54,13 @@ ob_noise = [0.1,0.05,0.005]            # ob noise for [h,hu,hr]
 o_d = 50                                # ob density: observe every o_d elements
 #
 
-## parameters for outer loop
-#o_d = [25,50]                           # observation density (no. of gridcells)
-#loc = [1.5,2.0,2.5]                     # localisation lengthscales
-#inf = [1.05,1.1,1.25,1.5]               # inflation (multiplicative)
+''' OUTER LOOP'''
+'''
+Parameters for outer loop are specified in main_p.py 
+loc     : localisation scale
+add_inf : additive infaltaion factor
+inf     : mult. inflation factor
+'''
 
 ##################################################################
 #			END OF PROGRAM				 #
