@@ -1,9 +1,7 @@
 # modRSW_EnKF
 ## An idealised convective-scale forecast-assimilation framework
 
-This repository aims to facilitate the transfer of knowledge and continued use of the software developed by TK and deposited in the git repository. It should contain sufficient instruction for users to implement and adapt the source code (briefly comprising Python scripts for the numerical solver, idealised forecast-assimilation routines, plotting and data analysis). 
-
-The source code available here was developed during TK's PhD, a pdf is available [here](http://etheses.whiterose.ac.uk/17269/).
+This repository aims to facilitate the transfer of knowledge and continued use of an idelaised convective-scale forecast -assimilation system. It should contain sufficient instruction for users to implement and adapt the source code (briefly comprising Python scripts for the numerical solver, idealised forecast-assimilation routines, plotting and data analysis). This source code was developed during TK's PhD, a pdf is available [here](http://etheses.whiterose.ac.uk/17269/).
 
 ***CAVEAT: this is not a black-box model and should accordingly be used with care and curiosity!***
 
@@ -43,6 +41,12 @@ Clone:
 * the most up-to-date version is hosted here by github. From the command line
 ```
 git clone https://github.com/tkent198/modRSW_EnKF.git
+```
+
+### Running the code
+To run a script (e.g., `fname.py`) from the terminal:
+```
+python fname.py
 ```
 
 
