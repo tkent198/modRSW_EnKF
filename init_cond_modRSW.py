@@ -4,7 +4,8 @@
 ##################################################################
 
 '''
-Functions generate different initial conditions described below for modRSW model with zero bottom topography...
+Functions generate different initial conditions described below for modRSW model with
+and without bottom topography...
 
 INPUT ARGS:
 # x: mesh coords
@@ -20,6 +21,8 @@ OUTPUT:
 
 ##################################################################
 DESCRIPTIONS:
+
+Rotation, no topography:
 
 <init_cond_1>
 --- sinusiodal waves in h and u, zero v and r.
@@ -48,8 +51,16 @@ DESCRIPTIONS:
 --- Rossby adj with disturbed v-velocity profile:
 --- Quadrupel jet in v, flat h=1 profile, u = constant \ne 0, and zero r.
 
-<init_cond_topog>
+Topography, no rotation:
 
+<init_cond_topog>
+--- single parabolic ridge
+
+<init_cond_topog4>
+--- 4 parabolic ridges
+
+<init_cond_topog_cos>
+--- superposition of sinusoids, as used in thesis chapter 6
 '''
 
 ###############################################################
