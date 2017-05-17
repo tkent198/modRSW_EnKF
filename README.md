@@ -38,11 +38,13 @@ Same for Matplotlib.
 ### Downloading 
 Direct download: 
 * click on the download link on the repository homepage [https://github.com/tkent198/modRSW_EnKF](https://github.com/tkent198/modRSW_EnKF)
+
 Clone: 
 * the most up-to-date version is hosted here by github. From the command line
 ```
-git clone 
+git clone https://github.com/tkent198/modRSW_EnKF.git
 ```
+
 
 ## Test cases
 Have I implemented the code correctly?
