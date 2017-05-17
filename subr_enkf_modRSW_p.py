@@ -1,12 +1,14 @@
 #######################################################################
-# Perturbed obs EnKF for 1.5D SWEs with rain variable and topography
-#               (T. Kent: mmtk@leeds.ac.uk)
+# Perturbed obs EnKF for modRSW with topography
+#               (T. Kent: tkent198@gmail)
 #######################################################################
 
 '''
 4.2.2016
 
-SUBROUTINE (p) for batch-processing EnKF experiments. Given parameters and truth run supplied by <main>, the function <run_enkf> carries out ensemble integratiopns IN PARALLEL using the multiprocessing module.
+SUBROUTINE (p) for batch-processing EnKF experiments. 
+Given parameters and truth run supplied by <main>, the function <run_enkf> carries out ensemble integratiopns 
+IN PARALLEL using the multiprocessing module.
 
 '''
 
@@ -23,15 +25,11 @@ from datetime import datetime
 # CUSTOM FUNCTIONS AND MODULES REQUIRED
 ##################################################################
 
-#from pars_modRSW import * # module storing fixed parameters
-#from pars_enkf import * # module storing enkf parameters (not for looping.. yet)
-
 from parameters import * # module storing fixed parameters
 from f_modRSW import make_grid, step_forward_topog, time_step, ens_forecast, ens_forecast_topog
 from f_enkf_modRSW import analysis_step_enkf
 from create_readme import create_readme
 
-# example subroutine of a single outer-loop for ensemble size
 def run_enkf(i,j,k,loc,add_inf,inf,ic,U_tr_array,dirname):
     
     obs_dens = o_d
