@@ -149,7 +149,7 @@ beta | 0.2
 alpha | 10
 c2  | 0.1Hr/(Fr)^2
 
-In  ```run_modRSW.py```, the user can specify the resoltion ```Nk```, initial condition ```ic```, and the number of "hours" to integrate ```Nmeas```. The routine then integrates the initial condition from ```tn=0``` to ```tmax``` and plots the ```Nmeas``` solutions, i.e., every hour.
+In  ```run_modRSW.py```, the user can specify the resoltion ```Nk```, initial condition ```ic```, and the number of "hours" to integrate ```Nmeas```. The routine then integrates the initial condition from ```tn=0``` to ```tmax``` and saves figures of the plotted ```Nmeas``` solutions in the created directory  ```cwd/test_model```.
 
 Default setting:
 
@@ -157,14 +157,15 @@ Choice      | Values
 ------------- | -------------
 Nk  | 200
 ic  | init_cond_topog_cos
-Nmeas  | 5
+Nmeas  | 3
 
 To run this from the terminal:
 ```
 python run_modRSW.py
 ```
 
-First, the initial conditon is generated and plotted (FIGURE?). After closing this manually, the integration starts.
+First, the initial conditon is generated and a figure saved in  ```cwd/test_model```. Then the integration starts and figures are saved in  ```cwd/test_model``` at the given times. This should be clear from the text that is printed to the terminal. When ```tmax``` is reached, the integration stops and a summary of the simulation is printed to the terminal.
+
 
 To kill at any point, press ```Ctrl+c```.
 
