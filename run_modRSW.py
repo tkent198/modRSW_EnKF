@@ -75,9 +75,9 @@ axes[2].set_xlabel('$x$',fontsize=18)
 #plt.show() # use block=False?
 
 name_fig = "/ic.pdf"
-f_name_fig = str(figsdir+name_fig)
+f_name_fig = str(dirn+name_fig)
 plt.savefig(f_name_fig)
-print ' *** Initial condition %s saved to %s' %(name_f,figsdir)
+print ' *** Initial condition %s saved to %s' %(name_f,dirn)
 print('Done initial conditions')
 
 ##################################################################
@@ -91,6 +91,7 @@ Nmeas = 3.
 tmax = Nmeas*hour
 dtmeasure = tmax/Nmeas
 tmeasure = dtmeasure
+index = 1
 
 ##################################################################
 #'''%%%----- integrate forward in time until tmax ------%%%'''
@@ -130,13 +131,13 @@ while tn < tmax:
         axes[2].set_ylim([0,0.1])
         axes[2].set_xlabel('$x$',fontsize=18)
 
-	#plt.show() # use block=False?
+		#plt.show() # use block=False?
 	
-	name_fig = "/t%d.pdf" %tmeasure
-	f_name_fig = str(figsdir+name_fig)
-	plt.savefig(f_name_fig)
-	print ' *** %s at time %d saved to %s' %(name_fig,tmeasure,figsdir)
-
+		name_fig = "/t%d.pdf" %index
+		f_name_fig = str(figsdir+name_fig)
+		plt.savefig(f_name_fig)
+		print ' *** %s at time %d saved to %s' %(name_fig,tmeasure,dirn)
+		index = index + 1
 
 print '***** DONE: end of simulation at time:', tn
 print ' '   
