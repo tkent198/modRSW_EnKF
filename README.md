@@ -177,8 +177,10 @@ First, the initial conditon is generated and a figure saved in  ```cwd/test_mode
 
 Once complete, check the saved figures: go to the directory ```test_model``` and open the figures.
 
-### Idealised forecast-assimilation experiment
+INSERT VERIFYING FIGURES HERE!!!
 
+### Idealised forecast-assimilation experiment
+#### Running an experiment
 The main run program for idealised forecast-assimilation experiments is ```main_p.py```. Its workhorse is the subroutine function ```run_enkf()``` in the ```subr_enkf_modRSW_p```, which carries out each experiment, i.e., the ensemble forecasts and analysis steps for the given outer loop parameters. The combination of outer loop parameters define a single experiment. 
 
 The default model parameters are (see ```paramters.py```):
@@ -195,12 +197,52 @@ alpha | 10
 c2  | 0.1Hr/(Fr)^2
 
 
-The default parameters pertaining to this test assimilatrion are:
+The default parameters for this test assimilatrion are:
 
 Parameter      | Values
 ------------- | -------------
 dres  | 2
 n_ens  | 20
 Nmeas  | 3
+
+The outer loop parameters are specified in ```main_p.py```:
+
+Parameter      | Values
+------------- | -------------
+loc  | 1e-10
+add_inf  | 0.2
+inf  | [1.01, 1.05, 1.1]
+
+The purpose of this test case is to check that the cycled system is up and running, including the saving of data and readmes to automatically-generated directories. Once this has been verified, the outer loop and assimilation parameters can be extended (e.g., more combinations in the table above, longer runs with, e.g., ```Nmeas = 48``` ). 
+
+First, the nature run is generated and saved as this is the same for all experiments. If it already exists, it is loaded instead. Once this is complete, the routine enters the EnKF outer loop.
+
+To run from the terminal:
+```
+python main_p.py
+```
+Text is printed to the terminal throughout to provide information and updates on its progress. After looping through all parameter combinations, a brief summary is printed to the terminal and the program ends. 
+To check the saved data and readmes, enter the relavent directory:
+```
+cd test_enkf
+```
+Here, there should be 2 data files for the nature run, ```U_tr_array.npy``` and ```B_tr.npy```, and more subdirectories for each experiment. The subdirectories are suffixed with digits ```ijk```, denoting each experiment from the outer loop. TTo enter one, e.g.,:
+```
+cd test_enkf111
+```
+Each subdirectory has data saved from this particular experiment and a ```readme.txt``` summarising this experiment.
+
+
+
+#### Plotting results from experiments
+From terminal:
+```
+python plot_func_x.py
+```
+```
+python plot_func_t.py
+```
+
+INSERT VERIFYING FIGURES HERE!!!
 
 
