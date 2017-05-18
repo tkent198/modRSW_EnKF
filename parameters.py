@@ -14,7 +14,7 @@ Neq = 3 # number of equations in system (3 with topography, 4 with rotation_
 L = 1.0 # length of domain (non-dim.)
 
 Nk_fc = 200                                 # forecast resolution
-dres = 4                                     # refinement factor for truth gridsize
+dres = 2                                     # refinement factor for truth gridsize
 Nk_tr = dres*Nk_fc                           # truth resolution
 
 cfl_fc = 1. # Courant Friedrichs Lewy number for time stepping
@@ -39,8 +39,8 @@ cc2 = 4*0.025*c2
 
 ''' FILTER PARAMETERS '''
 
-n_ens = 40                              # number of ensembles
-Nmeas = 48                               # number of cycles
+n_ens = 20                              # number of ensembles
+Nmeas = 3                               # number of cycles
 tn = 0.0                                # initial time
 #tmax = Nmeas*0.144                      # end time = Nmeas*1hr real time
 #dtmeasure = tmax/Nmeas                  # length of each window
