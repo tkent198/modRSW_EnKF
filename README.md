@@ -63,7 +63,7 @@ git pull https://github.com/tkent198/modRSW_EnKF.git
 ```
 
 ### Running the code: basics
-To run a script (e.g., `fname.py`) from the terminal:
+To run a script (e.g., `fname.py`) from the terminal, ```cd``` to the ```modRSW_EnKF``` directory and enter the command:
 ```
 python fname.py
 ```
