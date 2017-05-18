@@ -1,4 +1,4 @@
-##################################################################
+f##################################################################
 #--------------- Plotting routines for saved data ---------------
 #                   (T. Kent: mmtk@leeds.ac.uk)
 ##################################################################
@@ -30,7 +30,7 @@ j=0
 k=0
 ##
 ##
-dirname = '/experi'
+dirname = '/test_enkf'
 ##
 
 # LOAD DATA FROM GIVEN DIRECTORY
@@ -47,8 +47,8 @@ except OSError as exception:
 
 # parameters for outer loop
 # parameters for outer loop
-loc = [1e-10, 1., 2.5, 4.]
-add_inf = [0.5, 0.75, 1.]
+loc = [1e-10]
+add_inf = [0.2]
 inf = [1.01, 1.05, 1.1]
 
 # LOAD DATA FROM GIVEN DIRECTORY
