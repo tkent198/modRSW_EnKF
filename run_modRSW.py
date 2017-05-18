@@ -134,7 +134,7 @@ while tn < tmax:
 	#plt.show() # use block=False?
 	
 	name_fig = "/t%d.pdf" %index
-	f_name_fig = str(figsdir+name_fig)
+	f_name_fig = str(dirn+name_fig)
 	plt.savefig(f_name_fig)
 	print ' *** %s at time level %d saved to %s' %(name_fig,index,dirn)
 	index = index + 1
