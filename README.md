@@ -178,3 +178,29 @@ First, the initial conditon is generated and a figure saved in  ```cwd/test_mode
 Once complete, check the saved figures: go to the directory ```test_model``` and open the figures.
 
 ### Idealised forecast-assimilation experiment
+
+The main run program for idealised forecast-assimilation experiments is ```main_p.py```. Its workhorse is the subroutine function ```run_enkf()``` in the ```subr_enkf_modRSW_p```, which carries out each experiment, i.e., the ensemble forecasts and analysis steps for the given outer loop parameters. The combination of outer loop parameters define a single experiment. 
+
+The default model parameters are (see ```paramters.py```):
+
+Parameter      | Values
+------------- | -------------
+Ro  | Inf
+Fr  | 1.1
+H0  | 1.0
+Hc  | 1.02
+Hr  | 1.05
+beta | 0.2
+alpha | 10
+c2  | 0.1Hr/(Fr)^2
+
+
+The default parameters pertaining to this test assimilatrion are:
+
+Parameter      | Values
+------------- | -------------
+dres  | 2
+n_ens  | 20
+Nmeas  | 3
+
+
