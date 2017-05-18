@@ -118,7 +118,7 @@ def run_enkf(i,j,k,loc,add_inf,inf,ic,U_tr_array,dirname):
     tmeasure = dtmeasure # reset tmeasure
     
     
-    while tmeasure-dtmeasure <= tmax:
+    while tmeasure-dtmeasure < tmax:
         
         print ' '
         print '----------------------------------------------'
