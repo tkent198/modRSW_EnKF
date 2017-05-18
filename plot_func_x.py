@@ -28,7 +28,7 @@ j=0
 k=0
 ##
 ##
-dirname = '/experi'
+dirname = '/test_enkf'
 ##
 
 # LOAD DATA FROM GIVEN DIRECTORY
@@ -38,12 +38,12 @@ figsdir = str(dirn+'/figs')
 
 
 # parameters for outer loop
-loc = [1e-10, 1., 2.5, 4.]
-add_inf = [0.5, 0.75, 1.]
+loc = [1e-10]
+add_inf = [0.2]
 inf = [1.01, 1.05, 1.1]
 
 ## plot at assimilation cycle ii
-ii = 36
+ii = 3
 ##
 
 # make fig directory (if it doesn't already exist)
