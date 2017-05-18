@@ -35,7 +35,7 @@ from subr_enkf_modRSW_p import run_enkf
 # create directory for output
 #################################################################
 cwd = os.getcwd()
-dirname = str('/experi')
+dirname = str('/test_enkf')
 dirn = str(cwd+dirname)
 #check if dir exixts, if not make it
 try:
@@ -45,10 +45,14 @@ except OSError as exception:
         raise
 
 # parameters for outer loop
-loc = [1e-10, 1., 2.5, 4.]
-add_inf = [0.2, 0.4, 0.6]
-inf = [1.01, 1.05, 1.1]
+#loc = [1e-10, 1., 2.5, 4.]
+#add_inf = [0.2, 0.4, 0.6]
+#inf = [1.01, 1.05, 1.1]
 
+#TEST CASE: parameters for outer loop
+loc = [1e-10]
+add_inf = [0.2]
+inf = [1.01, 1.05, 1.1]
 
 #################################################################
 # CHOOSE INITIAL PROFILE FROM init_cond_modRSW:
