@@ -47,21 +47,30 @@ To check numpy version, open python in the terminal, import it and use the versi
 ```
 Same for Matplotlib. 
 
-### Downloading 
-Direct download: 
-* click on the download link on the repository homepage [https://github.com/tkent198/modRSW_EnKF](https://github.com/tkent198/modRSW_EnKF)
+### Download and install
 
-Clone: 
-* the most up-to-date version is hosted here by github. From the command line
+Direct download: 
+* click on the download link on the repository homepage [https://github.com/tkent198/modRSW_EnKF](https://github.com/tkent198/modRSW_EnKF) and save to desired directory.
+
+Clone from terminal:
+* Go to the directory where you want to save the repository and use the command:
 ```
 git clone https://github.com/tkent198/modRSW_EnKF.git
 ```
+* Once downloaded, to get any updates/upgrades to the original clone, use the command:
+```
+git pull https://github.com/tkent198/modRSW_EnKF.git
+```
 
-### Running the code
+### Running the code: basics
 To run a script (e.g., `fname.py`) from the terminal:
 ```
 python fname.py
 ```
+
+To kill at any point, press ```Ctrl+c```, or kill the active processes using ```top``` from the terminal.
+
+
 ## Brief overview of files
 
 ```parameters.py```: List of all parameters pertaining to the model itself and the forecast-assimilation framework.
@@ -166,7 +175,6 @@ python run_modRSW.py
 
 First, the initial conditon is generated and a figure saved in  ```cwd/test_model```. Then the integration starts and figures are saved in  ```cwd/test_model``` at the given times. This should be clear from the text that is printed to the terminal. When ```tmax``` is reached, the integration stops and a summary of the simulation is printed to the terminal.
 
-
-To kill at any point, press ```Ctrl+c```.
+Once complete, check the saved figures: go to the directory ```test_model``` and open the figures.
 
 ### Idealised forecast-assimilation experiment
