@@ -34,7 +34,7 @@ ic = init_cond_topog_cos
 #################################################################
 
 cwd = os.getcwd()
-dirname = str('/test')
+dirname = str('/test_model')
 dirn = str(cwd+dirname)
 #check if dir exixts, if not make it
 try:
@@ -70,10 +70,15 @@ axes[2].plot(xc, U0[2,:], 'b')
 axes[2].set_ylabel('$hr_0(x)$',fontsize=18)
 axes[2].set_ylim([0,0.5])
 axes[2].set_xlabel('$x$',fontsize=18)
-#plt.interactive(True)
-plt.show() # use block=False?
 
+#plt.show() # use block=False?
+
+name_fig = "/ic.pdf"
+f_name_fig = str(figsdir+name_fig)
+plt.savefig(f_name_fig)
+print ' *** Initial condition %s saved to %s' %(name_f,figsdir)
 print('Done initial conditions')
+
 ##################################################################
 #'''%%%----- Define system arrays and time parameters------%%%'''
 ##################################################################
@@ -123,8 +128,13 @@ while tn < tmax:
         axes[2].set_ylabel('$hr(x)$',fontsize=18)
         axes[2].set_ylim([0,0.1])
         axes[2].set_xlabel('$x$',fontsize=18)
-        #plt.interactive(True)
-        plt.show() # use block=False?
+
+	#plt.show() # use block=False?
+	
+	name_fig = "/t%d.pdf" %tmeasure
+	f_name_fig = str(figsdir+name_fig)
+	plt.savefig(f_name_fig)
+	print ' *** %s at time %d saved to %s' %(name_fig,tmeasure,figsdir)
 
 
 print '***** DONE: end of simulation at time:', tn
