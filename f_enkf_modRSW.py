@@ -166,7 +166,7 @@ def analysis_step_enkf(U_fc, U_tr, tmeasure, dtmeasure, index, pars_ob, pars_end
 
     q = add_inf*np.random.multivariate_normal(np.zeros(n_d), Q, n_ens)
     q = q.T
-    Xan = Xan + q # x(t+1) = M(x(t)) + q  (eq. 6.5)      
+    X = X + q # x(t+1) = M(x(t)) + q  (eq. 6.5)      
     
     '''
     Step 2.(a)
