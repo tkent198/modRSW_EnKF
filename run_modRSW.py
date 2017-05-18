@@ -77,7 +77,7 @@ axes[2].set_xlabel('$x$',fontsize=18)
 name_fig = "/ic.pdf"
 f_name_fig = str(dirn+name_fig)
 plt.savefig(f_name_fig)
-print ' *** Initial condition %s saved to %s' %(name_f,dirn)
+print ' *** Initial condition %s saved to %s' %(name_fig,dirn)
 print('Done initial conditions')
 
 ##################################################################
@@ -136,7 +136,7 @@ while tn < tmax:
 	name_fig = "/t%d.pdf" %index
 	f_name_fig = str(figsdir+name_fig)
 	plt.savefig(f_name_fig)
-	print ' *** %s at time %d saved to %s' %(name_fig,tmeasure,dirn)
+	print ' *** %s at time level %d saved to %s' %(name_fig,index,dirn)
 	index = index + 1
 
 print '***** DONE: end of simulation at time:', tn
