@@ -1,11 +1,11 @@
 # modRSW_EnKF
 ## An idealised convective-scale forecast-assimilation framework
 
-This repository aims to facilitate the transfer of knowledge and continued use of a basic convective-scale forecast -assimilation system developed during TK's PhD (Kent 2016). The forecast component comes from an idealised fluid model of convective-scale Numerical Wather Prediction (modRSW; Kent et al. 2017) and the assimilation algorithm is the perturbed-observation Ensemble Kalman Filter (EnKF). The following document should contain sufficient instruction for users to download, implement and adapt the source code, which briefly comprises Python scripts for the numerical solver, idealised forecast-assimilation routines, plotting and data analysis. 
+This repository aims to facilitate the transfer of knowledge and continued use of a basic convective-scale forecast -assimilation system developed during TK's PhD (Kent 2016). The forecast component comes from an idealised fluid model of convective-scale Numerical Weather Prediction (modRSW; Kent et al. 2017) and the assimilation algorithm is the perturbed-observation Ensemble Kalman Filter (EnKF). The following document should contain sufficient instruction for users to download, implement and adapt the source code, which briefly comprises Python scripts for the numerical solver, idealised forecast-assimilation routines, plotting and data analysis. 
 
 ***CAVEAT: this is not a black-box model and should accordingly be used with care and curiosity!***
 
-How to get started with the source code and files is outlined below. A breif overview of each file is given and there are some model-only and forecast-assimilation test cases to check things are up and running properly.
+How to get started with the source code and files is outlined below. A brief overview of each file is given and there are some model-only and forecast-assimilation test cases to check things are up and running properly.
 
 For further details, including what should be modified in the scripts for different experiemtnal set-ups, please see the pdf document (TO DO).
 
@@ -158,7 +158,7 @@ beta | 0.2
 alpha | 10
 c2  | 0.1Hr/(Fr)^2
 
-In  ```run_modRSW.py```, the user can specify the resoltion ```Nk```, initial condition ```ic```, and the number of "hours" to integrate ```Nmeas```. The routine then integrates the initial condition from ```tn=0``` to ```tmax``` and saves figures of the plotted ```Nmeas``` solutions in the created directory  ```cwd/test_model```.
+In  ```run_modRSW.py```, the user can specify the resolution ```Nk```, initial condition ```ic```, and the number of "hours" to integrate ```Nmeas```. The routine then integrates the initial condition from ```tn=0``` to ```tmax``` and saves figures of the plotted ```Nmeas``` solutions in the created directory  ```cwd/test_model```.
 
 Default setting:
 
@@ -226,7 +226,7 @@ To check the saved data and readmes, enter the relavent directory:
 ```
 cd test_enkf
 ```
-Here, there should be 2 data files for the nature run, ```U_tr_array.npy``` and ```B_tr.npy```, and more subdirectories for each experiment. The subdirectories are suffixed with digits ```ijk```, denoting each experiment from the outer loop. TTo enter one, e.g.,:
+Here, there should be 2 data files for the nature run, ```U_tr_array.npy``` and ```B_tr.npy```, and more subdirectories for each experiment. The subdirectories are suffixed with digits ```ijk```, denoting each experiment from the outer loop, e.g.,:
 ```
 cd test_enkf111
 ```
