@@ -177,7 +177,7 @@ First, the initial conditon is generated and a figure saved in  ```cwd/test_mode
 
 Once complete, check the saved figures: go to the directory ```test_model``` and open the figures and compare with the below figure.
 
-INSERT VERIFYING FIGURES HERE!!!
+![t3_Nk800](test_model/t3_Nk200.pdf)
 
 In idealised forecast-assimilation experiments, it is typical to use a finer resolution to generate the nature run, constituting an 'imperfect' twin experiment (see Background above). To see the impact on the solution of integrating at a finer resolution, open the ```run_modRSW.py``` script and change the number of elements to ```Nk = 800```. After saving, run the script again:
 ```
