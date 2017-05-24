@@ -99,6 +99,8 @@ def gaspcohn_matrix(loc_rho,Nk_fc):
 #'''------------------ ANALYSIS STEP ------------------'''
 ##################################################################
 
+# v2: (static) additive inflation applied BEFORE assimilation
+
 def analysis_step_enkf(U_fc, U_tr, tmeasure, dtmeasure, index, pars_ob, pars_enda):
     '''
     (Steps refer to algorithm on page 121 of thesis, as do eq. numbers)
@@ -353,7 +355,257 @@ def analysis_step_enkf(U_fc, U_tr, tmeasure, dtmeasure, index, pars_ob, pars_end
     return U_an, U_fc, X, X_tr, Xan, Y_obs, OI_vec
 
 ##################################################################
-#'''------------------ ANALYSIS STEP edit ------------------'''
+#'''------------------ ANALYSIS STEP v2 ------------------'''
 ##################################################################
 
+# v2: (static) additive inflation applied AFTER assimilation
+
+def analysis_step_enkf_v2(U_fc, U_tr, tmeasure, dtmeasure, index, pars_ob, pars_enda):
+    '''
+        (Steps refer to algorithm on page 121 of thesis, as do eq. numbers)
+        
+        INPUTS
+        U_fc: ensemble trajectories in U space, shape (Neq,Nk_fc,n_ens)
+        U_tr: truth trajectory in U space, shape (Neq,Nk_tr,Nmeas+1)
+        tmeasure: time of assimilation
+        dtmeasure: length of window
+        pars_ob: vector of parameter values relating to obs (density and error)
+        pars_enda: vector of parameters relating to DA fixes (inflation and localisation)
+        '''
+    
+    print ' '
+    print '----------------------------------------------'
+    print '------------ ANALYSIS STEP: START ------------'
+    print '----------------------------------------------'
+    print ' '
+    
+    Nk_fc = np.shape(U_fc)[1] # fc resolution (no. of cells)
+    Kk_fc = L/Nk_fc # fc resolution (cell length)
+    Nk_tr = np.shape(U_tr)[1] # tr resolution (no. of cells)
+    n_ens = np.shape(U_fc)[2]
+    n_d = Neq*Nk_fc # total number of variables (dgs of freedom)
+    dres = Nk_tr/Nk_fc # ratio of resolutions
+    inf = pars_enda[0] # inflation factor
+    loc = pars_enda[1]
+    add_inf = pars_enda[2]
+    obs_dens = pars_ob[0]
+    ob_noise = pars_ob[1] # 4-vector of obs noise
+    
+    
+    print ' '
+    print '--------- ANALYSIS: perturbed obs EnKF ---------'
+    print ' '
+    print 'Assimilation time = ', tmeasure
+    print 'Number of ensembles = ', n_ens
+    
+    # project truth onto forecast grid so that U and U_tr are the same dimension
+    U_tmp = np.empty([Neq,Nk_fc])
+    for i in range(0,Nk_fc):
+        U_tmp[:,i] = U_tr[:,i*dres:(i+1)*dres,index+1].mean(axis=-1)
+    U_tr = U_tmp
+    
+    '''
+        step 1.(c)
+        '''
+    # for assimilation, work with [h,u,r]
+    U_fc[1:,:,:] = U_fc[1:,:,:]/U_fc[0,:,:]
+    U_tr[1:,:] = U_tr[1:,:]/U_tr[0,:]
+    
+    X_tr = U_tr.flatten()
+    X_tr = np.matrix(X_tr).T
+    
+    # state matrix (flatten the array)
+    X = np.empty((n_d,n_ens))
+    for N in range(0,n_ens):
+        X[:,N] = U_fc[:,:,N].flatten()
+    
+#    # ADDITIVE INFLATION (Gordon: NEEDS MOVING after analysis...)
+#    cwd = os.getcwd()
+#    Q = np.load(str(cwd+'/Q_offline.npy'))
+#    
+#    q = add_inf*np.random.multivariate_normal(np.zeros(n_d), Q, n_ens)
+#    q = q.T
+#    X = X + q # x(t+1) = M(x(t)) + q  (eq. 6.5)
+
+    '''
+        Step 2.(a)
+        '''
+    # make pseudo-obs by defining observation operator and adding perturbations
+    n_obs = n_d/obs_dens # no. of observations
+    print 'Total no. of obs. =', n_obs
+    # observation operator
+    H = np.zeros((n_obs,n_d))
+    row_vec = range(obs_dens,n_d+1,obs_dens)
+    for i in range(0,n_obs):
+        H[i,row_vec[i]-1]=1
+    
+    # for ensemble of observations
+    ob_noise = np.repeat(ob_noise,n_obs/Neq)
+    obs_pert = ob_noise[:,None]*np.random.randn(n_obs,n_ens)
+    print 'obs_pert shape =', np.shape(obs_pert)
+    
+    Y_obs = np.empty([n_obs,n_ens])
+    Y_mod = np.dot(H, X_tr)
+    print 'Y_mod shape =', np.shape(Y_mod)
+    
+    Y_obs = Y_mod + obs_pert #y_o = y_m + e_o (eq. 6.6)
+    
+    '''
+        Step 2.(b)
+        '''
+    #### CALCULATE KALMAN GAIN, INNOVATIONS, AND ANALYSIS STATES ####
+    ONE = np.ones([n_ens,n_ens])
+    ONE = ONE/n_ens # NxN array with elements equal to 1/N
+    Xbar = np.dot(X,ONE) # mean
+    Xdev = X - Xbar # deviations
+    
+    # covariance matrix
+    Pf = np.dot(Xdev, Xdev.T)
+    Pf = Pf/(n_ens - 1)
+    Cf = np.corrcoef(Xdev) # correlation matrix
+    
+    '''
+        Step 2.(c)
+        '''
+    # construct localisation matrix rho based on Gaspari Cohn function
+    loc_rho = pars_enda[1] # loc_rho is form of lengthscale.
+    rho = gaspcohn_matrix(loc_rho,Nk_fc)
+    print 'loc matrix rho shape: ', np.shape(rho)
+    
+    # construct K
+    R = ob_noise*ob_noise*np.identity(n_obs) # obs cov matrix
+    K = np.dot(H, np.dot(rho*Pf,H.T)) + R # H B H^T + R
+    K = np.linalg.inv(K) # [H B H^T + R]^-1
+    K = np.dot(np.dot(rho*Pf,H.T), K) # (rho Pf)H^T [H (rho Pf) H^T + R]^-1
+    
+    # compute innovation d = Y-H*X
+    D = Y_obs - np.dot(H,X)
+    
+    # compute analysis
+    Xan = X + np.dot(K,D) # kalman update step
+    Xanbar = np.dot(Xan,ONE) # analysis mean
+    Xandev = Xan - Xanbar  # analysis deviations
+    
+    Pa = np.dot(Xandev,Xandev.T)
+    Pa = Pa/(n_ens - 1) # analysis covariance matrix
+    Ca = np.corrcoef(Xandev) # analysis correlation matrix
+    
+
+    ### ADDITIVE INFLATION ...### (NEEDS MOVING after analysis... here?????)
+    cwd = os.getcwd()
+    Q = np.load(str(cwd+'/Q_offline.npy'))
+    
+    q = add_inf*np.random.multivariate_normal(np.zeros(n_d), Q, n_ens)
+    q = q.T
+    Xan = Xan + q # x(t+1) = M(x(t)) + q
+
+    
+    # masks for locating model variables in state vector
+    h_mask = range(0,Nk_fc)
+    hu_mask = range(Nk_fc,2*Nk_fc)
+    hr_mask = range(2*Nk_fc,3*Nk_fc)
+    
+    obs_mask = np.array(row_vec[0:n_obs/Neq])-1
+    h_obs_mask = range(0,n_obs/Neq)
+    hu_obs_mask = range(n_obs/Neq,2*n_obs/Neq)
+    hr_obs_mask = range(2*n_obs/Neq,3*n_obs/Neq)
+    
+    # make matrices arrays for manipulating and then saving
+    X = np.array(X)
+    X_tr = np.array(X_tr)
+    Xbar = np.array(Xbar)
+    Xan = np.array(Xan)
+    Xanbar = np.array(Xanbar)
+    Xandev = np.array(Xandev)
+    Y_obs = np.array(Y_obs)
+    
+    # transform to x = (h,hu,hr) for inflation (to avoid double inflation of hu,hr)
+    Xan_new = Xan
+    Xan_new[hu_mask,:] = Xan_new[hu_mask,:]*Xan_new[h_mask,:]
+    Xan_new[hr_mask,:] = Xan_new[hr_mask,:]*Xan_new[h_mask,:]
+    
+    ### MULTIPLICATIVE INFLATION
+    if inf != 1.0: # inflate the ensemble
+        print 'Covariance (ensemble) inflation factor =', inf
+        Xanbar_new = np.dot(Xan_new, ONE)
+        Xandev_new = Xan_new - Xanbar_new
+        Xandev_new = inf*Xandev_new
+        Xan_new = Xandev_new + Xanbar_new # inflated analysis ensemble
+        Xan_new = np.array(Xan_new)
+    else:
+        print 'No multiplicative inflation applied'
+    
+    # if hr < 0, set to zero:
+    hr = Xan_new[hr_mask,:]
+    hr[hr < 0.] = 0.
+    Xan_new[hr_mask,:] = hr
+    
+    # if h < 0, set to epsilon:
+    h = Xan_new[h_mask,:]
+    h[h < 0.] = 1e-3
+    Xan_new[h_mask,:] = h
+    
+    # transform from X to U for next integration:
+    U_an = np.empty((Neq,Nk_fc,n_ens))
+    for N in range(0,n_ens):
+        U_an[:,:,N] = Xan_new[:,N].reshape(Neq,Nk_fc)
+    
+    # now inflated, transform back to x = (h,u,r) for saving and later plotting
+    Xan[h_mask,:] = Xan_new[h_mask,:]
+    Xan[hu_mask,:] = Xan_new[hu_mask,:]/Xan_new[h_mask,:]
+    Xan[hr_mask,:] = Xan_new[hr_mask,:]/Xan_new[h_mask,:]
+    
+    
+    
+    print ' '
+    print '--------- CHECK SHAPE OF MATRICES: ---------'
+    print ' '
+    print 'U_fc shape   :', np.shape(U_fc)
+    print 'U_tr shape   :', np.shape(U_tr)
+    print 'X_truth shape:', np.shape(X_tr), '( NOTE: should be', n_d,' by 1 )'
+    print 'X shape      :', np.shape(X), '( NOTE: should be', n_d,'by', n_ens,')'
+    print 'Xbar shape   :', np.shape(Xbar)
+    print 'Xdev shape   :', np.shape(Xdev)
+    print 'Pf shape     :', np.shape(Pf), '( NOTE: should be n by n square for n=', n_d,')'
+    print 'H shape      :', np.shape(H), '( NOTE: should be', n_obs,'by', n_d,')'
+    print 'K shape      :', np.shape(K), '( NOTE: should be', n_d,'by', n_obs,')'
+    print 'ob_pert shape:', np.shape(obs_pert)
+    print 'Y_mod shape  :', np.shape(Y_mod)
+    print 'Y_obs shape  :', np.shape(Y_obs)
+    print 'Xan shape    :', np.shape(Xan), '( NOTE: should be the same as X shape)'
+    print 'U_an shape   :', np.shape(U_an), '( NOTE: should be the same as U_fc shape)'
+    
+    
+    ## observational influence diagnostics
+    print ' '
+    print '--------- OBSERVATIONAL INFLUENCE DIAGNOSTICS:---------'
+    print ' '
+    print ' Benchmark: global NWP has an average OI of ~0.18... '
+    print ' ... high-res. NWP less clear but should be 0.15 - 0.4'
+    print 'Check below: '
+    HK = np.dot(H,K)
+    HKd = np.diag(HK)
+    OI = np.trace(HK)/n_obs
+    OI_h = np.sum(HKd[h_obs_mask])/n_obs
+    OI_hu = np.sum(HKd[hu_obs_mask])/n_obs
+    OI_hr = np.sum(HKd[hr_obs_mask])/n_obs
+    OI_vec = np.array([OI , OI_h , OI_hu , OI_hr])
+    
+    np.set_printoptions(formatter={'float': '{: 0.4f}'.format})
+    print 'trace(HK) =', np.trace(HK)
+    print 'shape(HK) =', np.shape(HK), '( NOTE: should be', n_obs,'by', n_obs,')'
+    print 'OI =', OI
+    print 'OI check = ', np.sum(HKd)/n_obs
+    print 'OI_h =', OI_h
+    print 'OI_hu =', OI_hu
+    print 'OI_hr =', OI_hr
+    print ' '
+    print ' '
+    print '----------------------------------------------'
+    print '------------- ANALYSIS STEP: END -------------'
+    print '----------------------------------------------'
+    print ' '
+    
+    
+    return U_an, U_fc, X, X_tr, Xan, Y_obs, OI_vec
 
