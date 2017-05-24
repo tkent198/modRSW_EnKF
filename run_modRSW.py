@@ -30,6 +30,13 @@ Nk = 200
 # CHOOSE INITIAL PROFILE FROM init_cond_modRSW:
 ic = init_cond_topog_cos
 
+print ' -------------- ------------- ------------- ------------- '
+print ' --- TEST CASE: model only (dynamics and integration) --- '
+print ' -------------- ------------- ------------- ------------- '
+print ' '
+print ' Number of elements Nk =', Nk
+print ' Initial condition:', ic
+print ' '
 #################################################################
 # create directory for output
 #################################################################
@@ -55,7 +62,7 @@ xc = grid[2]
 ##################################################################    
 #'''%%%----- Apply initial conditions -----%%%'''
 ##################################################################
-
+print 'Generate initial conditions...'
 U0, B = ic(x,Nk,Neq,H0,L,A,V)
 
 ### 4 panel subplot for initial state of 4 vars
@@ -64,10 +71,10 @@ axes[0].plot(xc, U0[0,:]+B, 'b')
 axes[0].plot(xc, B, 'k', linewidth=2.)
 axes[0].set_ylabel('$h_0(x)$',fontsize=18)
 axes[0].set_ylim([0,2*H0])
-axes[1].plot(xc, U0[1,:]/U[0,:], 'b')
+axes[1].plot(xc, U0[1,:]/U0[0,:], 'b')
 axes[1].set_ylim([-2,2])
 axes[1].set_ylabel('$u_0(x)$',fontsize=18)
-axes[2].plot(xc, U0[2,:]/U[0,:], 'b')
+axes[2].plot(xc, U0[2,:]/U0[0,:], 'b')
 axes[2].set_ylabel('$r_0(x)$',fontsize=18)
 axes[2].set_ylim([-0.05,0.25])
 axes[2].set_xlabel('$x$',fontsize=18)
@@ -78,7 +85,7 @@ name_fig = "/ic_Nk%d.pdf" %Nk
 f_name_fig = str(dirn+name_fig)
 plt.savefig(f_name_fig)
 print ' *** Initial condition %s saved to %s' %(name_fig,dirn)
-print('Done initial conditions')
+print ' '
 
 ##################################################################
 #'''%%%----- Define system arrays and time parameters------%%%'''
@@ -96,7 +103,8 @@ index = 1
 ##################################################################
 #'''%%%----- integrate forward in time until tmax ------%%%'''
 ##################################################################
-print 'Integrating forward with Nk = ', Nk,' ...'
+print 'Integrating forward from t =', tn, 'to', tmax,'...'
+print ' '
 while tn < tmax:
     
     dt = time_step(U,Kk,cfl_fc)
@@ -137,7 +145,7 @@ while tn < tmax:
 	plt.savefig(f_name_fig)
 	print ' *** %s at time level %d saved to %s' %(name_fig,index,dirn)
 	index = index + 1
-
+print ' '
 print '***** DONE: end of simulation at time:', tn
 print ' '   
 print ' -------------- SUMMARY: ------------- '  
@@ -146,9 +154,9 @@ print 'Dynamics:'
 print 'Ro =', Ro  
 print 'Fr = ', Fr
 print '(H_0 , H_c , H_r) =', [H0, Hc, Hr]  
-print ' resolution (number of gridcells) =', Nk
+print ' Mesh: number of elements Nk =', Nk
 print ' '   
-print ' ----------- END OF SUMMARY: ---------- '  
+print ' ----------- END OF SUMMARY ---------- '
 print ' '  
 
 
