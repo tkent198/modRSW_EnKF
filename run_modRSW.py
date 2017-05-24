@@ -26,7 +26,7 @@ from init_cond_modRSW import init_cond_topog_cos, init_cond_topog
 
 
 # CHOOSE resolution
-Nk = 200
+Nk = 800
 # CHOOSE INITIAL PROFILE FROM init_cond_modRSW:
 ic = init_cond_topog_cos
 
@@ -126,7 +126,7 @@ while tn < tmax:
         print 'Plotting at time =',tmeasure
 
         fig, axes = plt.subplots(3, 1, figsize=(8,8))
-        plt.suptitle("Model varaibles at t = %r with Nk =%d" %(tmeasure,Nk))
+        plt.suptitle("Model varaibles at t = %.3f with Nk =%d" %(tmeasure,Nk))
         
         axes[0].plot(xc, U[0,:]+B, 'b')
         axes[0].plot(xc, B, 'k', linewidth=2.0)
