@@ -26,7 +26,7 @@ from init_cond_modRSW import init_cond_topog_cos, init_cond_topog
 
 
 # CHOOSE resolution
-Nk = 200
+Nk = 800
 # CHOOSE INITIAL PROFILE FROM init_cond_modRSW:
 ic = init_cond_topog_cos
 
@@ -113,7 +113,6 @@ while tn < tmax:
 	
         print 'Plotting at time =',tmeasure
 
-# output other diagnostics here, e.g. covariances?
         tmeasure = tmeasure + dtmeasure
 
         fig, axes = plt.subplots(3, 1, figsize=(8,8))
