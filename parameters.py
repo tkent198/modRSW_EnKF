@@ -10,8 +10,8 @@ import numpy as np
 
 ''' MODEL PARAMETERS '''
 
-Neq = 3 # number of equations in system (3 with topography, 4 with rotation_
-L = 1.0 # length of domain (non-dim.)
+Neq = 3     # number of equations in system (3 with topography, 4 with rotation_
+L = 1.0     # length of domain (non-dim.)
 
 Nk_fc = 200                                 # forecast resolution
 dres = 2                                     # refinement factor for truth gridsize
