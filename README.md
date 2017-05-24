@@ -7,7 +7,7 @@ This repository aims to facilitate the transfer of knowledge and continued use o
 
 How to get started with the source code and files is outlined below. A brief overview of each file is given and there are some model-only and forecast-assimilation test cases to check things are up and running properly.
 
-For further details, including what should be modified in the scripts for different experiemtnal set-ups, please see the pdf document (TO DO).
+For further details, including what should be modified in the scripts for different experiemtnal set-ups, please see the pdf document (TO DO - if necessary?).
 
 ## Background
 Numerical Weather Prediction (NWP) can be thought of as initial value problem comprising a forecast model and suitable initial conditions, with its accuracy depending critically on both. Data Assimilation (DA) attempts to provide the optimal initial conditions for the forecast model by estimating the state of the atmosphere and its uncertainty using a combination of forecast and observational information whilst taking into account their respective uncertainties. Optimality of the initial state is crucial in such a highly nonlinear system with limited predictability, and the forecast models need regular reinitialisation to prevent divergence from the true solution. 
@@ -175,7 +175,15 @@ python run_modRSW.py
 
 First, the initial conditon is generated and a figure saved in  ```cwd/test_model```. Then the integration starts and figures are saved in  ```cwd/test_model``` at the given times. This should be clear from the text that is printed to the terminal. When ```tmax``` is reached, the integration stops and a summary of the simulation is printed to the terminal.
 
-Once complete, check the saved figures: go to the directory ```test_model``` and open the figures.
+Once complete, check the saved figures: go to the directory ```test_model``` and open the figures and compare with the below figure.
+
+INSERT VERIFYING FIGURES HERE!!!
+
+In idealised forecast-assimilation experiments, it is typical to use a finer resolution to generate the nature run, constituting an 'imperfect' twin experiment (see Background above). To see the impact on the solution of integrating at a finer resolution, open the ```run_modRSW.py``` script and change the number of elements to ```Nk = 800```. After saving, run the script again:
+```
+python run_modRSW.py
+```
+This simulation will take longer since the smaller grid-length requires a smaller time step for stability. When complete, check the saved figures. 
 
 INSERT VERIFYING FIGURES HERE!!!
 
