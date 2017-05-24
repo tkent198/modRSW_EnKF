@@ -177,7 +177,7 @@ First, the initial conditon is generated and a figure saved in  ```cwd/test_mode
 
 Once complete, check the saved figures: go to the directory ```test_model``` and open the figures and compare with the below figure.
 
-![t2_Nk200](figs/t2_Nk200.pdf)
+![t2_Nk200](figs/t2_Nk200.png)
 
 In idealised forecast-assimilation experiments, it is typical to use a finer resolution to generate the nature run, constituting an 'imperfect' twin experiment (see Background above). To see the impact on the solution of integrating at a finer resolution, open the ```run_modRSW.py``` script and change the number of elements to ```Nk = 800```. After saving, run the script again:
 ```
@@ -185,8 +185,7 @@ python run_modRSW.py
 ```
 This simulation will take longer since the smaller grid-length requires a smaller time step for stability. When complete, check the saved figures.
 
-![t2_Nk800](https://github.com/tkent198/modRSW_EnKF/tree/master/figs/t2_Nk800.pdf
-)
+![t2_Nk800](figs/t2_Nk800.png)
 
 ### Idealised forecast-assimilation experiment
 #### Running an experiment
