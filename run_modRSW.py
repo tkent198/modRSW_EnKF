@@ -107,7 +107,7 @@ while tn < tmax:
         tn = tmeasure + 1e-12
 
     U = step_forward_topog(U,B,dt,tn,Nk,Kk)
-    print 't =',tn
+#    print 't =',tn
 
     if tn > tmeasure:
 	
