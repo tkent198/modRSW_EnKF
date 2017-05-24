@@ -173,7 +173,7 @@ To run this from the terminal:
 python run_modRSW.py
 ```
 
-First, the initial conditon is generated and a figure saved in  ```cwd/test_model```. Then the integration starts and figures are saved in  ```cwd/test_model``` at the given times. This should be clear from the text that is printed to the terminal. When ```tmax``` is reached, the integration stops and a summary of the simulation is printed to the terminal.
+First, the initial conditon is generated and a figure saved in  ```cwd/test_model```. Then the integration starts and figures and simulation data are saved in  ```cwd/test_model``` at the given times. This should be clear from the text that is printed to the terminal. When ```tmax``` is reached, the integration stops and a summary of the simulation is printed to the terminal.
 
 Once complete, check the saved figures: go to the directory ```test_model``` and open the figures and compare with the below figure.
 
@@ -187,6 +187,15 @@ This simulation will take longer since the smaller grid-length requires a smalle
 
 ![t2_Nk800](figs/t2_Nk800.png)
 
+There is another plotting routine ```plot_test_model.py``` that shows how to load the saved data and plot multiple subplots. This also gives a better comparison between the two simulations. Run from the terminal:
+```
+python plot_test_model.py
+```
+This plots four figures (for the four times the data is saved) and saves them in the same directory ```test_model```. Verify that the following figure is produced: 
+
+![t2_compare](figs/T2_compare.png)
+
+This saves 
 ### Idealised forecast-assimilation experiment
 #### Running an experiment
 The main run program for idealised forecast-assimilation experiments is ```main_p.py```. Its workhorse is the subroutine function ```run_enkf()``` in the ```subr_enkf_modRSW_p```, which carries out each experiment, i.e., the ensemble forecasts and analysis steps for the given outer loop parameters. The combination of outer loop parameters define a single experiment. 

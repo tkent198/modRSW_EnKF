@@ -167,6 +167,7 @@ print ' '
 print ' Saving simulation data in:', dirn
 
 np.save(str(dirn+'/U_array_Nk%d' %Nk),U_array)
+np.save(str(dirn+'/B_Nk%d' %Nk),B)
 
 print ' '
 print ' -------------- SUMMARY: ------------- '  
