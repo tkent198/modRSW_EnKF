@@ -185,9 +185,8 @@ python run_modRSW.py
 ```
 This simulation will take longer since the smaller grid-length requires a smaller time step for stability. When complete, check the saved figures.
 
-![t2_Nk800](figs/t2_Nk800.pdf)
-
-[embed]https://github.com/tkent198/modRSW_EnKF/tree/master/figs/t2_Nk800.pdf[/embed]
+![t2_Nk800](https://github.com/tkent198/modRSW_EnKF/tree/master/figs/t2_Nk800.pdf
+)
 
 ### Idealised forecast-assimilation experiment
 #### Running an experiment
