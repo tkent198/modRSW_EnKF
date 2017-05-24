@@ -35,7 +35,7 @@ Hr = 1.05
 beta = 0.2
 alpha2 = 10
 c2 = g*Hr
-cc2 = 4*0.025*c2
+cc2 = 0.1*c2
 
 ''' FILTER PARAMETERS '''
 
