@@ -74,7 +74,7 @@ axes[2].set_xlabel('$x$',fontsize=18)
 
 #plt.show() # use block=False?
 
-name_fig = "/ic.pdf"
+name_fig = "/ic_Nk%d.pdf" %Nk
 f_name_fig = str(dirn+name_fig)
 plt.savefig(f_name_fig)
 print ' *** Initial condition %s saved to %s' %(name_fig,dirn)
@@ -87,7 +87,7 @@ U = np.empty([Neq,Nk])
 U = U0
 tn = 0
 hour = 0.144
-Nmeas = 3.
+Nmeas = 3. # determined by Ro and Fr scaling (see note in README)
 tmax = Nmeas*hour
 dtmeasure = tmax/Nmeas
 tmeasure = dtmeasure
@@ -133,7 +133,7 @@ while tn < tmax:
 
 	#plt.show() # use block=False?
 	
-	name_fig = "/t%d.pdf" %index
+	name_fig = "/t%d_Nk%d.pdf" %(index, Nk)
 	f_name_fig = str(dirn+name_fig)
 	plt.savefig(f_name_fig)
 	print ' *** %s at time level %d saved to %s' %(name_fig,index,dirn)
