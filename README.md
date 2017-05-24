@@ -195,7 +195,10 @@ This plots four figures (for the four times the data is saved) and saves them in
 
 ![t2_compare](figs/T2_compare.png)
 
-This saves 
+The Nk=200 simulation represents the forecast the Nk=800 simulation is the nature run. This figure shows an example trajectory of both forecast and nature at a given time: h (top), u (middle), and r (bottom) from the forecast model (left) and the nature run (right). The forecast trajectory is smoother and exhibits `under-resolved' convection and precipitation while the nature run has sharper `resolved' features and is a proxy for the truth. The thick black line in the top panels is the topography, the red dotted lines are the threshold heights. 
+
+Conceptually, the basic data assimilation problem can be summarised using this figure: adjust the forecast (left) using pseudo-observations of the ``truth'' in order to provide a better estimate of the nature run (right). 
+
 ### Idealised forecast-assimilation experiment
 #### Running an experiment
 The main run program for idealised forecast-assimilation experiments is ```main_p.py```. Its workhorse is the subroutine function ```run_enkf()``` in the ```subr_enkf_modRSW_p```, which carries out each experiment, i.e., the ensemble forecasts and analysis steps for the given outer loop parameters. The combination of outer loop parameters define a single experiment. 
