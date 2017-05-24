@@ -26,7 +26,7 @@ from init_cond_modRSW import init_cond_topog_cos, init_cond_topog
 
 
 # CHOOSE resolution
-Nk = 800
+Nk = 200
 # CHOOSE INITIAL PROFILE FROM init_cond_modRSW:
 ic = init_cond_topog_cos
 
@@ -64,12 +64,12 @@ axes[0].plot(xc, U0[0,:]+B, 'b')
 axes[0].plot(xc, B, 'k', linewidth=2.)
 axes[0].set_ylabel('$h_0(x)$',fontsize=18)
 axes[0].set_ylim([0,2*H0])
-axes[1].plot(xc, U0[1,:], 'b')
+axes[1].plot(xc, U0[1,:]/U[0,:], 'b')
 axes[1].set_ylim([-2,2])
-axes[1].set_ylabel('$hu_0(x)$',fontsize=18)
-axes[2].plot(xc, U0[2,:], 'b')
-axes[2].set_ylabel('$hr_0(x)$',fontsize=18)
-axes[2].set_ylim([0,0.5])
+axes[1].set_ylabel('$u_0(x)$',fontsize=18)
+axes[2].plot(xc, U0[2,:]/U[0,:], 'b')
+axes[2].set_ylabel('$r_0(x)$',fontsize=18)
+axes[2].set_ylim([-0.05,0.25])
 axes[2].set_xlabel('$x$',fontsize=18)
 
 #plt.show() # use block=False?
@@ -96,7 +96,7 @@ index = 1
 ##################################################################
 #'''%%%----- integrate forward in time until tmax ------%%%'''
 ##################################################################
-print 'Integrating forward...'
+print 'Integrating forward with Nk = ', Nk,' ...'
 while tn < tmax:
     
     dt = time_step(U,Kk,cfl_fc)
@@ -122,12 +122,12 @@ while tn < tmax:
         axes[0].plot(xc,Hr*np.ones(len(xc)),'r:')
         axes[0].set_ylim([0,4*H0])
         axes[0].set_ylabel('$h(x)$',fontsize=18)
-        axes[1].plot(xc, U[1,:], 'b')
+        axes[1].plot(xc, U[1,:]/U[0,:], 'b')
         axes[1].set_ylim([-2,2])
-        axes[1].set_ylabel('$hu(x)$',fontsize=18)
-        axes[2].plot(xc, U[2,:], 'b')
-        axes[2].set_ylabel('$hr(x)$',fontsize=18)
-        axes[2].set_ylim([0,0.1])
+        axes[1].set_ylabel('$u(x)$',fontsize=18)
+        axes[2].plot(xc, U[2,:]/U[0,:], 'b')
+        axes[2].set_ylabel('$r(x)$',fontsize=18)
+        axes[2].set_ylim([-0.05,0.25])
         axes[2].set_xlabel('$x$',fontsize=18)
 
 	#plt.show() # use block=False?
