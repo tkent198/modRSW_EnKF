@@ -67,16 +67,20 @@ U0, B = ic(x,Nk,Neq,H0,L,A,V)
 
 ### 4 panel subplot for initial state of 4 vars
 fig, axes = plt.subplots(3, 1, figsize=(8,8))
+plt.suptitle("Initial condition with Nk = %d" %Nk)
+
 axes[0].plot(xc, U0[0,:]+B, 'b')
 axes[0].plot(xc, B, 'k', linewidth=2.)
 axes[0].set_ylabel('$h_0(x)$',fontsize=18)
 axes[0].set_ylim([0,2*H0])
+
 axes[1].plot(xc, U0[1,:]/U0[0,:], 'b')
 axes[1].set_ylim([-2,2])
 axes[1].set_ylabel('$u_0(x)$',fontsize=18)
+
 axes[2].plot(xc, U0[2,:]/U0[0,:], 'b')
 axes[2].set_ylabel('$r_0(x)$',fontsize=18)
-axes[2].set_ylim([-0.05,0.25])
+axes[2].set_ylim([-0.025,0.15])
 axes[2].set_xlabel('$x$',fontsize=18)
 
 #plt.show() # use block=False?
@@ -103,10 +107,11 @@ index = 1
 ##################################################################
 #'''%%%----- integrate forward in time until tmax ------%%%'''
 ##################################################################
-print 'Integrating forward from t =', tn, 'to', tmax,'...'
+
 print ' '
+print 'Integrating forward from t =', tn, 'to', tmeasure,'...'
 while tn < tmax:
-    
+
     dt = time_step(U,Kk,cfl_fc)
     tn = tn + dt
 
@@ -115,36 +120,42 @@ while tn < tmax:
         tn = tmeasure + 1e-12
 
     U = step_forward_topog(U,B,dt,tn,Nk,Kk)
-#    print 't =',tn
 
     if tn > tmeasure:
-	
+        print ' '
         print 'Plotting at time =',tmeasure
 
-        tmeasure = tmeasure + dtmeasure
-
         fig, axes = plt.subplots(3, 1, figsize=(8,8))
+        plt.suptitle("Model varaibles at t = %r with Nk =%d" %(tmeasure,Nk))
+        
         axes[0].plot(xc, U[0,:]+B, 'b')
         axes[0].plot(xc, B, 'k', linewidth=2.0)
         axes[0].plot(xc,Hc*np.ones(len(xc)),'r:')
         axes[0].plot(xc,Hr*np.ones(len(xc)),'r:')
         axes[0].set_ylim([0,4*H0])
         axes[0].set_ylabel('$h(x)$',fontsize=18)
+        
         axes[1].plot(xc, U[1,:]/U[0,:], 'b')
         axes[1].set_ylim([-2,2])
         axes[1].set_ylabel('$u(x)$',fontsize=18)
-        axes[2].plot(xc, U[2,:]/U[0,:], 'b')
-        axes[2].set_ylabel('$r(x)$',fontsize=18)
-        axes[2].set_ylim([-0.05,0.25])
-        axes[2].set_xlabel('$x$',fontsize=18)
 
-	#plt.show() # use block=False?
+        axes[2].plot(xc, U[2,:]/U[0,:], 'b')
+        axes[2].plot(xc,np.zeros(len(xc)),'k--')
+        axes[2].set_ylabel('$r(x)$',fontsize=18)
+        axes[2].set_ylim([-0.025,0.15])
+        axes[2].set_xlabel('$x$',fontsize=18)
+    
 	
-	name_fig = "/t%d_Nk%d.pdf" %(index, Nk)
-	f_name_fig = str(dirn+name_fig)
-	plt.savefig(f_name_fig)
-	print ' *** %s at time level %d saved to %s' %(name_fig,index,dirn)
-	index = index + 1
+        name_fig = "/t%d_Nk%d.pdf" %(index, Nk)
+        f_name_fig = str(dirn+name_fig)
+        plt.savefig(f_name_fig)
+        print ' *** %s at time level %d saved to %s' %(name_fig,index,dirn)
+    
+        index = index + 1
+        tmeasure = tmeasure + dtmeasure
+        print ' '
+        print 'Integrating forward from t =', tmeasure-dtmeasure, 'to', tmeasure,'...'
+
 print ' '
 print '***** DONE: end of simulation at time:', tn
 print ' '   
