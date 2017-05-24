@@ -26,7 +26,7 @@ from init_cond_modRSW import init_cond_topog_cos, init_cond_topog
 
 
 # CHOOSE resolution
-Nk = 800
+Nk = 200
 # CHOOSE INITIAL PROFILE FROM init_cond_modRSW:
 ic = init_cond_topog_cos
 
@@ -85,7 +85,7 @@ axes[2].set_xlabel('$x$',fontsize=18)
 
 #plt.show() # use block=False?
 
-name_fig = "/ic_Nk%d.pdf" %Nk
+name_fig = "/ic_Nk%d.png" %Nk
 f_name_fig = str(dirn+name_fig)
 plt.savefig(f_name_fig)
 print ' *** Initial condition %s saved to %s' %(name_fig,dirn)
@@ -107,6 +107,8 @@ index = 1
 ##################################################################
 #'''%%%----- integrate forward in time until tmax ------%%%'''
 ##################################################################
+U_array = np.empty((Neq,Nk,Nmeas+1))
+U_array[:,:,0] = U0
 
 print ' '
 print 'Integrating forward from t =', tn, 'to', tmeasure,'...'
@@ -146,11 +148,13 @@ while tn < tmax:
         axes[2].set_xlabel('$x$',fontsize=18)
     
 	
-        name_fig = "/t%d_Nk%d.pdf" %(index, Nk)
+        name_fig = "/t%d_Nk%d.png" %(index, Nk)
         f_name_fig = str(dirn+name_fig)
         plt.savefig(f_name_fig)
         print ' *** %s at time level %d saved to %s' %(name_fig,index,dirn)
-    
+        
+        U_array[:,:,index] = U
+        
         index = index + 1
         tmeasure = tmeasure + dtmeasure
         print ' '
@@ -158,7 +162,13 @@ while tn < tmax:
 
 print ' '
 print '***** DONE: end of simulation at time:', tn
-print ' '   
+print ' '
+
+print ' Saving simulation data in:', dirn
+
+np.save(str(dirn+'/U_array_Nk%d' %Nk),U_array)
+
+print ' '
 print ' -------------- SUMMARY: ------------- '  
 print ' ' 
 print 'Dynamics:'
