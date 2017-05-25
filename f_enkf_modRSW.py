@@ -32,6 +32,10 @@ def generate_truth(U_tr_array, B_tr, Nk_tr, tr_grid, assim_time, f_path_name):
     
     U_tr = U_tr_array[:,:,0]
     
+    print ' '
+    print 'Integrating forward from t =', tn, 'to', tmax,'...'
+    print ' '
+    
     index = 1 # for U_tr_array (start from 1 as 0 contains IC).
     while tn < tmax:
         dt = time_step(U_tr,Kk_tr,cfl_tr)
@@ -42,7 +46,7 @@ def generate_truth(U_tr_array, B_tr, Nk_tr, tr_grid, assim_time, f_path_name):
             tn = tmeasure + 1e-12
     
         U_tr = step_forward_topog(U_tr,B_tr,dt,tn,Nk_tr,Kk_tr)
-        print 't_tr =',tn
+#        print 't_tr =',tn
 
         if tn > tmeasure:
             U_tr_array[:,:,index] = U_tr

@@ -31,7 +31,13 @@ from f_enkf_modRSW import analysis_step_enkf
 from create_readme import create_readme
 
 def run_enkf(i,j,k,loc,add_inf,inf,ic,U_tr_array,dirname):
-    
+
+    print ' '
+    print '---------------------------------------------------'
+    print '----------------- EXPERIMENT '+str(i+1)+str(j+1)+str(k+1)+' ------------------'
+    print '---------------------------------------------------'
+    print ' '
+
     obs_dens = o_d
     pars_ob = [obs_dens, ob_noise]
     pars_enda = [inf, loc, add_inf]
@@ -49,7 +55,7 @@ def run_enkf(i,j,k,loc,add_inf,inf,ic,U_tr_array,dirname):
         if exception.errno != errno.EEXIST:
             raise
 
-    ##################################################################    
+    ##################################################################
     # Mesh generation for forecasts
     ##################################################################
 
