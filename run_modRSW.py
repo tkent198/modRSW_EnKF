@@ -26,7 +26,7 @@ from init_cond_modRSW import init_cond_topog_cos, init_cond_topog
 
 
 # CHOOSE resolution
-Nk = 800
+Nk = 200
 # CHOOSE INITIAL PROFILE FROM init_cond_modRSW:
 ic = init_cond_topog_cos
 
@@ -170,7 +170,7 @@ np.save(str(dirn+'/U_array_Nk%d' %Nk),U_array)
 np.save(str(dirn+'/B_Nk%d' %Nk),B)
 
 print ' '
-print ' CHECK data value: maximum h(x) at t = 0.288:' , np.max(U_array[0,:,2])
+print ' CHECK data value: maximum h(x) at t = 0.288:' , np.max(U_array[0,:,2]), ' at x = ', xc[np.argmax(U_array[0,:,2])]
 print ' '
 print ' -------------- SUMMARY: ------------- '  
 print ' ' 
