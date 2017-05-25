@@ -26,7 +26,7 @@ from init_cond_modRSW import init_cond_topog_cos, init_cond_topog
 
 
 # CHOOSE resolution
-Nk = 200
+Nk = 800
 # CHOOSE INITIAL PROFILE FROM init_cond_modRSW:
 ic = init_cond_topog_cos
 
@@ -127,18 +127,18 @@ while tn < tmax:
         print ' '
         print 'Plotting at time =',tmeasure
 
-        fig, axes = plt.subplots(3, 1, figsize=(8,8))
-        plt.suptitle("Model varaibles at t = %.3f with Nk =%d" %(tmeasure,Nk))
+        fig, axes = plt.subplots(3, 1, figsize=(6,8))
+        plt.suptitle("Model trajectories at t = %.3f with Nk =%d" %(tmeasure,Nk))
         
         axes[0].plot(xc, U[0,:]+B, 'b')
         axes[0].plot(xc, B, 'k', linewidth=2.0)
         axes[0].plot(xc,Hc*np.ones(len(xc)),'r:')
         axes[0].plot(xc,Hr*np.ones(len(xc)),'r:')
-        axes[0].set_ylim([0,4*H0])
+        axes[0].set_ylim([0,3*H0])
         axes[0].set_ylabel('$h(x)$',fontsize=18)
         
         axes[1].plot(xc, U[1,:]/U[0,:], 'b')
-        axes[1].set_ylim([-2,2])
+        axes[1].set_ylim([0,2])
         axes[1].set_ylabel('$u(x)$',fontsize=18)
 
         axes[2].plot(xc, U[2,:]/U[0,:], 'b')
@@ -169,6 +169,8 @@ print ' Saving simulation data in:', dirn
 np.save(str(dirn+'/U_array_Nk%d' %Nk),U_array)
 np.save(str(dirn+'/B_Nk%d' %Nk),B)
 
+print ' '
+print ' CHECK data value: maximum h(x) at t = 0.288:' , np.max(U_array[0,:,2])
 print ' '
 print ' -------------- SUMMARY: ------------- '  
 print ' ' 
