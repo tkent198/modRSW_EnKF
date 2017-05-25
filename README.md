@@ -147,26 +147,26 @@ Given a computational mesh, model parameters, and an initial condition, the mode
 
 The default model parameters are:
 
-Parameter      | Values
-------------- | -------------
-Ro  | Inf
-Fr  | 1.1
-H0  | 1.0
-Hc  | 1.02
-Hr  | 1.05
-beta | 0.2
-alpha | 10
-c2  | 0.1Hr/(Fr)^2
+Name | Parameter      | Values
+------------- | ------------- | -------------
+Rossby | Ro  | Inf
+Froude | Fr  | 1.1
+Base height | H0  | 1.0
+Threshold c | Hc  | 1.02
+Threshold r | Hr  | 1.05
+beta | beta | 0.2
+alpha | alpha | 10
+c2 | c2  | 0.1Hr/(Fr)^2
 
 In  ```run_modRSW.py```, the user can specify the resolution ```Nk```, initial condition ```ic```, and the number of "hours" to integrate ```Nmeas```. The routine then integrates the initial condition from ```tn=0``` to ```tmax``` and saves figures of the plotted ```Nmeas``` solutions in the created directory  ```cwd/test_model```.
 
 Default setting:
 
-Choice      | Values
-------------- | -------------
-Nk  | 200
-ic  | init_cond_topog_cos
-Nmeas  | 3
+Name | Parameters    | Values
+------------- | ------------- | -------------
+# elements | Nk  | 200
+Init. cond. | ic  | init_cond_topog_cos
+# cycles | Nmeas  | 3
 
 To run this from the terminal:
 ```
@@ -205,33 +205,32 @@ The main run program for idealised forecast-assimilation experiments is ```main_
 
 The default model parameters are (see ```parameters.py```):
 
-Parameter      | Values
-------------- | -------------
-Ro  | Inf
-Fr  | 1.1
-H0  | 1.0
-Hc  | 1.02
-Hr  | 1.05
-beta | 0.2
-alpha | 10
-c2  | 0.1Hr/(Fr)^2
-
+Name | Parameter      | Values
+------------- | ------------- | -------------
+Rossby | Ro  | Inf
+Froude | Fr  | 1.1
+Base height | H0  | 1.0
+Threshold c | Hc  | 1.02
+Threshold r | Hr  | 1.05
+beta | beta | 0.2
+alpha | alpha | 10
+c2 | c2  | 0.1Hr/(Fr)^2
 
 The default parameters for this test assimilation are:
 
-Parameter      | Values
-------------- | -------------
-dres  | 2
-n_ens  | 20
-Nmeas  | 3
+Name | Parameter      | Values
+------------- | ------------- | -------------
+Mesh refinement factor | dres  | 4
+Ensemble size | n_ens  | 20
+# cycles | Nmeas  | 3
 
 The outer loop parameters are specified in ```main_p.py```:
 
-Parameter      | Values
-------------- | -------------
-loc  | 1e-10
-add_inf  | 0.2
-inf  | [1.01, 1.05, 1.1]
+Name | Parameter      | Values
+------------- | ------------- | -------------
+Localisation scale | loc  | 1e-10
+Add. inflation | add_inf  | 0.2
+Mult. inflation | inf  | [1.01, 1.05, 1.1]
 
 The purpose of this test case is to check that the cycled system is up and running, including the saving of data and readmes to automatically-generated directories. Once this has been verified, the outer loop and assimilation parameters can be extended (e.g., more combinations in the table above, longer runs with, e.g., ```Nmeas = 48``` ). 
 
