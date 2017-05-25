@@ -164,9 +164,9 @@ Default setting:
 
 Name | Parameters    | Values
 ------------- | ------------- | -------------
-# elements | Nk  | 200
+No. of elements | Nk  | 200
 Init. cond. | ic  | init_cond_topog_cos
-# cycles | Nmeas  | 3
+No. of cycles | Nmeas  | 3
 
 To run this from the terminal:
 ```
@@ -200,7 +200,9 @@ In idealised DA experiments, the Nk=200 simulation represents the forecast the N
 Conceptually, the basic data assimilation problem can be summarised using this figure: adjust the forecast (left) using pseudo-observations of the ``truth'' in order to provide a better estimate of the nature run (right). 
 
 ### Idealised forecast-assimilation experiment
+
 #### Running an experiment
+
 The main run program for idealised forecast-assimilation experiments is ```main_p.py```. Its workhorse is the subroutine function ```run_enkf()``` in the ```subr_enkf_modRSW_p```, which carries out each experiment, i.e., the ensemble forecasts and analysis steps for the given outer loop parameters. The combination of outer loop parameters define a single experiment. 
 
 The default model parameters are (see ```parameters.py```):
@@ -222,7 +224,7 @@ Name | Parameter      | Values
 ------------- | ------------- | -------------
 Mesh refinement factor | dres  | 4
 Ensemble size | n_ens  | 20
-# cycles | Nmeas  | 3
+No. of cycles | Nmeas  | 3
 
 The outer loop parameters are specified in ```main_p.py```:
 
@@ -245,12 +247,14 @@ To check the saved data and readmes, enter the relevant directory:
 ```
 cd test_enkf
 ```
-Here, there should be 2 data files for the nature run, ```U_tr_array.npy``` and ```B_tr.npy```, and more subdirectories for each experiment. The subdirectories are suffixed with digits ```ijk```, denoting each experiment from the outer loop, e.g.,:
+Here, there should be 2 data files for the nature run, ```U_tr_array.npy``` and ```B_tr.npy```, and more subdirectories for each experiment. The subdirectories are suffixed with digits ```ijk``` denoting each experiment, e.g., ```test_enkf111``` refers to experiment ```[loc, add_inf, inf] = [1e-10, 0.2, 1.01]```. Each subdirectory has data saved from this particular experiment and a ```readme.txt``` summarising this experiment. Check:
+
 ```
 cd test_enkf111
+more readme.txt
 ```
-Each subdirectory has data saved from this particular experiment and a ```readme.txt``` summarising this experiment.
 
+Now the data has been saved, we can move on to plotting and data analysis...
 
 #### Plotting results from experiments
 
