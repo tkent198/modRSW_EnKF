@@ -173,9 +173,9 @@ To run this from the terminal:
 python run_modRSW.py
 ```
 
-First, the initial conditon is generated and a figure saved in  ```cwd/test_model```. Then the integration starts and figures and simulation data are saved in  ```cwd/test_model``` at the given times. This should be clear from the text that is printed to the terminal. When ```tmax``` is reached, the integration stops and a summary of the simulation is printed to the terminal.
+First, the initial condition is generated and a figure saved in  ```cwd/test_model```. Then the integration starts and figures and simulation data are saved in  ```cwd/test_model``` at the given times. This should be clear from the text that is printed to the terminal. When ```tmax``` is reached, the integration stops and a summary of the simulation is printed to the terminal.
 
-Once complete, check the saved figures: go to the directory ```test_model``` and open the figures and compare with the below figure.
+Once complete, check the saved figures: go to the directory ```test_model``` and open the figures and compare with the figure below (```t2_Nk200```).
 
 ![t2_Nk200](figs/t2_Nk200.png)
 
@@ -187,7 +187,7 @@ This simulation will take longer since the smaller grid-length requires a smalle
 
 ![t2_Nk800](figs/t2_Nk800.png)
 
-There is another plotting routine ```plot_test_model.py``` that shows how to load the saved data and plot multiple subplots. This also gives a better comparison between the two simulations. Run from the terminal:
+Typically (and as done in the idealised DA experiments), simulation data is saved and subsequently used to generate plots in separate 'offline' plotting routines.  The routine ```plot_test_model.py``` shows how to load the saved data and plot multiple subplots. This also gives a better comparison between the two simulations. To run from the terminal:
 ```
 python plot_test_model.py
 ```
@@ -203,7 +203,7 @@ Conceptually, the basic data assimilation problem can be summarised using this f
 #### Running an experiment
 The main run program for idealised forecast-assimilation experiments is ```main_p.py```. Its workhorse is the subroutine function ```run_enkf()``` in the ```subr_enkf_modRSW_p```, which carries out each experiment, i.e., the ensemble forecasts and analysis steps for the given outer loop parameters. The combination of outer loop parameters define a single experiment. 
 
-The default model parameters are (see ```paramters.py```):
+The default model parameters are (see ```parameters.py```):
 
 Parameter      | Values
 ------------- | -------------
@@ -217,7 +217,7 @@ alpha | 10
 c2  | 0.1Hr/(Fr)^2
 
 
-The default parameters for this test assimilatrion are:
+The default parameters for this test assimilation are:
 
 Parameter      | Values
 ------------- | -------------
@@ -242,7 +242,7 @@ To run from the terminal:
 python main_p.py
 ```
 Text is printed to the terminal throughout to provide information and updates on its progress. After looping through all parameter combinations, a brief summary is printed to the terminal and the program ends. 
-To check the saved data and readmes, enter the relavent directory:
+To check the saved data and readmes, enter the relevant directory:
 ```
 cd test_enkf
 ```
@@ -253,8 +253,10 @@ cd test_enkf111
 Each subdirectory has data saved from this particular experiment and a ```readme.txt``` summarising this experiment.
 
 
-
 #### Plotting results from experiments
+
+TEXT....
+
 From terminal:
 ```
 python plot_func_x.py
