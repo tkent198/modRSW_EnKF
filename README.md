@@ -191,7 +191,7 @@ Typically (and as done in the idealised DA experiments), simulation data is save
 ```
 python plot_test_model.py
 ```
-This plots four figures (for the four times the data is saved) and saves them in the same directory ```test_model```. Verify that the following figure is produced: 
+This plots four figures (for the four times the data is saved) and saves them in the same directory ```test_model```. Verify that the following figure is produced (```t2_compare```): 
 
 ![t2_compare](figs/T2_compare.png)
 
