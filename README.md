@@ -175,7 +175,8 @@ python run_modRSW.py
 
 First, the initial condition is generated and a figure saved in  ```cwd/test_model```. Then the integration starts and figures and simulation data are saved in  ```cwd/test_model``` at the given times. This should be clear from the text that is printed to the terminal. When ```tmax``` is reached, the integration stops and a summary of the simulation is printed to the terminal. Just above the summary on the terminal, the maximum value of h(x) at time t=0.288 is given; verify that the same numerical value is obtained:
 ```
-CHECK data value: maximum h(x) at t = 0.288: 1.70591737156  at x =  0.8875```
+CHECK data value: maximum h(x) at t = 0.288: 1.70591737156  at x =  0.8875
+```
 
 Also check the saved figures in the directory ```test_model```. Compare with the figure below (```t2_Nk200```), and note the maximum h value and its location, as given above.
 
