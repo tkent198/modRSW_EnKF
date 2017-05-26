@@ -259,7 +259,7 @@ axlim0 = np.max(np.maximum(spr_fc[0,1:-1], rmse_fc[0,1:-1]))
 axlim1 = np.max(np.maximum(spr_fc[1,1:-1], rmse_fc[1,1:-1]))
 axlim2 = np.max(np.maximum(spr_fc[2,1:-1], rmse_fc[2,1:-1]))
 
-fig, axes = plt.subplots(3, 1, figsize=(5,10))
+fig, axes = plt.subplots(3, 1, figsize=(7,12))
 plt.suptitle("Domain-averaged error vs spread  (N = %s): \n [loc, add_inf, inf] = [%s, %s, %s]" % (n_ens,loc[i], add_inf[j], inf[k]),fontsize=16)
 
 axes[0].plot(time_vec[1:], spr_fc[0,1:],'r',label='fc spread') # spread
@@ -309,7 +309,7 @@ axlim0 = np.max(crps_fc[0,1:-1])
 axlim1 = np.max(crps_fc[1,1:-1])
 axlim2 = np.max(crps_fc[2,1:-1])
 
-fig, axes = plt.subplots(3, 1, figsize=(5,10))
+fig, axes = plt.subplots(3, 1, figsize=(7,12))
 plt.suptitle("Domain-averaged CRPS  (N = %s): \n [loc, add_inf, inf] = [%s, %s, %s]" % (n_ens,loc[i], add_inf[j], inf[k]),fontsize=16)
 
 axes[0].plot(time_vec[1:], crps_fc[0,1:],'r',label='fc') # spread

@@ -346,7 +346,7 @@ axlim2 = np.max(CRPS_fc[2,:])
 ft = 16
 xl = 0.65
 
-fig, axes = plt.subplots(3, 1, figsize=(5,10))
+fig, axes = plt.subplots(3, 1, figsize=(7,12))
 
 axes[0].plot(xc, CRPS_fc[0,:],'r',linewidth=lw,label='fc')
 axes[0].plot(xc, CRPS_an[0,:],'b',linewidth=lw,label='an')
