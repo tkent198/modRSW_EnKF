@@ -194,7 +194,7 @@ CHECK data value: maximum h(x) at t = 0.288: 2.15336146511  at x =  0.888125
 ```
 Also check the saved figures, and compare with the figure below (```t2_Nk800```), again noting the maximum h value.
 
-![t2_Nk800](figs/t2_Nk800.png)
+->![t2_Nk800](figs/t2_Nk800.png)<-
 
 Typically (and as done in the idealised DA experiments), simulation data is saved and subsequently used to generate plots in separate 'offline' plotting routines.  The routine ```plot_test_model.py``` shows how to load the saved data and plot multiple subplots. This also gives a better comparison between the two simulations. To run from the terminal:
 ```
