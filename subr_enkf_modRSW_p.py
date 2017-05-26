@@ -173,7 +173,7 @@ def run_enkf(i,j,k,loc,add_inf,inf,ic,U_tr_array,dirname):
         
         U = U_an # update U with analysis ensembles for next integration
         
-        np.save(str(dirn+'/U'),U)
+#        np.save(str(dirn+'/U'),U)
         np.save(str(dirn+'/B'),B)
         np.save(str(dirn+'/X_array'),X_array)
         np.save(str(dirn+'/X_tr_array'),X_tr_array)

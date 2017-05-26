@@ -49,10 +49,7 @@ Same for Matplotlib.
 
 ### Download and install
 
-Direct download: 
-* click on the download link on the repository homepage [https://github.com/tkent198/modRSW_EnKF](https://github.com/tkent198/modRSW_EnKF) and save to desired directory.
-
-Clone from terminal:
+Clone from terminal (recommended):
 * Go to the directory where you want to save the repository and use the command:
 ```
 git clone https://github.com/tkent198/modRSW_EnKF.git
@@ -61,6 +58,9 @@ git clone https://github.com/tkent198/modRSW_EnKF.git
 ```
 git pull https://github.com/tkent198/modRSW_EnKF.git
 ```
+
+Direct download: 
+* click on the download link on the repository homepage [https://github.com/tkent198/modRSW_EnKF](https://github.com/tkent198/modRSW_EnKF) and save to desired directory.
 
 ### Running the code: basics
 To run a script (e.g., `fname.py`) from the terminal, ```cd``` to the ```modRSW_EnKF``` directory and enter the command:
@@ -82,7 +82,7 @@ To kill at any point, press ```Ctrl+c```, or kill the active processes using ```
 ```init_cond_modRSW.py```: Functions for different initial conditions, detailed within.
 
 ```f_modRSW.py```: Functions required for the numerical integration of the modRSW model with and without topography.
-* ```make_grid()```           : generates mesh for given length and gridcell number
+* ```make_grid()```           : generates mesh for given length and number of elements
 * ```NCPflux_topog()```       : calculates numerical flux as per the theory of Kent et al., 2017
 * ```time_step()```           : calculates stable time step for integration
 * ```step_forward_topog()```  : integrates forward one time step (forward euler) using NCP-Audusse
@@ -96,7 +96,6 @@ To kill at any point, press ```Ctrl+c```, or kill the active processes using ```
 
 
 ```create_readme.py```: function creates readme.txt file for summarising experiments, saved in `dirname` to accompany outputted data from main run script and EnKF subroutine.
-
 
 
 ```subr_enkf_modRSW_p.py```: Subroutine accessed by ```main_p``` for performing EnKF given outer-loop parameters in ```main_p```
@@ -132,10 +131,6 @@ To kill at any point, press ```Ctrl+c```, or kill the active processes using ```
 ```err_doub_hist.py```: Plots error doubling time histograms from saved data ```err_doub_Tn.npy```.
 
 ### .npy data
-
-```U_tr_array.npy```: nature run for current set-up for U = [h,hu,hr].
-
-```B_tr.npy```: topography projected on to 'nature' resolution.
 
 ```Q_offline.npy```: a static Q matrix for additive inflation, generated in ```offlineQ.py```.
 
@@ -261,10 +256,23 @@ Text is printed to the terminal throughout to provide information and updates on
 ```
 cd test_enkf
 ```
-Here, there should be 2 data files for the nature run, ```U_tr_array.npy``` and ```B_tr.npy```, and more subdirectories for each experiment. The subdirectories are suffixed with digits ```ijk``` denoting each experiment, e.g., ```test_enkf111``` refers to experiment ```[loc, add_inf, inf] = [1e-10, 0.2, 1.01]```. Each subdirectory has data saved from this particular experiment and a ```readme.txt``` summarising this experiment. Check:
+Here, there should be 2 data files for the nature run, ```U_tr_array.npy``` and ```B_tr.npy```, and more subdirectories for each experiment. The subdirectories are suffixed with digits ```ijk``` denoting each experiment, e.g., ```test_enkf111``` refers to experiment ```[loc, add_inf, inf] = [1e-10, 0.2, 1.01]```. Each subdirectory has data saved from this particular experiment (see table below) and a ```readme.txt``` summarising this experiment. 
+
+Filename | Type | Content
+------------- | ------------- | -------------
+B | .npy  | Topography
+X_tr_array | .npy | Nature run
+Y_obs_array | .npy | Observations
+OI | .npy | Obs. influence diagnostic
+X_array | .npy | Forecast ('prior') ens. 
+Xan_array | .npy | Analysis ('posterior') ens.
+readme | .txt | Summary
+
+Check:
 
 ```
 cd test_enkf111
+ls -l
 more readme.txt
 ```
 
@@ -272,7 +280,6 @@ Now the data has been saved, we can move on to plotting and data analysis...
 
 #### Plotting 
 
-TEXT....
 
 From terminal:
 
