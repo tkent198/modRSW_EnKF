@@ -1,7 +1,7 @@
 # modRSW_EnKF
 ## An idealised convective-scale forecast-assimilation framework
 
-This repository aims to facilitate the transfer of knowledge and continued use of a basic convective-scale forecast -assimilation system developed during TK's PhD (Kent 2016). The forecast component comes from an idealised fluid model of convective-scale Numerical Weather Prediction (modRSW; Kent et al. 2017) and the assimilation algorithm is the perturbed-observation Ensemble Kalman Filter (EnKF). The following document should contain sufficient instruction for users to download, implement and adapt the source code, which briefly comprises Python scripts for the numerical solver, idealised forecast-assimilation routines, plotting and data analysis. 
+This repository aims to facilitate the transfer of knowledge and continued use of a basic convective-scale forecast-assimilation system developed during TK's PhD (Kent 2016). The forecast component comes from an idealised fluid model of convective-scale Numerical Weather Prediction (modRSW; Kent et al. 2017) and the assimilation algorithm is the perturbed-observation Ensemble Kalman Filter (EnKF). The following document should contain sufficient instruction for users to download, implement and adapt the source code, which briefly comprises Python scripts for the numerical solver, idealised forecast-assimilation routines, plotting and data analysis. 
 
 ***CAVEAT: this is not a black-box model and should accordingly be used with care and curiosity!***
 
@@ -133,7 +133,7 @@ To kill at any point, press ```Ctrl+c```, or kill the active processes using ```
 
 ### .npy data
 
-```U_tr_array.npy```: nature run for current set-up for U = [h,u,r].
+```U_tr_array.npy```: nature run for current set-up for U = [h,hu,hr].
 
 ```B_tr.npy```: topography projected on to 'nature' resolution.
 
@@ -167,6 +167,8 @@ Name | Parameters    | Values
 No. of elements | Nk  | 200
 Init. cond. | ic  | init_cond_topog_cos
 No. of cycles | Nmeas  | 3
+
+NOTE: periodic BCs.
 
 To run this from the terminal:
 ```
@@ -218,7 +220,7 @@ Name | Parameter      | Values
 ------------- | ------------- | -------------
 Rossby | Ro  | Inf
 Froude | Fr  | 1.1
-Base height | H0  | 1.0
+Rest height | H0  | 1.0
 Threshold c | Hc  | 1.02
 Threshold r | Hr  | 1.05
 beta | beta | 0.2
@@ -227,11 +229,15 @@ c2 | c2  | 0.1Hr/(Fr)^2
 
 The default parameters for this test assimilation are:
 
-Name | Parameter      | Values
-------------- | ------------- | -------------
-Mesh refinement factor | dres  | 4
-Ensemble size | n_ens  | 20
+Name | Parameter      | Values 
+------------- | ------------- | ------------
+No. of elements | Nk_fc | 200
+Mesh refinement factor | dres  | 4  
+Ensemble size | n_ens  | 20 
 No. of cycles | Nmeas  | 3
+IC noise | sig_ic | [0.05,0.05,0.0]   
+Obs. noise | ob_noise | [0.1,0.05,0.005] 
+Obs. density | o_d | 50
 
 The outer loop parameters are specified in ```main_p.py```:
 
@@ -241,6 +247,8 @@ Localisation scale | loc  | 1e-10
 Add. inflation | add_inf  | 0.2
 Mult. inflation | inf  | [1.01, 1.05, 1.1]
 
+The observing system here is direct, i.e., the observation operator is linear: all variables are observed every ```o_d``` elements in forecast space. So, in the case with ```Nk_fc = 200```, each variable is observed in 4 equally spaced locations, yielding 12 observations in total. 
+
 The purpose of this test case is to check that the cycled system is up and running, including the saving of data and readmes to automatically-generated directories. Once this has been verified, the outer loop and assimilation parameters can be extended (e.g., more combinations in the table above, longer runs with, e.g., ```Nmeas = 48``` ). 
 
 First, the nature run is generated and saved as this is the same for all experiments. If it already exists, it is loaded instead. Once this is complete, the routine enters the EnKF outer loop.
@@ -249,8 +257,7 @@ To run from the terminal:
 ```
 python main_p.py
 ```
-Text is printed to the terminal throughout to provide information and updates on its progress. After looping through all parameter combinations, a brief summary is printed to the terminal and the program ends. 
-To check the saved data and readmes, enter the relevant directory:
+Text is printed to the terminal throughout to provide information and updates on its progress. After looping through all parameter combinations, a brief summary is printed to the terminal and the program ends. To check the saved data and readmes, enter the relevant directory:
 ```
 cd test_enkf
 ```
@@ -268,13 +275,26 @@ Now the data has been saved, we can move on to plotting and data analysis...
 TEXT....
 
 From terminal:
-```
-python plot_func_x.py
-```
+
 ```
 python plot_func_t.py
 ```
+![OID.png](figs/OID.png)
+
+![spr_err.png](figs/spr_err.png)
+
+![crps.png](figs/crps.png)
+
+```
+python plot_func_x.py
+```
 
 INSERT VERIFYING FIGURES HERE!!!
+
+![T3_assim.png](figs/T3_assim.png)
+
+![T3_spr_err.png](figs/T3_spr_err.png)
+
+![T3_crps.png](figs/T3_crps.png)
 
 

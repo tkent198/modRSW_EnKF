@@ -1,11 +1,18 @@
 ##################################################################
 #--------------- Plotting routines for saved data ---------------
-#                   (T. Kent: mmtk@leeds.ac.uk)
+#                   (T. Kent: tkent198@gmail.com)
 ##################################################################
 '''
-<plotting_routine_loop_v2>
-Produces domain-averaged error and OI plots as a function of time.  To use, specify (1) dir_name, (2) combination of parameters ijk.
-'''
+    Plotting routine: <plot_func_t>
+    
+    Loads saved data in specific directories and produces plots as a function of time for OID, spr v err, and CRPS (i.e., domain-averaged time series). To use, specify (1) dir_name, (2) combination of parameters ijk.
+    
+    NOTE: Any changes to the outer loop parameters should be replicated here too.
+    
+    NOTEE: currently saves as .png files
+    '''
+
+
 
 
 ## generic modules 
@@ -15,67 +22,67 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 ## custom modules
-
-#from pars_modRSW import *
-#from pars_enkf import *
-
 from parameters import *
 from crps_calc_fun import crps_calc
 
 ##################################################################
 
-## e.g. if i,j,k... etc a coming from outer loop:
+## 1. CHOOSE ijk. E.g., for test_enkf111/ [i,j,k] = [0,0,0]
 i=0
 j=0
 k=0
-##
-##
+## 2. CHOOSE directory name
 dirname = '/test_enkf'
 ##
 
-# LOAD DATA FROM GIVEN DIRECTORY
+## parameters for outer loop
+loc = [1e-10]
+add_inf = [0.2]
+inf = [1.01, 1.05, 1.1]
+
+# make fig directory (if it doesn't already exist)
 cwd = os.getcwd()
 dirn = str(cwd+dirname+dirname+str(i+1)+str(j+1)+str(k+1))
 figsdir = str(dirn+'/figs')
 
-#check if dir exixts, if not make it
 try:
     os.makedirs(figsdir)
 except OSError as exception:
     if exception.errno != errno.EEXIST:
         raise
 
-# parameters for outer loop
-# parameters for outer loop
-loc = [1e-10]
-add_inf = [0.2]
-inf = [1.01, 1.05, 1.1]
-
-# LOAD DATA FROM GIVEN DIRECTORY
+## load data
+print '*** Loading saved data... '
+B = np.load(str(dirn+'/B.npy')) #topography
 X = np.load(str(dirn+'/X_array.npy')) # fc ensembles
 X_tr = np.load(str(dirn+'/X_tr_array.npy')) # truth
 Xan = np.load(str(dirn+'/Xan_array.npy')) # an ensembles
 Y_obs = np.load(str(dirn+'/Y_obs_array.npy')) # obs ensembles
-OI = np.load(str(dirn+'/OI.npy')) # obs ensembles
+OI = np.load(str(dirn+'/OI.npy')) # OI
 
+# print shape of data arrays to terminal (sanity check)
+print ' Check array shapes...'
 np.set_printoptions(formatter={'float': '{: 0.3f}'.format})
-print 'X_array shape (n_d,n_ens,T)      : ', np.shape(X) 
-print 'X_tr_array shape (n_d,1,T)       : ', np.shape(X_tr) 
-print 'Xan_array shape (n_d,n_ens,T)    : ', np.shape(Xan) 
-print 'Y_obs_array shape (p,n_ens,T)    : ', np.shape(Y_obs) 
-print 'OI shape (Neq + 1,T)             : ', np.shape(OI) 
-
+print 'X_array shape (n_d,n_ens,T)      : ', np.shape(X)
+print 'X_tr_array shape (n_d,1,T)       : ', np.shape(X_tr)
+print 'Xan_array shape (n_d,n_ens,T)    : ', np.shape(Xan)
+print 'Y_obs_array shape (p,n_ens,T)    : ', np.shape(Y_obs)
+print ' '
 ##################################################################
 
+# determine parameters from loaded arrays
 Neq = np.shape(OI)[0] - 1
 n_d = np.shape(X)[0]
 Nk_fc = n_d/Neq
-Kk_fc = 1./Nk_fc 
+Kk_fc = 1./Nk_fc
+xc = np.linspace(Kk_fc/2,L-Kk_fc/2,Nk_fc)
 n_ens = np.shape(X)[1]
 n_obs = np.shape(Y_obs)[0]
 obs_dens = n_d/n_obs
 t_an = np.shape(X)[2]
 time_vec = range(0,t_an)
+print 'time_vec = ', time_vec
+print ' '
 
 # masks for locating model variables in state vector
 h_mask = range(0,Nk_fc)
@@ -99,33 +106,32 @@ print ' '
 print ' PLOT : OI'
 print ' ' 
 fig, axes = plt.subplots(1, 1, figsize=(10,7))
-#plt.suptitle("OI diagnostic  (N = %s): [od, loc, inf] = [%s, %s, %s]" % (n_ens,o_d[i], loc[j], inf[k]),fontsize=16)
+plt.suptitle("OI diagnostic  (N = %s): [loc, add_inf, inf] = [%s, %s, %s]" % (n_ens,loc[i], add_inf[j], inf[k]),fontsize=16)
 
-axes.plot(time_vec[1:], 100*OI[1,1:]/3,'r',label='$OID_h$') # rmse
-axes.plot(time_vec[1:], 100*OI[2,1:]/3,'b',label='$OID_{u}$')
-axes.plot(time_vec[1:], 100*OI[3,1:]/3,'c',label='$OID_{r}$')
-#axes.plot(time_vec[1:], OI_check,'g',linewidth =3.)
-axes.plot(time_vec[1:], 100*OI[0,1:],'k',linewidth=2.0,label='$OID$') # spread
-#axes.text(1, 40, '$OI_{ave} = %.3g$' %OI_ave, fontsize=18, color='k')
+axes.plot(time_vec[1:], 100*OI[1,1:],'r',label='$OID_h$') # rmse
+axes.plot(time_vec[1:], 100*OI[2,1:],'b',label='$OID_{u}$')
+axes.plot(time_vec[1:], 100*OI[3,1:],'c',label='$OID_{r}$')
+axes.plot(time_vec[1:], 100*OI[0,1:],'k',linewidth=2.0,label='$OID$')
 axes.set_ylabel('OID (%)',fontsize=18)
 axes.legend(loc = 1, fontsize='large')
-#axes[0].set_title("Spread and RMSE")
 axes.set_ylim([0,50])
-#axes.set_xlim([time_vec[0],time_vec[-1]])
-axes.set_xlim([time_vec[0],time_vec[-1]])
+axes.set_xlim([time_vec[1],time_vec[-1]])
 axes.set_xlabel('Assim. time $T$',fontsize=14)
 
-name = "/OI.pdf"
+name = "/OID.png"
 f_name = str(figsdir+name)
 plt.savefig(f_name)
 print ' '
 print ' *** %s saved to %s' %(name,figsdir)
 print ' '
-#plt.show()
+
 ##################################################################
-nz_index = np.where(OI[0,:])
+
+#nz_index = np.where(OI[0,:])
 
 # for means and deviations
+ONE = np.ones([n_ens,n_ens])
+ONE = ONE/n_ens # NxN array with elements equal to 1/N
 Xbar = np.empty(np.shape(X))
 Xdev = np.empty(np.shape(X))
 Xanbar = np.empty(np.shape(X))
@@ -133,7 +139,7 @@ Xandev = np.empty(np.shape(X))
 Xdev_tr = np.empty(np.shape(X))
 Xandev_tr = np.empty(np.shape(X))
 
-# for errs as at each assim time
+# for errs etc at each assim time
 rmse_fc = np.empty((Neq,len(time_vec)))
 rmse_an = np.empty((Neq,len(time_vec)))
 spr_fc = np.empty((Neq,len(time_vec)))
@@ -145,10 +151,10 @@ tote_an = np.empty((Neq,len(time_vec)))
 crps_fc = np.empty((Neq,len(time_vec)))
 crps_an = np.empty((Neq,len(time_vec)))
 
-ONE = np.ones([n_ens,n_ens])
-ONE = ONE/n_ens # NxN array with elements equal to 1/N
 
-print ' *** Calculating errors...'
+##################################################################
+###               ERRORS + SPREAD                             ####
+##################################################################
 
 for T in time_vec[1:]:
     
@@ -161,9 +167,6 @@ for T in time_vec[1:]:
     Xandev[:,:,T] = Xan[:,:,T] - Xanbar[:,:,T] # an deviations from mean
     Xandev_tr[:,:,T] = Xan[:,:,T] - X_tr[:,:,T] # an deviations from truth    
     
-    ##################################################################
-    ###               ERRORS + SPREAD                             ####
-    ##################################################################
 
     # ANALYSIS: ensemble mean error
     an_err = Xanbar[:,0,T] - X_tr[:,0,T] # an_err = analysis ens. mean - truth
@@ -244,114 +247,6 @@ for T in time_vec[1:]:
     crps_an[2,T] = np.mean(CRPS_an[2,:])
     crps_fc[2,T] = np.mean(CRPS_fc[2,:])
 #####################################################################
-'''
-print ' '
-print ' PLOT : ERRORS'
-print ' '
-fig, axes = plt.subplots(3, 2, figsize=(12,12))
-plt.suptitle("Domain-averaged error measures  (N = %s): [od, loc, inf] = [%s, %s, %s]" % (n_ens,o_d[i], loc[j], inf[k]),fontsize=16)
-
-axes[0,0].plot(time_vec[1:], spr_fc[0,1:],'r',label='fc spread') # spread
-axes[0,0].plot(time_vec[1:], rmse_fc[0,1:],'r--',label='fc rmse') # rmse
-axes[0,0].plot(time_vec[1:], spr_an[0,1:],'b',label='an spread')
-axes[0,0].plot(time_vec[1:], rmse_an[0,1:],'b--',label='an rmse')
-axes[0,0].set_ylabel('$h$',fontsize=18)
-#axes[0,0].text(0.025, 1.2*pl_h, '$(SPR,RMSE)_{an} = (%.3g,%.3g)$' %(an_spr_h,an_rmse_h), fontsize=12, color='b')
-#axes[0,0].text(0.025, 1.1*pl_h, '$(SPR,RMSE)_{fc} = (%.3g,%.3g)$' %(fc_spr_h,fc_rmse_h), fontsize=12, color='r')
-#axes[0,0].set_ylim([0,1.3*pl_h])
-axes[0,0].legend(loc = 1, fontsize='small')
-axes[0,0].set_title("Spread and RMSE")
-
-axes[1,0].plot(time_vec[1:], spr_fc[1,1:],'r',label='fc spread') # spread
-axes[1,0].plot(time_vec[1:], rmse_fc[1,1:],'r--',label='fc rmse') # rmse
-axes[1,0].plot(time_vec[1:], spr_an[1,1:],'b',label='an spread')
-axes[1,0].plot(time_vec[1:], rmse_an[1,1:],'b--',label='an rmse')
-axes[1,0].set_ylabel('$hu$',fontsize=18)
-#axes[1,0].text(0.025, 1.2*pl_hu, '$(SPR,RMSE)_{an} = (%.3g,%.3g)$' %(an_spr_hu,an_rmse_hu), fontsize=12, color='b')
-#axes[1,0].text(0.025, 1.1*pl_hu, '$(SPR,RMSE)_{fc} = (%.3g,%.3g)$' %(fc_spr_hu,fc_rmse_hu), fontsize=12, color='r')
-#axes[1,0].set_ylim([0,1.3*pl_hu])
-
-axes[2,0].plot(time_vec[1:], spr_fc[2,1:],'r',label='fc spread') # spread
-axes[2,0].plot(time_vec[1:], rmse_fc[2,1:],'r--',label='fc rmse') # rmse
-axes[2,0].plot(time_vec[1:], spr_an[2,1:],'b',label='an spread')
-axes[2,0].plot(time_vec[1:], rmse_an[2,1:],'b--',label='an rmse')
-axes[2,0].set_ylabel('$hr$',fontsize=18)
-axes[2,0].set_xlabel('Assim. time $T$',fontsize=14)
-
-
-axes[0,1].plot(time_vec[1:], ame_fc[0,1:], 'r',label='fc AME')
-axes[0,1].plot(time_vec[1:], ame_an[0,1:], 'b',label='an AME')
-axes[0,1].legend(loc=0,fontsize='small')
-axes[0,1].set_title("Abs. mean error")
-
-axes[1,1].plot(time_vec[1:], ame_fc[1,1:], 'r',label='fc AME')
-axes[1,1].plot(time_vec[1:], ame_an[1,1:], 'b',label='an AME')
-
-axes[2,1].plot(time_vec[1:], ame_fc[2,1:], 'r',label='fc AME')
-axes[2,1].plot(time_vec[1:], ame_an[2,1:], 'b',label='an AME')
-
-axes[2,1].set_xlabel('Assim. time $T$',fontsize=14)
-
-
-name = "/errs.pdf"
-f_name = str(figsdir+name)
-plt.savefig(f_name)
-print ' '
-print ' *** %s saved to %s' %(name,figsdir)
-print ' '
-
-###########################################################################
-
-print ' ' 
-print ' PLOT : MA ERRORS vs SPREAD'
-print ' '
-
-axlim0 = np.max(np.maximum(spr_fc[0,1:-1], ame_fc[0,1:-1]))
-axlim1 = np.max(np.maximum(spr_fc[1,1:-1], ame_fc[1,1:-1]))
-axlim2 = np.max(np.maximum(spr_fc[2,1:-1], ame_fc[2,1:-1]))
-
-fig, axes = plt.subplots(3, 1, figsize=(7,12))
-plt.suptitle("Domain-averaged error measures  (N = %s): \n [od, loc, inf] = [%s, %s, %s]" % (n_ens,o_d[i], loc[j], inf[k]),fontsize=16)
-
-axes[0].plot(time_vec[1:], spr_fc[0,1:],'r',label='fc spread') # spread
-axes[0].plot(time_vec[1:], spr_an[0,1:],'b',label='an spread')
-axes[0].plot(time_vec[1:], ame_fc[0,1:], 'r--',label='fc err')
-axes[0].plot(time_vec[1:], ame_an[0,1:], 'b--',label='an err')
-axes[0].set_ylabel('$h$',fontsize=18)
-axes[0].text(1, 1.2*axlim0, '$(SPR,ERR)_{an} = (%.3g,%.3g)$' %(spr_an[0,1:-1].mean(axis=-1),ame_an[0,1:-1].mean(axis=-1)), fontsize=12, color='b')
-axes[0].text(1, 1.1*axlim0, '$(SPR,ERR)_{fc} = (%.3g,%.3g)$' %(spr_fc[0,1:-1].mean(axis=-1),ame_fc[0,1:-1].mean(axis=-1)), fontsize=12, color='r')
-axes[0].set_ylim([0,1.3*axlim0])
-axes[0].legend(loc = 1, fontsize='small')
-axes[0].set_title("Ensemble Spread and Error")
-
-axes[1].plot(time_vec[1:], spr_fc[1,1:],'r',label='fc spread') # spread
-axes[1].plot(time_vec[1:], spr_an[1,1:],'b',label='an spread')
-axes[1].plot(time_vec[1:], ame_fc[1,1:], 'r--',label='fc err')
-axes[1].plot(time_vec[1:], ame_an[1,1:], 'b--',label='an err')
-axes[1].set_ylabel('$u$',fontsize=18)
-axes[1].text(1, 1.2*axlim1, '$(SPR,ERR)_{an} = (%.3g,%.3g)$' %(spr_an[1,1:-1].mean(axis=-1),ame_an[1,1:-1].mean(axis=-1)), fontsize=12, color='b')
-axes[1].text(1, 1.1*axlim1, '$(SPR,ERR)_{fc} = (%.3g,%.3g)$' %(spr_fc[1,1:-1].mean(axis=-1),ame_fc[1,1:-1].mean(axis=-1)), fontsize=12, color='r')
-axes[1].set_ylim([0,1.3*axlim1])
-
-axes[2].plot(time_vec[1:], spr_fc[2,1:],'r',label='fc spread') # spread
-axes[2].plot(time_vec[1:], spr_an[2,1:],'b',label='an spread')
-axes[2].plot(time_vec[1:], ame_fc[2,1:], 'r--',label='fc err')
-axes[2].plot(time_vec[1:], ame_an[2,1:], 'b--',label='an err')
-axes[2].set_ylabel('$r$',fontsize=18)
-axes[2].set_xlabel('Assim. time $T$',fontsize=14)
-axes[2].text(1, 1.2*axlim2, '$(SPR,ERR)_{an} = (%.3g,%.3g)$' %(spr_an[2,1:-1].mean(axis=-1),ame_an[2,1:-1].mean(axis=-1)), fontsize=12, color='b')
-axes[2].text(1, 1.1*axlim2, '$(SPR,ERR)_{fc} = (%.3g,%.3g)$' %(spr_fc[2,1:-1].mean(axis=-1),ame_fc[2,1:-1].mean(axis=-1)), fontsize=12, color='r')
-axes[2].set_ylim([0,1.3*axlim2])
-
-name = "/errs2.pdf"
-f_name = str(figsdir+name)
-plt.savefig(f_name)
-print ' '
-print ' *** %s saved to %s' %(name,figsdir)
-print ' '
-
-#plt.show()
-'''
 
 ###########################################################################
 
@@ -359,31 +254,31 @@ print ' '
 print ' PLOT : RMS ERRORS vs SPREAD'
 print ' '
 ft=16
+
 axlim0 = np.max(np.maximum(spr_fc[0,1:-1], rmse_fc[0,1:-1]))
 axlim1 = np.max(np.maximum(spr_fc[1,1:-1], rmse_fc[1,1:-1]))
 axlim2 = np.max(np.maximum(spr_fc[2,1:-1], rmse_fc[2,1:-1]))
 
 fig, axes = plt.subplots(3, 1, figsize=(7,12))
-#plt.suptitle("Domain-averaged error measures  (N = %s): \n [od, loc, inf] = [%s, %s, %s]" % (n_ens, o_d[i], loc[j], inf[k]),fontsize=16)
+plt.suptitle("Domain-averaged error vs spread  (N = %s): \n [loc, add_inf, inf] = [%s, %s, %s]" % (n_ens,loc[i], add_inf[j], inf[k]),fontsize=16)
 
 axes[0].plot(time_vec[1:], spr_fc[0,1:],'r',label='fc spread') # spread
 axes[0].plot(time_vec[1:], spr_an[0,1:],'b',label='an spread')
 axes[0].plot(time_vec[1:], rmse_fc[0,1:], 'r--',label='fc rmse')
 axes[0].plot(time_vec[1:], rmse_an[0,1:], 'b--',label='an rmse')
 axes[0].set_ylabel('$h$',fontsize=18)
-axes[0].text(1, 1.2*axlim0, '$(SPR,RMSE)_{an} = (%.3g,%.3g)$' %(spr_an[0,nz_index].mean(axis=-1),rmse_an[0,nz_index].mean(axis=-1)), fontsize=ft, color='b')
-axes[0].text(1, 1.1*axlim0, '$(SPR,RMSE)_{fc} = (%.3g,%.3g)$' %(spr_fc[0,nz_index].mean(axis=-1),rmse_fc[0,nz_index].mean(axis=-1)), fontsize=ft, color='r')
+axes[0].text(1, 1.2*axlim0, '$(SPR,RMSE)_{an} = (%.3g,%.3g)$' %(spr_an[0,1:].mean(axis=-1),rmse_an[0,1:].mean(axis=-1)), fontsize=ft, color='b')
+axes[0].text(1, 1.1*axlim0, '$(SPR,RMSE)_{fc} = (%.3g,%.3g)$' %(spr_fc[0,1:].mean(axis=-1),rmse_fc[0,1:].mean(axis=-1)), fontsize=ft, color='r')
 axes[0].set_ylim([0,1.3*axlim0])
 axes[0].legend(loc = 1, fontsize='small')
-#axes[0].set_title("Ensemble Spread and RMS Error")
 
 axes[1].plot(time_vec[1:], spr_fc[1,1:],'r',label='fc spread') # spread
 axes[1].plot(time_vec[1:], spr_an[1,1:],'b',label='an spread')
 axes[1].plot(time_vec[1:], rmse_fc[1,1:], 'r--',label='fc rmse')
 axes[1].plot(time_vec[1:], rmse_an[1,1:], 'b--',label='an rmse')
 axes[1].set_ylabel('$u$',fontsize=18)
-axes[1].text(1, 1.2*axlim1, '$(SPR,RMSE)_{an} = (%.3g,%.3g)$' %(spr_an[1,nz_index].mean(axis=-1),rmse_an[1,nz_index].mean(axis=-1)), fontsize=ft, color='b')
-axes[1].text(1, 1.1*axlim1, '$(SPR,RMSE)_{fc} = (%.3g,%.3g)$' %(spr_fc[1,nz_index].mean(axis=-1),rmse_fc[1,nz_index].mean(axis=-1)), fontsize=ft, color='r')
+axes[1].text(1, 1.2*axlim1, '$(SPR,RMSE)_{an} = (%.3g,%.3g)$' %(spr_an[1,1:].mean(axis=-1),rmse_an[1,1:].mean(axis=-1)), fontsize=ft, color='b')
+axes[1].text(1, 1.1*axlim1, '$(SPR,RMSE)_{fc} = (%.3g,%.3g)$' %(spr_fc[1,1:].mean(axis=-1),rmse_fc[1,1:].mean(axis=-1)), fontsize=ft, color='r')
 axes[1].set_ylim([0,1.3*axlim1])
 
 axes[2].plot(time_vec[1:], spr_fc[2,1:],'r',label='fc spread') # spread
@@ -392,11 +287,11 @@ axes[2].plot(time_vec[1:], rmse_fc[2,1:], 'r--',label='fc rmse')
 axes[2].plot(time_vec[1:], rmse_an[2,1:], 'b--',label='an rmse')
 axes[2].set_ylabel('$r$',fontsize=18)
 axes[2].set_xlabel('Assim. time $T$',fontsize=14)
-axes[2].text(1, 1.2*axlim2, '$(SPR,RMSE)_{an} = (%.3g,%.3g)$' %(spr_an[2,nz_index].mean(axis=-1),rmse_an[2,nz_index].mean(axis=-1)), fontsize=ft, color='b')
-axes[2].text(1, 1.1*axlim2, '$(SPR,RMSE)_{fc} = (%.3g,%.3g)$' %(spr_fc[2,nz_index].mean(axis=-1),rmse_fc[2,nz_index].mean(axis=-1)), fontsize=ft, color='r')
+axes[2].text(1, 1.2*axlim2, '$(SPR,RMSE)_{an} = (%.3g,%.3g)$' %(spr_an[2,1:].mean(axis=-1),rmse_an[2,1:].mean(axis=-1)), fontsize=ft, color='b')
+axes[2].text(1, 1.1*axlim2, '$(SPR,RMSE)_{fc} = (%.3g,%.3g)$' %(spr_fc[2,1:].mean(axis=-1),rmse_fc[2,1:].mean(axis=-1)), fontsize=ft, color='r')
 axes[2].set_ylim([0,1.3*axlim2])
 
-name = "/errs3.pdf"
+name = "/spr_err.png"
 f_name = str(figsdir+name)
 plt.savefig(f_name)
 print ' '
@@ -415,33 +310,31 @@ axlim1 = np.max(crps_fc[1,1:-1])
 axlim2 = np.max(crps_fc[2,1:-1])
 
 fig, axes = plt.subplots(3, 1, figsize=(7,12))
-#plt.suptitle("Domain-averaged CRPS  (N = %s): \n [od, loc, inf] = [%s, %s, %s]" % (n_ens, o_d[i], loc[j], inf[k]),fontsize=16)
+plt.suptitle("Domain-averaged CRPS  (N = %s): \n [loc, add_inf, inf] = [%s, %s, %s]" % (n_ens,loc[i], add_inf[j], inf[k]),fontsize=16)
 
 axes[0].plot(time_vec[1:], crps_fc[0,1:],'r',label='fc') # spread
 axes[0].plot(time_vec[1:], crps_an[0,1:],'b',label='an')
 axes[0].set_ylabel('$h$',fontsize=18)
-axes[0].text(1, 1.2*axlim0, '$CRPS_{an} = %.3g$' %crps_an[0,nz_index].mean(axis=-1), fontsize=ft, color='b')
-axes[0].text(1, 1.1*axlim0, '$CRPS_{fc} = %.3g$' %crps_fc[0,nz_index].mean(axis=-1), fontsize=ft, color='r')
+axes[0].text(1, 1.2*axlim0, '$CRPS_{an} = %.3g$' %crps_an[0,1:].mean(axis=-1), fontsize=ft, color='b')
+axes[0].text(1, 1.1*axlim0, '$CRPS_{fc} = %.3g$' %crps_fc[0,1:].mean(axis=-1), fontsize=ft, color='r')
 axes[0].set_ylim([0,1.3*axlim0])
-#axes[0].legend(loc = 1, fontsize='small')
-#axes[0].set_title("Continuous Ranked Probability Score")
 
 axes[1].plot(time_vec[1:], crps_fc[1,1:],'r',label='fc') # spread
 axes[1].plot(time_vec[1:], crps_an[1,1:],'b',label='an')
 axes[1].set_ylabel('$u$',fontsize=18)
-axes[1].text(1, 1.2*axlim1, '$CRPS_{an} = %.3g$' %crps_an[1,nz_index].mean(axis=-1), fontsize=ft, color='b')
-axes[1].text(1, 1.1*axlim1, '$CRPS_{fc} = %.3g$' %crps_fc[1,nz_index].mean(axis=-1), fontsize=ft, color='r')
+axes[1].text(1, 1.2*axlim1, '$CRPS_{an} = %.3g$' %crps_an[1,1:].mean(axis=-1), fontsize=ft, color='b')
+axes[1].text(1, 1.1*axlim1, '$CRPS_{fc} = %.3g$' %crps_fc[1,1:].mean(axis=-1), fontsize=ft, color='r')
 axes[1].set_ylim([0,1.3*axlim1])
 
 axes[2].plot(time_vec[1:], crps_fc[2,1:],'r',label='fc') # spread
 axes[2].plot(time_vec[1:], crps_an[2,1:],'b',label='an')
 axes[2].set_ylabel('$r$',fontsize=18)
 axes[2].set_xlabel('Assim. time $T$',fontsize=14)
-axes[2].text(1, 1.2*axlim2, '$CRPS_{an} = %.3g$' %crps_an[2,nz_index].mean(axis=-1), fontsize=ft, color='b')
-axes[2].text(1, 1.1*axlim2, '$CRPS_{fc} = %.3g$' %crps_fc[2,nz_index].mean(axis=-1), fontsize=ft, color='r')
+axes[2].text(1, 1.2*axlim2, '$CRPS_{an} = %.3g$' %crps_an[2,1:].mean(axis=-1), fontsize=ft, color='b')
+axes[2].text(1, 1.1*axlim2, '$CRPS_{fc} = %.3g$' %crps_fc[2,1:].mean(axis=-1), fontsize=ft, color='r')
 axes[2].set_ylim([0,1.3*axlim2])
 
-name = "/crps.pdf"
+name = "/crps.png"
 f_name = str(figsdir+name)
 plt.savefig(f_name)
 print ' '
