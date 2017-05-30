@@ -16,8 +16,6 @@ import errno
 
 ##################################################################
 
-##################################################################
-
 
 # LOAD DATA FROM GIVEN DIRECTORY
 ## e.g. if i,j,k... etc a coming from outer loop:
@@ -76,20 +74,19 @@ for T in time_vec[1:]:
 Xdev_tr_new = Xdev_tr.reshape(n_d,n_ens*t_an)
 print np.shape(Xdev_tr_new)
 
-T = time_vec[24]
-
 ## time-dep Q matrix (at time T)
+T = time_vec[30]
 QT = Q_array[:,:,T]
 print np.shape(QT)
 
 ## static Q matrix (averaged over all times T)
-Q_ave = Q_array[:,:,:].mean(axis=2)
-print np.shape(Q_ave)
-Q = Q_ave
+Qave = Q_array[:,:,:].mean(axis=2)
+print np.shape(Qave)
 
-Qnew = np.dot(Xdev_tr_new, Xdev_tr_new.T)/(n_ens-1)
+## static Q (from a larger sample)
+Qnew = np.dot(Xdev_tr_new, Xdev_tr_new.T)/(t_an*n_ens-1)
 
-q = np.random.multivariate_normal(np.zeros(600), Q, n_ens)
+q = np.random.multivariate_normal(np.zeros(600), Qave, n_ens)
 q = q.T
 
 qt = np.random.multivariate_normal(np.zeros(600), QT, n_ens)
@@ -102,8 +99,7 @@ print 'q shape: ', np.shape(q)
 print ' '
 
 alph=0.2
-
-fig, axes = plt.subplots(3, 2, figsize=(10,10))
+fig, axes = plt.subplots(3, 2, figsize=(9,12))
 
 axes[0,0].plot(range(0,Nk_fc), q[0:200,0],'g',label='h',alpha=alph)
 axes[0,0].plot(range(0,Nk_fc), q[200:400,0],'r',label='u',alpha=alph)
@@ -113,8 +109,8 @@ axes[0,0].plot(range(0,Nk_fc), q[200:400,1:],'r',alpha=alph)
 axes[0,0].plot(range(0,Nk_fc), q[400:600,1:],'b',alpha=alph)
 axes[0,0].set_ylim([-2,2])
 axes[0,0].set_xlabel('x')
-axes[0,0].set_title('samples from static Q')
-axes[0,0].legend(loc = 1)
+axes[0,0].set_title('samples from static Q (ave)')
+axes[0,0].legend(loc = 1,fontsize = 'small')
 
 axes[2,0].plot(range(0,Nk_fc), qt[0:200,0],'g',label='h',alpha=alph)
 axes[2,0].plot(range(0,Nk_fc), qt[200:400,0],'r',label='u',alpha=alph)
@@ -124,8 +120,8 @@ axes[2,0].plot(range(0,Nk_fc), qt[200:400,1:],'r',alpha=alph)
 axes[2,0].plot(range(0,Nk_fc), qt[400:600,1:],'b',alpha=alph)
 axes[2,0].set_ylim([-2,2])
 axes[2,0].set_xlabel('x')
-axes[2,0].set_title('samples from time-dep. Q')
-axes[2,0].legend(loc = 1)
+axes[2,0].set_title('samples from time-dep. Q (T=%d)' %T)
+axes[2,0].legend(loc = 1,fontsize = 'small')
 
 axes[1,0].plot(range(0,Nk_fc), qnew[0:200,0],'g',label='h',alpha=alph)
 axes[1,0].plot(range(0,Nk_fc), qnew[200:400,0],'r',label='u',alpha=alph)
@@ -135,18 +131,24 @@ axes[1,0].plot(range(0,Nk_fc), qnew[200:400,1:],'r',alpha=alph)
 axes[1,0].plot(range(0,Nk_fc), qnew[400:600,1:],'b',alpha=alph)
 axes[1,0].set_ylim([-2,2])
 axes[1,0].set_xlabel('x')
-axes[1,0].set_title('samples from new static Q')
-axes[1,0].legend(loc = 1)
+axes[1,0].set_title('samples from static Q (large)')
+axes[1,0].legend(loc = 1,fontsize = 'small')
 
-axes[0,1].imshow(Q,cmap=plt.cm.RdBu,vmin=-0.05, vmax=0.05)
-axes[0,1].set_title('static Q')
+axes[0,1].imshow(Qave,cmap=plt.cm.RdBu,vmin=-0.05, vmax=0.05)
+axes[0,1].set_title('static Q (ave)')
 
 axes[2,1].imshow(QT,cmap=plt.cm.RdBu,vmin=-0.05, vmax=0.05)
-axes[2,1].set_title('time-dep. Q')
+axes[2,1].set_title('time-dep. Q (T=%d)' %T)
 
 axes[1,1].imshow(Qnew,cmap=plt.cm.RdBu,vmin=-0.05, vmax=0.05)
-axes[1,1].set_title('new static Q')
+axes[1,1].set_title('static Q (large)')
 
-plt.show()
+#plt.show()
 
-np.save(str(cwd+'/Q_offline'),Q)
+name_f = "/whichQ.pdf"
+f_name_f = str(figsdir+name_f)
+plt.savefig(f_name_f)
+print ' *** %s saved to %s' %(name_f,figsdir)
+
+np.save(str(cwd+'/Q_ave'),Qave)
+np.save(str(cwd+'/Q_large'),Qnew)
