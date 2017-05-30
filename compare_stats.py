@@ -22,7 +22,7 @@ from parameters import *
 from analysis_diag_stats import ave_stats
 ##################################################################
 
-dirname = '/addinfv9_4dres'
+dirname = '/test_enkf'
 
 # LOAD DATA FROM GIVEN DIRECTORY
 cwd = os.getcwd()
@@ -36,12 +36,12 @@ except OSError as exception:
     if exception.errno != errno.EEXIST:
         raise
 
-# parameters for outer loop
-o_d = [20,40]
-loc = [1.5, 2.5, 3.5, 0]
+#TEST CASE: parameters for outer loop
+loc = [1e-10]
+add_inf = [0.2]
 inf = [1.01, 1.05, 1.1]
 
-loc = [200,80,50,'inf']
+loc = ['inf']
 ii=0
 ##################################################################
 
@@ -63,22 +63,22 @@ try:
 
 # if NOT:
 except:
-    spr_fc = np.empty([len(o_d),len(loc),len(inf)])
-    spr_an = np.empty([len(o_d),len(loc),len(inf)])
-    err_fc = np.empty([len(o_d),len(loc),len(inf)])
-    err_an = np.empty([len(o_d),len(loc),len(inf)])
-    rmse_fc = np.empty([len(o_d),len(loc),len(inf)])
-    rmse_an = np.empty([len(o_d),len(loc),len(inf)])
-    crps_fc = np.empty([len(o_d),len(loc),len(inf)])
-    crps_an = np.empty([len(o_d),len(loc),len(inf)])
-    OI = np.empty([len(o_d),len(loc),len(inf)])
+    spr_fc = np.empty([len(loc),len(add_inf),len(inf)])
+    spr_an = np.empty([len(loc),len(add_inf),len(inf)])
+    err_fc = np.empty([len(loc),len(add_inf),len(inf)])
+    err_an = np.empty([len(loc),len(add_inf),len(inf)])
+    rmse_fc = np.empty([len(loc),len(add_inf),len(inf)])
+    rmse_an = np.empty([len(loc),len(add_inf),len(inf)])
+    crps_fc = np.empty([len(loc),len(add_inf),len(inf)])
+    crps_an = np.empty([len(loc),len(add_inf),len(inf)])
+    OI = np.empty([len(loc),len(add_inf),len(inf)])
 
-    for i in range(0,len(o_d)):
-        for j in range(0,len(loc)):
+    for i in range(0,len(loc)):
+        for j in range(0,len(add_inf)):
             for k in range(0,len(inf)):
                 spr_fc[i,j,k], err_fc[i,j,k], rmse_fc[i,j,k], crps_fc[i,j,k], spr_an[i,j,k], err_an[i,j,k], rmse_an[i,j,k], crps_an[i,j,k], OI[i,j,k] = ave_stats(i, j, k, dirname)
 
-    DIAGS = np.empty([9,len(o_d),len(loc),len(inf)])
+    DIAGS = np.empty([9,len(loc),len(add_inf),len(inf)])
     DIAGS[0,:,:,:] = spr_fc
     DIAGS[1,:,:,:] = spr_an
     DIAGS[2,:,:,:] = err_fc
@@ -105,15 +105,13 @@ except:
     crps_an = DIAGS[7,:,:,:]
     OI = DIAGS[8,:,:,:]
 
-#spr_fc = spr_fc
+
 ##################################################################
 fs = 14
 cpar = 0.06
-tick_loc_y = [0,1,2,3]
+tick_loc_y = [0]
 tick_loc_x = [0,1,2]
-#tick_lab_y = [loc[0],loc[1],loc[2],loc[3]]
-tick_lab_y = np.roll(loc,1)
-#tick_lab_x = [inf[0],inf[1],inf[2]]
+tick_lab_y = np.roll(add_inf,1)
 tick_lab_x = inf
 
 

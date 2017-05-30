@@ -133,6 +133,7 @@ To kill at any point, press ```Ctrl+c```, or kill the active processes using ```
 ### .npy data
 
 ```Q_offline.npy```: a static Q matrix for additive inflation, generated in ```offlineQ.py```.
+```Q_large.npy```: a static Q matrix for additive inflation, generated in ```offlineQ.py```.
 
 ## Test cases
 
