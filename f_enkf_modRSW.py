@@ -166,7 +166,7 @@ def analysis_step_enkf(U_fc, U_tr, tmeasure, dtmeasure, index, pars_ob, pars_end
 
     # ADDITIVE INFLATION (Gordon: NEEDS MOVING after analysis...)
     cwd = os.getcwd()
-    Q = np.load(str(cwd+'/Q_offline.npy'))
+    Q = np.load(str(cwd+'/Q_large.npy'))
     print 'max Q value: ', np.max(Q)
     print 'min Q value: ', np.min(Q)
 
@@ -236,18 +236,6 @@ def analysis_step_enkf(U_fc, U_tr, tmeasure, dtmeasure, index, pars_ob, pars_end
     Pa = np.dot(Xandev,Xandev.T)
     Pa = Pa/(n_ens - 1) # analysis covariance matrix
     Ca = np.corrcoef(Xandev) # analysis correlation matrix
-
-    '''
-    ### ADDITIVE INFLATION ...### (NEEDS MOVING after analysis... here?????)
-    cwd = os.getcwd()
-    Q = np.load(str(cwd+'/Q_offline.npy'))
-    print 'max Q value: ', np.max(Q)
-    print 'min Q value: ', np.min(Q)
-
-    q = add_inf*np.random.multivariate_normal(np.zeros(n_d), Q, n_ens)
-    q = q.T
-    Xan = Xan + q # x(t+1) = M(x(t)) + q
-    '''
     
     # masks for locating model variables in state vector
     h_mask = range(0,Nk_fc)
@@ -423,13 +411,6 @@ def analysis_step_enkf_v2(U_fc, U_tr, tmeasure, dtmeasure, index, pars_ob, pars_
     for N in range(0,n_ens):
         X[:,N] = U_fc[:,:,N].flatten()
     
-#    # ADDITIVE INFLATION (Gordon: NEEDS MOVING after analysis...)
-#    cwd = os.getcwd()
-#    Q = np.load(str(cwd+'/Q_offline.npy'))
-#    
-#    q = add_inf*np.random.multivariate_normal(np.zeros(n_d), Q, n_ens)
-#    q = q.T
-#    X = X + q # x(t+1) = M(x(t)) + q  (eq. 6.5)
 
     '''
         Step 2.(a)
@@ -495,9 +476,9 @@ def analysis_step_enkf_v2(U_fc, U_tr, tmeasure, dtmeasure, index, pars_ob, pars_
     Ca = np.corrcoef(Xandev) # analysis correlation matrix
     
 
-    ### ADDITIVE INFLATION ...### (NEEDS MOVING after analysis... here?????)
+    ### ADDITIVE INFLATION ...### (NEEDS MOVING after analysis... here)
     cwd = os.getcwd()
-    Q = np.load(str(cwd+'/Q_offline.npy'))
+    Q = np.load(str(cwd+'/Q_large.npy'))
     
     q = add_inf*np.random.multivariate_normal(np.zeros(n_d), Q, n_ens)
     q = q.T
