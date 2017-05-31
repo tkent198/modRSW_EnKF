@@ -103,8 +103,9 @@ To kill at any point, press ```Ctrl+c```, or kill the active processes using ```
 ```f_enkf_modRSW.py```: Collection of functions related to the assimilation specifically, incl.:
 * ```generate_truth()```      : simulates truth trajectory at given resolution and stores run at given observing times.
 * ```analysis_step_enkf()```  : performs perturbed obs. enkf analysis step, returns updated ensemble and output data for saving.
-* ```gasp_cohn()```           : Gaspari-Cohn taper function for ensemble localisation.
-
+* ```analysis_step_enkf_v2()```  : same as above, but with additive inflation applied AFTER assimilation.
+* ```gaspcohn()```           : Gaspari-Cohn taper function for ensemble localisation.
+* ```gaspcohn_matrix()```: construct localisation matrix based on ```gaspcohn``` function
 
 ```localisation.py```: Initial investigations and calculation of localisation taper function and matrices using ```gasp_cohn```.
 
@@ -247,13 +248,15 @@ The observing system here is direct, i.e., the observation operator is linear: a
 
 The purpose of this test case is to check that the cycled system is up and running, including the saving of data and readmes to automatically-generated directories. Once this has been verified, the outer loop and assimilation parameters can be extended (e.g., more combinations in the table above, longer runs with, e.g., ```Nmeas = 48``` ). 
 
-First, the nature run is generated and saved as this is the same for all experiments. If it already exists, it is loaded instead. Once this is complete, the routine enters the EnKF outer loop.
-
 To run from the terminal:
 ```
 python main_p.py
 ```
-Text is printed to the terminal throughout to provide information and updates on its progress. After looping through all parameter combinations, a brief summary is printed to the terminal and the program ends. To check the saved data and readmes, enter the relevant directory:
+Text is printed to the terminal throughout to provide information and updates on its progress. 
+
+First, the nature run is generated and saved as this is the same for all experiments. If it already exists, it is loaded instead. Once this is complete, the routine enters the EnKF outer loop, comprising ```Nmeas``` 'forecast' and 'analysis' steps. The ensemble forecasts are integrated in parallel using the ```multiprocessing``` module. This is set to use half of the total number of CPU cores and can be modified depending on the user's machine. When all forecasts reach the time for assimilation, the ensembles are passed to the analysis step routine. Here, pseudo-observations are generated from the nature run and assimilated using the EnKF, producing the analysis ensemble and passing back for the next cycle to start. 
+
+After looping through all parameter combinations, a brief summary is printed to the terminal and the program ends. To check the saved data and readmes, enter the relevant directory:
 ```
 cd test_enkf
 ```

@@ -27,7 +27,7 @@ from datetime import datetime
 
 from parameters import * # module storing fixed parameters
 from f_modRSW import make_grid, step_forward_topog, time_step, ens_forecast, ens_forecast_topog
-from f_enkf_modRSW import analysis_step_enkf
+from f_enkf_modRSW import analysis_step_enkf, analysis_step_enkf_v2
 from create_readme import create_readme
 
 def run_enkf(i,j,k,loc,add_inf,inf,ic,U_tr_array,dirname):
