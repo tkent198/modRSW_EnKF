@@ -132,6 +132,7 @@ To kill at any point, press ```Ctrl+c```, or kill the active processes using ```
 ### .npy data
 
 ```Q_offline.npy```: a static Q matrix for additive inflation, generated in ```offlineQ.py```.
+
 ```Q_large.npy```: a static Q matrix for additive inflation, generated in ```offlineQ.py```.
 
 ## Test cases
@@ -324,7 +325,8 @@ A well-configured ensemble (i.e., sufficiently spread) is crucial to providing a
 
 ###### CRPS
 
-The CRPS verifies the reliability of an ensemble with lower scores indicating higherskill. As such, the analysis ensemble should have a lower CRPS than the forecast ensemble valid at the same time.
+The CRPS verifies the reliability of an ensemble with lower scores indicating higher
+skill. As such, the analysis ensemble should have a lower CRPS than the forecast ensemble valid at the same time.
 
 ![crps.png](figs/crps.png)
 
@@ -359,7 +361,8 @@ Ensemble trajectories (blue) and their mean (red for forecast; cyan for analysis
 
 ###### Spread vs. Error 
 
-The figure `T3_spr_err.png` plots the ensemble spread and RMSE of the ensemble mean for each variable as a function of x (left column). Generally, the ensemble exhibits larger spread in regions of convection where the errors are largest (around x=0.05 here). The right columnof plots the difference between the error and spread.
+The figure `T3_spr_err.png` plots the ensemble spread and RMSE of the ensemble mean for each variable as a function of x (left column). Generally, the ensemble exhibits larger spread in regions of convection where the errors are largest (around x=0.05 here). The right column
+of plots the difference between the error and spread.
 
 ![T3_spr_err.png](figs/T3_spr_err.png)
 
@@ -371,6 +374,7 @@ The CRPS is calculated for each variable at each grid point at the given time (s
 
 ![T3_crps.png](figs/T3_crps.png)
 
-CRPS as a function of x at T=36: forecast (red) and analysis (blue) ensemble.Generally, the ensembles are less reliable (higher CRPS values) in regions of convection and precipitation (again, around x=0.05 here). Domain-averaged values are given in the top-right corner.
+CRPS as a function of x at T=36: forecast (red) and analysis (blue) ensemble.
+Generally, the ensembles are less reliable (higher CRPS values) in regions of convection and precipitation (again, around x=0.05 here). Domain-averaged values are given in the top-right corner.
 
 ***NOTE AGAIN: this is a test case, not a well-tuned experiment! See chapter 6 (specifically figs. 6.10-6.12) of Kent (2016) for an example of a well-tuned experiment with comparable spread and error, reasonable OID and CRPS.*** 
