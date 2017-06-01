@@ -21,22 +21,27 @@ import matplotlib.pyplot as plt
 
 from parameters import *
 from crps_calc_fun import crps_calc
-##################################################################
 
+##################################################################
+##
 ## 1. CHOOSE ijk. E.g., for test_enkf111/ [i,j,k] = [0,0,0]
 i=0
 j=0
 k=0
+##
 ## 2. CHOOSE directory name
 dirname = '/test_enkf'
 ##
 ## 3. CHOOSE time: plot at assimilation cycle ii
 ii = 3
+##################################################################
 
 ## parameters for outer loop
 loc = [1e-10]
 add_inf = [0.2]
 inf = [1.01, 1.05, 1.1]
+
+##################################################################
 
 # make fig directory (if it doesn't already exist)
 cwd = os.getcwd()

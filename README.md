@@ -301,9 +301,11 @@ When complete, check the plots are been created:
 ```
 ls -l test_enkf/test_enkf111/figs/
 ```
-and verify them with the figures below. To generate the same plots for different experiments, open the script and specify a different `ijk' combination.
+and verify them with the figures below. Time-averaged values for each metric are printed in the figure corner. To generate the same plots for different experiments, open the script and specify a different `ijk' combination.
 
-###### Observational Influence diagnostic.
+***NOTE: statistics will vary slightly as each experiment uses a stochastically-generated ensemble of model trajectories and observations.***
+
+###### Observational Influence diagnostic
 
 The OID provides a measure of the overall impact of observations/forecast on the analysis estimate. In operational NWP, most weight comes from the forecast (approx. 80% for global NWP). Observations are too few and incomplete (compared to the size of the system) to provide a comprehensive picture of the state. As such, observations adjust the more comprehensive forecast estimate closer to reality, rather than replace it completely. The OID of an idealised framework should reflect this; as a guiding figure, it should not be lower than 10% or higher than 50%. The OID is calculated at each assimilation time. In this test case, there are 3 cycles so we have 3 OID values. The plot title shows the number of ensembles `N` and the outer loop parameter combination:
 
@@ -322,24 +324,49 @@ The CRPS verifies the reliability of an ensemble with lower scores indicating hi
 
 ![crps.png](figs/crps.png)
 
-***NOTE 1: this is a test case, not a well-tuned experiment! See chapter 6 of Kent (2016) for an example of a well-tuned experiment with comparable spread and error, reasonable OID and CRPS.*** 
+***NOTE: this is a test case, not a well-tuned experiment! See chapter 6 (specifically figs. 6.8 and 6.9) of Kent (2016) for an example of a well-tuned experiment with comparable spread and error, reasonable OID and CRPS.*** 
 
-***NOTE 2: statistics will vary slightly as each experiment uses a stochastically-generated ensemble of model trajectories and observations.***
 
 ##### 2. Using `plot_func_x.py`
 
-To run the plotting routine, enter in the terminal:
+This routine produces plots as a function of space *at a given assimilation time*. Thus, in addition to the `dirname` and `ijk` combination, the user must specify the time ```T = time_vec[ii]```, i.e., choose ```ii```. The default setting is `ii=3`. 
 
+Enter in the terminal:
 ```
 python plot_func_x.py
 ```
 
-INSERT VERIFYING FIGURES HERE!!!
+When complete, check the plots are been created: 
+```
+ls -l test_enkf/test_enkf111/figs/
+```
+and verify with the figures below... 
+
+Afterwards, try changing the cycle number (e.g., `ii=2`) and experiment `ijk` by specifying the values in the script.
+
+###### Ensemble trajectories and observations 
+ 
+As well as the spread vs. error and CRPS statistics, it is useful to look at the dynamical situation at the specified time and how the ensembles and observations reflect this. The figure `T3_assim.png` illustrates this: 
 
 ![T3_assim.png](figs/T3_assim.png)
 
+Ensemble trajectories (blue) and their mean (red for forecast; cyan for analysis), pseudo-observations (green circles with corresponding error bars), and nature run (green solid line) after 3 hours/cycles (hence `T=3`). Left column: forecast ensemble (i.e., prior distribution, before assimilation); right column: analysis ensemble (i.e., posterior distribution, after assimilation).
+
+
+###### Spread vs. Error 
+
+The figure `T3_spr_err.png` plots the ensemble spread and RMSE of the ensemble mean for each variable as a function of x (left column). Generally, the ensemble exhibits larger spread in regions of convection where the errors are largest (around x=0.05 here). The right columnof plots the difference between the error and spread.
+
 ![T3_spr_err.png](figs/T3_spr_err.png)
+
+Left column: error (dashed) and spread (solid) as a function of x at T=3. Domain-averaged values are given in the top-left corner. Right column: the difference between the error and spread. Positive (negative) values indicate under- (over-) spread.
+
+###### CRPS
+
+The CRPS is calculated for each variable at each grid point at the given time (see section 5.6.3 in Kent (2016)) and plotted as a function of space in figure `T3_crps.png`:
 
 ![T3_crps.png](figs/T3_crps.png)
 
+CRPS as a function of x at T=36: forecast (red) and analysis (blue) ensemble.Generally, the ensembles are less reliable (higher CRPS values) in regions of convection and precipitation (again, around x=0.05 here). Domain-averaged values are given in the top-right corner.
 
+***NOTE AGAIN: this is a test case, not a well-tuned experiment! See chapter 6 (specifically figs. 6.10-6.12) of Kent (2016) for an example of a well-tuned experiment with comparable spread and error, reasonable OID and CRPS.*** 
