@@ -5,9 +5,7 @@ This repository aims to facilitate the transfer of knowledge and continued use o
 
 ***CAVEAT: this is not a black-box model and should accordingly be used with care and curiosity!***
 
-How to get started with the source code and files is outlined below. A brief overview of each file is given and there are some model-only and forecast-assimilation test cases to check things are up and running properly.
-
-For further details, including what should be modified in the scripts for different experimental set-ups, please see the pdf document (TO DO - if necessary?).
+How to get started with the source code and files is outlined below. A brief overview of each file is given and there are some model-only and forecast-assimilation test cases to check things are up and running properly. Further details, including what should be modified in the scripts for different experimental set-ups, are given in the test cases.
 
 ## Background
 Numerical Weather Prediction (NWP) can be thought of as initial value problem comprising a forecast model and suitable initial conditions, with its accuracy depending critically on both. Data Assimilation (DA) attempts to provide the optimal initial conditions for the forecast model by estimating the state of the atmosphere and its uncertainty using a combination of forecast and observational information whilst taking into account their respective uncertainties. Optimality of the initial state is crucial in such a highly nonlinear system with limited predictability, and the forecast models need regular reinitialisation to prevent divergence from the true solution. 
@@ -284,9 +282,11 @@ Now the data has been saved, we can move on to plotting and data analysis...
 
 #### Plotting 
 
+There are numerous diagnostics and metrics for interpreting ensemble-based forecast-assimilation systems and their relevance to the NWP problem. Here, the focus is on ensemble spread, error, the continuous ranked probability score (CRPS), and the observational influence diagnostic (OID)  - see chapter 5 (specifically section 5.6) in Kent (2016) for definitions, details, and relevant references. 
+
+
 
 From terminal:
-
 ```
 python plot_func_t.py
 ```
