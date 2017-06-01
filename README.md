@@ -291,6 +291,8 @@ There are two main plotting routines:
   
 Both routines load the saved data generated in `main_p.py` from specific directories which must be manually specified. In this case, `dirname` is `test_enkf` and the default `ijk` is `111`.  Three plots are saved in an automatically-generated figure directory `cwd/test_enkf/test_enkf111/figs/`.
 
+##### 1. `plot_func_t.py`
+
 To run the plotting routine, enter in the terminal:
 ```
 python plot_func_t.py
@@ -301,20 +303,20 @@ ls -l test_enkf/test_enkf111/figs/
 ```
 and verify them with the figures below. To generate the same plots for different experiments, open the script and specify a different `ijk' combination.
 
-##### Observational Influence diagnostic.
+###### Observational Influence diagnostic.
 
 The OID provides a measure of the overall impact of observations/forecast on the analysis estimate. In operational NWP, most weight comes from the forecast (approx. 80% for global NWP). Observations are too few and incomplete (compared to the size of the system) to provide a comprehensive picture of the state. As such, observations adjust the more comprehensive forecast estimate closer to reality, rather than replace it completely. The OID of an idealised framework should reflect this; as a guiding figure, it should not be lower than 10% or higher than 50%. The OID is calculated at each assimilation time. In this test case, there are 3 cycles so we have 3 OID values.
 
 ![OID.png](figs/OID.png)
 
 
-##### Spread vs. Error
+###### Spread vs. Error
 
 A well-configured ensemble (i.e., sufficiently spread) is crucial to providing an adequate estimation of forecast error, and consequently an optimal analysis estimate. Thus, the RMSE of the ensemble mean should be comparable to the ensemble spread. These statistics are calculated at each grid point and then domain-averaged, yielding a single value for the forecast ensemble and analysis ensemble at each assimilation time.
 
 ![spr_err.png](figs/spr_err.png)
 
-##### CRPS
+###### CRPS
 
 The CRPS verifies the reliability of an ensemble with lower scores indicating higherskill. As such, the analysis ensemble should have a lower CRPS than the forecast ensemble valid at the same time.
 
@@ -323,6 +325,8 @@ The CRPS verifies the reliability of an ensemble with lower scores indicating hi
 *** NOTE 1: this is a test case, not a well-tuned experiment! See chapter 6 of Kent (2016) for an example of a well-tuned experiment with comparable spread and error, reasonable OID and CRPS.*** 
 
 *** NOTE 2: statistics will vary slightly as each experiment uses a stochastically-generated ensemble of model trajectories and observations.***
+
+##### 2. `plot_func_x.py`
 
 To run the plotting routine, enter in the terminal:
 
