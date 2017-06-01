@@ -291,7 +291,7 @@ There are two main plotting routines:
   
 Both routines load the saved data generated in `main_p.py` from specific directories which must be manually specified. In this case, `dirname` is `test_enkf` and the default `ijk` is `111`.  Three plots are saved in an automatically-generated figure directory `cwd/test_enkf/test_enkf111/figs/`.
 
-##### 1. `plot_func_t.py`
+##### 1. Using `plot_func_t.py`
 
 To run the plotting routine, enter in the terminal:
 ```
@@ -305,7 +305,7 @@ and verify them with the figures below. To generate the same plots for different
 
 ###### Observational Influence diagnostic.
 
-The OID provides a measure of the overall impact of observations/forecast on the analysis estimate. In operational NWP, most weight comes from the forecast (approx. 80% for global NWP). Observations are too few and incomplete (compared to the size of the system) to provide a comprehensive picture of the state. As such, observations adjust the more comprehensive forecast estimate closer to reality, rather than replace it completely. The OID of an idealised framework should reflect this; as a guiding figure, it should not be lower than 10% or higher than 50%. The OID is calculated at each assimilation time. In this test case, there are 3 cycles so we have 3 OID values.
+The OID provides a measure of the overall impact of observations/forecast on the analysis estimate. In operational NWP, most weight comes from the forecast (approx. 80% for global NWP). Observations are too few and incomplete (compared to the size of the system) to provide a comprehensive picture of the state. As such, observations adjust the more comprehensive forecast estimate closer to reality, rather than replace it completely. The OID of an idealised framework should reflect this; as a guiding figure, it should not be lower than 10% or higher than 50%. The OID is calculated at each assimilation time. In this test case, there are 3 cycles so we have 3 OID values. The plot title shows the number of ensembles `N` and the outer loop parameter combination:
 
 ![OID.png](figs/OID.png)
 
@@ -322,11 +322,11 @@ The CRPS verifies the reliability of an ensemble with lower scores indicating hi
 
 ![crps.png](figs/crps.png)
 
-*** NOTE 1: this is a test case, not a well-tuned experiment! See chapter 6 of Kent (2016) for an example of a well-tuned experiment with comparable spread and error, reasonable OID and CRPS.*** 
+***NOTE 1: this is a test case, not a well-tuned experiment! See chapter 6 of Kent (2016) for an example of a well-tuned experiment with comparable spread and error, reasonable OID and CRPS.*** 
 
-*** NOTE 2: statistics will vary slightly as each experiment uses a stochastically-generated ensemble of model trajectories and observations.***
+***NOTE 2: statistics will vary slightly as each experiment uses a stochastically-generated ensemble of model trajectories and observations.***
 
-##### 2. `plot_func_x.py`
+##### 2. Using `plot_func_x.py`
 
 To run the plotting routine, enter in the terminal:
 
