@@ -138,7 +138,9 @@ To kill at any point, press ```Ctrl+c```, or kill the active processes using ```
 
 ### 1. Model only: integration and dynamics
 
-Given a computational mesh, model parameters, and an initial condition, the model can be integrated to a specified finite time. The ```run_modRSW.py``` script achieves this, using functions from ```f_modRSW.py```, initial conditions from ```init_cond_modRSW.py``` and parameters from ```parameters.py```, plotting the model variables at given times.
+Given a computational mesh, model parameters, and an initial condition, the model can be integrated to a specified finite time. The ```run_modRSW.py``` script achieves this, using functions from ```f_modRSW.py```, initial conditions from ```init_cond_modRSW.py``` and parameters from ```parameters.py```, plotting the variables at given times.
+
+***NOTE: the model integrates the flux variables [h,hu,hr]; for plotting purposes, we use [h,u,r].***
 
 The default model parameters are:
 
@@ -280,6 +282,8 @@ more readme.txt
 
 Now the data has been saved, we can move on to plotting and data analysis...
 
+***NOTE: the model integrates the flux variables U=[h,hu,hr] but assimilates X=[h,u,r]. Hence, the forecast and analysis trajectories are in terms of X.***
+
 #### Plotting 
 
 There are numerous diagnostics and metrics for interpreting ensemble-based forecast-assimilation systems and their relevance to the NWP problem. Here, the focus is on ensemble spread, error, the continuous ranked probability score (CRPS), and the observational influence diagnostic (OID)  - see chapter 5 (specifically section 5.6) in Kent (2016) for definitions, details, and relevant references. 
@@ -289,7 +293,7 @@ There are two main plotting routines:
   * ```plot_func_t.py```: produces *domain-averaged* spread vs. error, CPRS, and OI plots as a function of time.  To use, specify (1) `dir_name`, (2) combination of parameters `ijk`.
   * ```plot_func_x.py```: produces domain plots at a given assimilation time. To use, specify (1) `dir_name`, (2) combination of parameters `ijk`, (3) time level ```T = time_vec[ii]```, i.e., choose ```ii```.
   
-Both routines load the saved data generated in `main_p.py` from specific directories which must be manually specified. In this case, `dirname` is `test_enkf` and the default `ijk` is `111`.  Three plots are saved in an automatically-generated figure directory `cwd/test_enkf/test_enkf111/figs/`.
+Both routines load the saved data generated in `main_p.py` from specific directories, which must be manually specified. In this case, `dirname` is `test_enkf` and the default `ijk` is `111`.  Three plots are saved in an automatically-generated figure directory `cwd/test_enkf/test_enkf111/figs/`.
 
 ##### 1. Using `plot_func_t.py`
 
