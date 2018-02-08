@@ -19,8 +19,7 @@ One example of a potential configuration of the model and assimilation algorithm
 ## References
 * Kent, T. (2016) An idealised fluid model of Numerical Weather Prediction: dynamics and data assimilation. *PhD thesis, University of Leeds*. Available at [http://etheses.whiterose.ac.uk/17269/](http://etheses.whiterose.ac.uk/17269/).
 
-* Kent, T., Bokhove, O., Tobias, S.M. (2017): Dynamics of an idealised fluid model for investigating convective-scale data assimilation. *Tellus A: in review*.
-
+* Kent, T., Bokhove, O., Tobias, S.M. (2017): Dynamics of an idealized fluid model for investigating convective-scale data assimilation. *Tellus A: Dynamic Meteorology and Oceanography*, 69(1), 1369332. [DOI](https://doi.org/10.1080/16000870.2017.1369332).
 ----
 
 ## Getting started
