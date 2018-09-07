@@ -2,7 +2,7 @@
 ## 			 FIXED PARAMETERS   			     ##
 ####################################################################
 '''
-Author: T. Kent  (tkent198@gmail.com)
+Author: T. Kent  (amttk@leeds.ac.uk)
 List of fixed parameters for model integration and EnKF.
 '''
 
@@ -56,7 +56,7 @@ o_d = 50                                # ob density: observe every o_d elements
 
 ''' OUTER LOOP'''
 '''
-Parameters for outer loop are specified in main_p.py 
+Parameters for outer loop are specified in main_p.py
 loc     : localisation scale
 add_inf : additive infaltaion factor
 inf     : mult. inflation factor
