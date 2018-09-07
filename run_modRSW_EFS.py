@@ -1,15 +1,15 @@
 #######################################################################
 # Ensemble forecasts for 1.5D SWEs with rain variable and topography
-#               (T. Kent: mmtk@leeds.ac.uk)
+#               (T. Kent: amttk@leeds.ac.uk)
 #######################################################################
 
 '''
     25.09.2016
-    
+
     Script runs ensemble forecasts, initialised from analysed ensembles at a given time.
-    
+
     Specify: directory, ijk, T0, Tfc
-    
+
     '''
 
 ##################################################################
@@ -146,46 +146,46 @@ while tmeasure-dtmeasure <= tmax:
     print '---------- ENSEMBLE FORECAST: START ----------'
     print '----------------------------------------------'
     print ' '
-    
+
     num_cores_tot = mp.cpu_count()
     num_cores_use = num_cores_tot-1
     print 'Number of cores available:', num_cores_tot
     print 'Number of cores used:', num_cores_use
-    
+
     print 'Starting ensemble integrations from time =', index,' to', index+1
-    
+
     print  ' *** Started: ', str(datetime.now())
-    
+
     print np.shape(U)
-    
+
     pool = mp.Pool(processes=num_cores_use)
-    
+
     mp_out = [pool.apply_async(ens_forecast_topog, args=(N, U, B, Nk_fc, Kk_fc, assim_time, index, tmeasure)) for N in range(0,n_ens)]
-    
+
     UU = [p.get() for p in mp_out]
-    
+
     pool.close()
-    
+
     print ' All ensembles integrated forward from time =', index,' to', index+1
     print ' *** Ended: ', str(datetime.now())
     print np.shape(UU)
-    
+
     UU =np.swapaxes(UU,0,1)
     UU =np.swapaxes(UU,1,2)
-    
+
     print np.shape(UU)
-    
+
     print ' '
     print '----------------------------------------------'
     print '------------- FORECAST STEP: END -------------'
     print '----------------------------------------------'
     print ' '
-    
+
     ##################################################################
     #  calculate crps and error at this time then integrate forward  #
     ##################################################################
-    
-    
+
+
     # transform to X for saving
     UU[1:,:,:] = UU[1:,:,:]/UU[0,:,:]
     for N in range(0,n_ens):
@@ -196,7 +196,7 @@ while tmeasure-dtmeasure <= tmax:
     np.save(str(dirn+'/X_EFS_array_T'+str(T)),X_fc_array)
 
     UU[1:,:,:] = UU[1:,:,:]*UU[0,:,:]
-    
+
     U = UU # update U for next integration
 
     # on to next assim_time
@@ -209,5 +209,3 @@ while tmeasure-dtmeasure <= tmax:
 ##################################################################
 #                       END OF PROGRAM                           #
 ##################################################################
-
-

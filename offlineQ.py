@@ -1,10 +1,10 @@
 #######################################################################
 # Investigating computation and structure of model error and candidate Q matrices
-# (T. Kent: tkent198@gmail.com)
+# (T. Kent:  amttk@leeds.ac.uk)
 #######################################################################
 '''
     Comparing time-dep. and 2 static Q matrices
-    
+
     '''
 import math as m
 import numpy as np

@@ -1,19 +1,19 @@
 ##################################################################
 #--------------- Plotting routines for saved data ---------------
-#                   (T. Kent: tkent198@gmail.com)
+#                   (T. Kent:  amttk@leeds.ac.uk)
 ##################################################################
 '''
     Plotting routine: <plot_func_t>
-    
+
     Loads saved data in specific directories and produces plots as a function of time for OID, spr v err, and CRPS (i.e., domain-averaged time series). To use, specify (1) dir_name, (2) combination of parameters ijk.
-    
+
     NOTE: Any changes to the outer loop parameters should be replicated here too.
-    
+
     NOTEE: currently saves as .png files
     '''
 
 
-## generic modules 
+## generic modules
 import os
 import errno
 import numpy as np
@@ -100,9 +100,9 @@ OI_ave = 100*OI[0,1:-1].mean(axis=-1)
 
 print 'OI ave. =', OI_ave
 
-print ' ' 
+print ' '
 print ' PLOT : OI'
-print ' ' 
+print ' '
 fig, axes = plt.subplots(1, 1, figsize=(8,5))
 plt.suptitle("OI diagnostic  (N = %s): [loc, add_inf, inf] = [%s, %s, %s]" % (n_ens,loc[i], add_inf[j], inf[k]),fontsize=16)
 
@@ -155,16 +155,16 @@ crps_an = np.empty((Neq,len(time_vec)))
 ##################################################################
 
 for T in time_vec[1:]:
-    
+
     plt.clf() # clear figs from previous loop
-    
+
     Xbar[:,:,T] = np.dot(X[:,:,T],ONE) # fc mean
     Xdev[:,:,T] = X[:,:,T] - Xbar[:,:,T] # fc deviations from mean
     Xdev_tr[:,:,T] = X[:,:,T] - X_tr[:,:,T] # fc deviations from truth
     Xanbar[:,:,T] = np.dot(Xan[:,:,T],ONE) # an mean
     Xandev[:,:,T] = Xan[:,:,T] - Xanbar[:,:,T] # an deviations from mean
-    Xandev_tr[:,:,T] = Xan[:,:,T] - X_tr[:,:,T] # an deviations from truth    
-    
+    Xandev_tr[:,:,T] = Xan[:,:,T] - X_tr[:,:,T] # an deviations from truth
+
 
     # ANALYSIS: ensemble mean error
     an_err = Xanbar[:,0,T] - X_tr[:,0,T] # an_err = analysis ens. mean - truth
@@ -173,7 +173,7 @@ for T in time_vec[1:]:
     # FORECAST: ensemble mean error
     fc_err = Xbar[:,0,T] - X_tr[:,0,T] # fc_err = ens. mean - truth
     fc_err2 = fc_err**2
-    
+
     # analysis cov matrix
     Pa = np.dot(Xandev[:,:,T],np.transpose(Xandev[:,:,T]))
     Pa = Pa/(n_ens - 1) # analysis covariance matrix
@@ -182,7 +182,7 @@ for T in time_vec[1:]:
     Pa_tr = np.dot(Xandev_tr[:,:,T],np.transpose(Xandev_tr[:,:,T]))
     Pa_tr = Pa_tr/(n_ens - 1) # fc covariance matrix w.r.t truth
     var_ant = np.diag(Pa_tr)
-    
+
     # forecast cov matrix
     Pf = np.dot(Xdev[:,:,T],np.transpose(Xdev[:,:,T]))
     Pf = Pf/(n_ens - 1) # fc covariance matrix
@@ -194,7 +194,7 @@ for T in time_vec[1:]:
     ##################################################################
     ###                       CRPS                                ####
     ##################################################################
-    
+
     CRPS_fc = np.empty((Neq,Nk_fc))
     CRPS_an = np.empty((Neq,Nk_fc))
 
@@ -205,8 +205,8 @@ for T in time_vec[1:]:
         CRPS_an[0,ii] = crps_calc(Xan[ii,:,T],X_tr[ii,0,T])
         CRPS_an[1,ii] = crps_calc(Xan[ii+Nk_fc,:,T],X_tr[ii+Nk_fc,0,T])
         CRPS_an[2,ii] = crps_calc(Xan[ii+2*Nk_fc,:,T],X_tr[ii+2*Nk_fc,0,T])
-        
-    
+
+
     #################################################################
 
 

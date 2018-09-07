@@ -1,8 +1,8 @@
 #######################################################################
-# modRSW with topography (T. Kent: tkent198@gmail.com)
+# modRSW with topography (T. Kent:  amttk@leeds.ac.uk)
 #######################################################################
 '''
-Given mesh, IC, time paramters, integrates modRSW and plots evolution. 
+Given mesh, IC, time paramters, integrates modRSW and plots evolution.
 Useful first check of simulations before use in the EnKF.
 '''
 
@@ -13,14 +13,14 @@ Useful first check of simulations before use in the EnKF.
 import numpy as np
 import scipy as sp
 import matplotlib.pyplot as plt
-import errno 
+import errno
 import os
 
 ##################################################################
 # CUSTOM FUNCTIONS AND MODULES REQUIRED
 ##################################################################
 
-from parameters import * 
+from parameters import *
 from f_modRSW import step_forward_topog, time_step, make_grid, make_grid_2
 from init_cond_modRSW import init_cond_topog_cos, init_cond_topog
 
@@ -51,7 +51,7 @@ except OSError as exception:
     if exception.errno != errno.EEXIST:
         raise
 
-##################################################################    
+##################################################################
 # Mesh generation for forecast and truth resolutions
 ##################################################################
 grid =  make_grid(Nk,L) # forecast
@@ -59,7 +59,7 @@ Kk = grid[0]
 x = grid[1]
 xc = grid[2]
 
-##################################################################    
+##################################################################
 #'''%%%----- Apply initial conditions -----%%%'''
 ##################################################################
 print 'Generate initial conditions...'
@@ -129,14 +129,14 @@ while tn < tmax:
 
         fig, axes = plt.subplots(3, 1, figsize=(6,8))
         plt.suptitle("Model trajectories at t = %.3f with Nk =%d" %(tmeasure,Nk))
-        
+
         axes[0].plot(xc, U[0,:]+B, 'b')
         axes[0].plot(xc, B, 'k', linewidth=2.0)
         axes[0].plot(xc,Hc*np.ones(len(xc)),'r:')
         axes[0].plot(xc,Hr*np.ones(len(xc)),'r:')
         axes[0].set_ylim([0,3*H0])
         axes[0].set_ylabel('$h(x)$',fontsize=18)
-        
+
         axes[1].plot(xc, U[1,:]/U[0,:], 'b')
         axes[1].set_ylim([0,2])
         axes[1].set_ylabel('$u(x)$',fontsize=18)
@@ -146,15 +146,15 @@ while tn < tmax:
         axes[2].set_ylabel('$r(x)$',fontsize=18)
         axes[2].set_ylim([-0.025,0.15])
         axes[2].set_xlabel('$x$',fontsize=18)
-    
-	
+
+
         name_fig = "/t%d_Nk%d.png" %(index, Nk)
         f_name_fig = str(dirn+name_fig)
         plt.savefig(f_name_fig)
         print ' *** %s at time level %d saved to %s' %(name_fig,index,dirn)
-        
+
         U_array[:,:,index] = U
-        
+
         index = index + 1
         tmeasure = tmeasure + dtmeasure
         print ' '
@@ -172,19 +172,18 @@ np.save(str(dirn+'/B_Nk%d' %Nk),B)
 print ' '
 print ' CHECK data value: maximum h(x) at t = 0.288:' , np.max(U_array[0,:,2]), ' at x = ', xc[np.argmax(U_array[0,:,2])]
 print ' '
-print ' -------------- SUMMARY: ------------- '  
-print ' ' 
+print ' -------------- SUMMARY: ------------- '
+print ' '
 print 'Dynamics:'
-print 'Ro =', Ro  
+print 'Ro =', Ro
 print 'Fr = ', Fr
-print '(H_0 , H_c , H_r) =', [H0, Hc, Hr]  
+print '(H_0 , H_c , H_r) =', [H0, Hc, Hr]
 print ' Mesh: number of elements Nk =', Nk
-print ' '   
+print ' '
 print ' ----------- END OF SUMMARY ---------- '
-print ' '  
+print ' '
 
 
 ##################################################################
 #			END OF PROGRAM				 #
 ##################################################################
-

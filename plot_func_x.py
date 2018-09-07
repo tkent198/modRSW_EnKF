@@ -1,6 +1,6 @@
 ##################################################################
 #--------------- Plotting routines for saved data ---------------
-#                   (T. Kent: tkent198@gmail.com)
+#                   (T. Kent:  amttk@leeds.ac.uk)
 ##################################################################
 '''
 Plotting routine: <plot_func_x>
@@ -13,7 +13,7 @@ NOTEE: currently saves as .png files
 '''
 
 
-# generic modules 
+# generic modules
 import os
 import errno
 import numpy as np
@@ -66,16 +66,16 @@ OI = np.load(str(dirn+'/OI.npy')) # OI
 # print shape of data arrays to terminal (sanity check)
 print ' Check array shapes...'
 np.set_printoptions(formatter={'float': '{: 0.3f}'.format})
-print 'X_array shape (n_d,n_ens,T)      : ', np.shape(X) 
-print 'X_tr_array shape (n_d,1,T)       : ', np.shape(X_tr) 
-print 'Xan_array shape (n_d,n_ens,T)    : ', np.shape(Xan) 
-print 'Y_obs_array shape (p,n_ens,T)    : ', np.shape(Y_obs) 
+print 'X_array shape (n_d,n_ens,T)      : ', np.shape(X)
+print 'X_tr_array shape (n_d,1,T)       : ', np.shape(X_tr)
+print 'Xan_array shape (n_d,n_ens,T)    : ', np.shape(Xan)
+print 'Y_obs_array shape (p,n_ens,T)    : ', np.shape(Y_obs)
 print ' '
 ##################################################################
 
 # determine parameters from loaded arrays
 Neq = np.shape(OI)[0] - 1
-n_d = np.shape(X)[0] 
+n_d = np.shape(X)[0]
 Nk_fc = n_d/Neq
 Kk_fc = 1./Nk_fc
 xc = np.linspace(Kk_fc/2,L-Kk_fc/2,Nk_fc)
@@ -201,7 +201,7 @@ print ' *** %s at time level %d saved to %s' %(name_f,T,figsdir)
 an_err = Xanbar[:,0,T] - X_tr[:,0,T] # an_err = analysis ens. mean - truth
 an_err2 = an_err**2
 # domain-averaged mean errors
-an_ME_h = an_err[h_mask].mean() 
+an_ME_h = an_err[h_mask].mean()
 an_ME_hu = an_err[hu_mask].mean()
 an_ME_hr = an_err[hr_mask].mean()
 # domain-averaged absolute errors

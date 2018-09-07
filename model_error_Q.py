@@ -1,6 +1,6 @@
 #######################################################################
 # Investigating computation and structure of model error and candidate Q matrices
-# (T. Kent: mmtk@leeds.ac.uk)
+# (T. Kent: amttk@leeds.ac.uk)
 #######################################################################
 '''
     5.9.16
@@ -111,7 +111,7 @@ Pf = np.dot(Xdev[:,:,T], Xdev[:,:,T].T)
 Pf = Pf/(n_ens - 1)
 print 'max Pf value: ', np.max(Pf)
 print 'min Pf value: ', np.min(Pf)
-print ' ' 
+print ' '
 ## true covariance matrix
 Pf_tr = np.dot(Xdev_tr[:,:,T], Xdev_tr[:,:,T].T)
 Pf_tr = Pf_tr/(n_ens - 1)

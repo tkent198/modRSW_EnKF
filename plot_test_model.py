@@ -1,6 +1,6 @@
 ##################################################################
 #------------- Plotting routine for saved test data -------------
-#                   (T. Kent: tkent198@gmail.com)
+#                   (T. Kent:  amttk@leeds.ac.uk)
 ##################################################################
 '''
 Uses simulation data generated in run_modRSW.py test cases. Goal: compare low- and high-res. simulations.
