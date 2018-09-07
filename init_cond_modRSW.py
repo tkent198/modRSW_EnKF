@@ -1,6 +1,6 @@
 ##################################################################
 #----------------- Initial conditions for modRSW -----------------
-#                   (T. Kent: mmtk@leeds.ac.uk)
+#                   (T. Kent: amttk@leeds.ac.uk)
 ##################################################################
 
 '''
@@ -11,7 +11,7 @@ INPUT ARGS:
 # x: mesh coords
 # Neq: number of equations (variables) - 4 w/o topography, 5 w/ topography
 # Nk: no. of cells in mesh
-# H0: reference (scaled) height 
+# H0: reference (scaled) height
 # L: length of domain
 # A: amplitude
 # V: velocity scale
@@ -66,7 +66,7 @@ Topography, no rotation:
 ###############################################################
 
 import numpy as np
- 
+
 ###############################################################
 
 def init_cond_1(x,Nk,Neq,H0,L,A,V):
@@ -79,7 +79,7 @@ def init_cond_1(x,Nk,Neq,H0,L,A,V):
     ic3 = np.zeros(len(x))
     ic4 = np.zeros(len(x))
 
-    # Define array and fill with first-order FV (piecewise constant) initial data  
+    # Define array and fill with first-order FV (piecewise constant) initial data
     U0 = np.zeros((Neq,Nk))
     U0[0,:] = 0.5*(ic1[0:Nk] + ic1[1:Nk+1]) # h
     U0[1,:] = 0.5*(ic1[0:Nk]*ic2[0:Nk] + ic1[1:Nk+1]*ic2[1:Nk+1]) # hu
@@ -102,7 +102,7 @@ def init_cond_2(x,Nk,Neq,H0,L,A,V):
     ic3 = np.zeros(len(x))
     ic4 = np.zeros(len(x))
 
-# Define array and fill with first-order FV (piecewise constant) initial data 
+# Define array and fill with first-order FV (piecewise constant) initial data
     U0 = np.zeros((Neq,Nk))
     U0[0,:] = 0.5*(ic1[0:Nk] + ic1[1:Nk+1]) # h
     U0[1,:] = 0.5*(ic1[0:Nk]*ic2[0:Nk] + ic1[1:Nk+1]*ic2[1:Nk+1]) # hu
@@ -117,7 +117,7 @@ def init_cond_3(x,Nk,Neq,H0,L,A,V):
 
 # for disturbed height (top-hat) Rossby adj. set up
 # Smoothed step:
-    gam = 100 
+    gam = 100
     f1 = 1-np.tanh(gam*(x-0.75*L))
     f2 = 1-np.tanh(gam*(x-0.25*L))
 
@@ -126,7 +126,7 @@ def init_cond_3(x,Nk,Neq,H0,L,A,V):
     ic3 = np.zeros(len(x))
     ic4 = np.zeros(len(x))
 
-# Define array and fill with first-order FV (piecewise constant) initial data 
+# Define array and fill with first-order FV (piecewise constant) initial data
     U0 = np.zeros((Neq,Nk))
     U0[0,:] = 0.5*(ic1[0:Nk] + ic1[1:Nk+1]) # h
     U0[1,:] = 0.5*(ic1[0:Nk]*ic2[0:Nk] + ic1[1:Nk+1]*ic2[1:Nk+1]) # hu
@@ -144,10 +144,10 @@ def init_cond_4(x,Nk,Neq,H0,L,A,V):
     ic3 = np.zeros(len(x))
 # single jet
     Lj = 0.1*L
-    ic4 = V*(1+np.tanh(4*(x-0.5*L)/Lj + 2))*(1-np.tanh(4*(x-0.5*L)/Lj - 2))/4 
-    #ic4 = V*(1+np.tanh(4*(x)/Lj + 2))*(1-np.tanh(4*(x)/Lj - 2))/4 
-    
-# Define array and fill with first-order FV (piecewise constant) initial data 
+    ic4 = V*(1+np.tanh(4*(x-0.5*L)/Lj + 2))*(1-np.tanh(4*(x-0.5*L)/Lj - 2))/4
+    #ic4 = V*(1+np.tanh(4*(x)/Lj + 2))*(1-np.tanh(4*(x)/Lj - 2))/4
+
+# Define array and fill with first-order FV (piecewise constant) initial data
     U0 = np.zeros((Neq,Nk))
     U0[0,:] = 0.5*(ic1[0:Nk] + ic1[1:Nk+1]) # h
     U0[1,:] = 0.5*(ic1[0:Nk]*ic2[0:Nk] + ic1[1:Nk+1]*ic2[1:Nk+1]) # hu
@@ -163,14 +163,14 @@ def init_cond_5(x,Nk,Neq,H0,L,A,V):
     ic1 = H0*np.ones(len(x))
     ic2 = np.zeros(len(x))
     ic3 = np.zeros(len(x))
- 
+
 ## double jet
     Lj = 0.1*L
     f1 = V*(1+np.tanh(4*(x-0.75*L)/Lj + 2))*(1-np.tanh(4*(x-0.75*L)/Lj - 2))/4
     f2 = V*(1+np.tanh(4*(x-0.25*L)/Lj + 2))*(1-np.tanh(4*(x-0.25*L)/Lj - 2))/4
     ic4 = f1-f2
-    
-# Define array and fill with first-order FV (piecewise constant) initial data 
+
+# Define array and fill with first-order FV (piecewise constant) initial data
     U0 = np.zeros((Neq,Nk))
     U0[0,:] = 0.5*(ic1[0:Nk] + ic1[1:Nk+1]) # h
     U0[1,:] = 0.5*(ic1[0:Nk]*ic2[0:Nk] + ic1[1:Nk+1]*ic2[1:Nk+1]) # hu
@@ -178,7 +178,7 @@ def init_cond_5(x,Nk,Neq,H0,L,A,V):
     U0[3,:] = 0.5*(ic1[0:Nk]*ic4[0:Nk] + ic1[1:Nk+1]*ic4[1:Nk+1]) # hv
 
     return U0
-    
+
 ###############################################################
 
 def init_cond_5_1(x,Nk,Neq,H0,L,A,V):
@@ -186,14 +186,14 @@ def init_cond_5_1(x,Nk,Neq,H0,L,A,V):
     ic1 = H0*np.ones(len(x))
     ic2 = 0.5*np.ones(len(x))
     ic3 = np.zeros(len(x))
- 
+
 ## double jet
     Lj = 0.1*L
     f1 = V*(1+np.tanh(4*(x-0.75*L)/Lj + 2))*(1-np.tanh(4*(x-0.75*L)/Lj - 2))/4
     f2 = V*(1+np.tanh(4*(x-0.25*L)/Lj + 2))*(1-np.tanh(4*(x-0.25*L)/Lj - 2))/4
     ic4 = f1-f2
-    
-# Define array and fill with first-order FV (piecewise constant) initial data 
+
+# Define array and fill with first-order FV (piecewise constant) initial data
     U0 = np.zeros((Neq,Nk))
     U0[0,:] = 0.5*(ic1[0:Nk] + ic1[1:Nk+1]) # h
     U0[1,:] = 0.5*(ic1[0:Nk]*ic2[0:Nk] + ic1[1:Nk+1]*ic2[1:Nk+1]) # hu
@@ -218,7 +218,7 @@ def init_cond_6(x,Nk,Neq,H0,L,A,V):
     #ic4 = V*(f3+f4-f5-f6)
     ic4 = V*(f3-f4+f5-f6)
 
-# Define array and fill with first-order FV (piecewise constant) initial data 
+# Define array and fill with first-order FV (piecewise constant) initial data
     U0 = np.zeros((Neq,Nk))
     U0[0,:] = 0.5*(ic1[0:Nk] + ic1[1:Nk+1]) # h
     U0[1,:] = 0.5*(ic1[0:Nk]*ic2[0:Nk] + ic1[1:Nk+1]*ic2[1:Nk+1]) # hu
@@ -243,7 +243,7 @@ def init_cond_6_1(x,Nk,Neq,H0,L,A,V):
     #ic4 = V*(f3+f4-f5-f6)
     ic4 = V*(f3-f4+f5-f6)
 
-# Define array and fill with first-order FV (piecewise constant) initial data 
+# Define array and fill with first-order FV (piecewise constant) initial data
     U0 = np.zeros((Neq,Nk))
     U0[0,:] = 0.5*(ic1[0:Nk] + ic1[1:Nk+1]) # h
     U0[1,:] = 0.5*(ic1[0:Nk]*ic2[0:Nk] + ic1[1:Nk+1]*ic2[1:Nk+1]) # hu
@@ -260,7 +260,7 @@ def init_cond_topog(x,Nk,Neq,H0,L,A,V):
     ic2 = np.zeros(len(x))
     ic2= 1./ic1 # for hu = 1:
     ic3 = np.zeros(len(x))
-    
+
     # single hill
     bc = 0.5
     xp = 0.1
@@ -284,7 +284,7 @@ def init_cond_topog4(x,Nk,Neq,H0,L,A,V):
     ic2 = np.zeros(len(x))
     ic2=1/ic1 # for hu = 1:
     ic3 = np.zeros(len(x))
-    
+
     # 4 hills
     bc = 0.4
     xp = 0.5
@@ -293,13 +293,13 @@ def init_cond_topog4(x,Nk,Neq,H0,L,A,V):
     B = np.maximum(B, bc*(1 - ((x - L*0.65*xp)**2)/a**2))
     B = np.maximum(B, bc*(1 - ((x - L*0.85*xp)**2)/a**2))
     B = np.maximum(0,B)
-    
+
     U0 = np.zeros((Neq,Nk))
     B = 0.5*(B[0:Nk] + B[1:Nk+1]); # b
     U0[0,:] = np.maximum(0, 0.5*(ic1[0:Nk] + ic1[1:Nk+1]) - B) # h
     U0[1,:] = 0.5*(ic1[0:Nk]*ic2[0:Nk] + ic1[1:Nk+1]*ic2[1:Nk+1]) # hu
     U0[2,:] = 0.5*(ic1[0:Nk]*ic3[0:Nk] + ic1[1:Nk+1]*ic3[1:Nk+1]) # hr
-    
+
     return U0, B
 
 ###############################################################
@@ -318,7 +318,7 @@ def init_cond_topog_cos(x,Nk,Neq,H0,L,A,V):
 
     B = A[0]*(1+np.cos(k*(waven[0]*(x-xp)-0.5)))+ A[1]*(1+np.cos(k*(waven[1]*(x-xp)-0.5)))+    A[2]*(1+np.cos(k*(waven[2]*(x-xp)-0.5)))
     B = 0.5*B
-    
+
     index = np.where(B<=np.min(B)+1e-10)
     index = index[0]
     B[:index[0]] = 0
@@ -329,7 +329,7 @@ def init_cond_topog_cos(x,Nk,Neq,H0,L,A,V):
     U0[0,:] = np.maximum(0, 0.5*(ic1[0:Nk] + ic1[1:Nk+1]) - B) # h
     U0[1,:] = 0.5*(ic1[0:Nk]*ic2[0:Nk] + ic1[1:Nk+1]*ic2[1:Nk+1]) # hu
     U0[2,:] = 0.5*(ic1[0:Nk]*ic3[0:Nk] + ic1[1:Nk+1]*ic3[1:Nk+1]) # hr
-    
+
     return U0, B
 
 ###############################################################

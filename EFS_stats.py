@@ -96,63 +96,63 @@ ONE = ONE/n_ens # NxN array with elements equal to 1/N
 print ' *** Calculating errors...'
 
 for T in time_vec:
-    
+
     plt.clf() # clear figs from previous loop
-    
+
     Xbar[:,:,T] = np.dot(X[:,:,T],ONE) # fc mean
     Xdev[:,:,T] = X[:,:,T] - Xbar[:,:,T] # fc deviations from mean
     Xdev_tr[:,:,T] = X[:,:,T] - X_tr[:,:,T] # fc deviations from truth
-    
+
     ##################################################################
     ###               ERRORS + SPREAD                             ####
     ##################################################################
-    
-    
+
+
     # FORECAST: ensemble mean error
     fc_err = Xbar[:,0,T] - X_tr[:,0,T] # fc_err = ens. mean - truth
     fc_err2 = fc_err**2
-    
+
     # forecast cov matrix
     Pf = np.dot(Xdev[:,:,T],np.transpose(Xdev[:,:,T]))
     Pf = Pf/(n_ens - 1) # fc covariance matrix
     var_fc = np.diag(Pf)
-    
+
     Pf_tr = np.dot(Xdev_tr[:,:,T],np.transpose(Xdev_tr[:,:,T]))
     Pf_tr = Pf_tr/(n_ens - 1) # fc covariance matrix w.r.t. truth
     var_fct = np.diag(Pf_tr)
-    
+
     err2 = Xdev_tr[:,:,T]**2
     err2_h = err2[h_mask,:].mean(axis=0)
     err2_u = err2[hu_mask,:].mean(axis=0)
     err2_r = err2[hr_mask,:].mean(axis=0)
-    
+
     error_fc[0,:,T] = np.sqrt(err2_h)
     error_fc[1,:,T] = np.sqrt(err2_u)
     error_fc[2,:,T] = np.sqrt(err2_r)
-    
-    
+
+
     ##################################################################
     ###                       CRPS                                ####
     ##################################################################
-    
+
     CRPS_fc = np.empty((Neq,Nk_fc))
-    
+
     for ii in h_mask:
         CRPS_fc[0,ii] = crps_calc(X[ii,:,T],X_tr[ii,0,T])
         CRPS_fc[1,ii] = crps_calc(X[ii+Nk_fc,:,T],X_tr[ii+Nk_fc,0,T])
         CRPS_fc[2,ii] = crps_calc(X[ii+2*Nk_fc,:,T],X_tr[ii+2*Nk_fc,0,T])
-    
-    
+
+
     #################################################################
-    
-    
+
+
     # domain-averaged stats
     ame_fc[0,T] = np.mean(np.absolute(fc_err[h_mask]))
     spr_fc[0,T] = np.sqrt(np.mean(var_fc[h_mask]))
     rmse_fc[0,T] = np.sqrt(np.mean(fc_err2[h_mask]))
     tote_fc[0,T] = np.sqrt(np.mean(var_fct[h_mask]))
     crps_fc[0,T] = np.mean(CRPS_fc[0,:])
-    
+
     ame_fc[1,T] = np.mean(np.absolute(fc_err[hu_mask]))
     spr_fc[1,T] = np.sqrt(np.mean(var_fc[hu_mask]))
     rmse_fc[1,T] = np.sqrt(np.mean(fc_err2[hu_mask]))
@@ -388,4 +388,3 @@ print ' '
 
 
 ###########################################################################
-

@@ -1,14 +1,14 @@
 #######################################################################
 # Perturbed obs. EnKF for 1.5D SWEs with rain variable and topography
-#               (T. Kent: tkent198@gmail.com)
+#               (T. Kent:  amttk@leeds.ac.uk)
 #######################################################################
 
 '''
 May 2017
-Main run script for batch-processing of EnKF jobs. 
+Main run script for batch-processing of EnKF jobs.
 Define outer-loop through parameter space and run the EnKF subroutine for each case.
 Summary:
-> truth generated outside of outer loop as this is the same for all experiments 
+> truth generated outside of outer loop as this is the same for all experiments
 > uses subroutine <subr_enkf_modRSW_p> that parallelises ensemble forecasts using multiprocessing module
 > Data saved to automatically-generated directories and subdirectories with accompanying readme.txt file.
 '''
@@ -25,7 +25,7 @@ import errno
 ##################################################################
 
 from parameters import *
-from f_modRSW import make_grid 
+from f_modRSW import make_grid
 from f_enkf_modRSW import generate_truth
 from init_cond_modRSW import init_cond_topog4, init_cond_topog_cos
 from create_readme import create_readme
@@ -59,12 +59,12 @@ inf = [1.01, 1.05, 1.1]
 #################################################################
 ic = init_cond_topog_cos
 
-##################################################################    
-# Mesh generation and IC for truth 
+##################################################################
+# Mesh generation and IC for truth
 ##################################################################
 tr_grid =  make_grid(Nk_tr,L) # truth
-Kk_tr = tr_grid[0] 
-x_tr = tr_grid[1] 
+Kk_tr = tr_grid[0]
+x_tr = tr_grid[1]
 
 ### Truth ic
 U0_tr, B_tr = ic(x_tr,Nk_tr,Neq,H0,L,A,V)
@@ -83,24 +83,24 @@ except:
     U_tr_array = generate_truth(U_tr_array, B_tr, Nk_tr, tr_grid, assim_time, f_path_name)
 
 
-##################################################################    
-# EnKF: outer loop 
+##################################################################
+# EnKF: outer loop
 ##################################################################
 print ' '
-print ' ------- ENTERING EnKF OUTER LOOP ------- '  
+print ' ------- ENTERING EnKF OUTER LOOP ------- '
 print ' '
 for i in range(0,len(loc)):
     for j in range(0,len(add_inf)):
         for k in range(0,len(inf)):
             run_enkf(i,j,k, loc[i], add_inf[j], inf[k] , ic , U_tr_array, dirname)
-    
 
-print ' '   
+
+print ' '
 print ' --------- FINISHED OUTER LOOP -------- '
-print ' '   
-print ' ------------ END OF PROGRAM ---------- '  
-print ' ' 
-    
-##################################################################    
+print ' '
+print ' ------------ END OF PROGRAM ---------- '
+print ' '
+
+##################################################################
 #                        END OF PROGRAM                          #
 ##################################################################

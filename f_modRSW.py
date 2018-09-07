@@ -3,25 +3,25 @@
 #######################################################################
 
 '''
-AUTHOR: T. Kent (tkent198@gmail.com)
+AUTHOR: T. Kent (amttk@leeds.ac.uk)
 
 Module contains numerous functions for the numerical inegration of the modRSW model:
 > make_grid            : makes mesh for given length and gridcell number
 > NCPflux4d             : calculates numerical flux as per the theory of Kent et al. 2017
 > NCPflux_topog         : calcualtes flux for flow over topography
 > time_step            : calculates stable time step for integration
-> step_forward_modRSW   : integrates forward one time step (forward euler) using NCPflux4d 
+> step_forward_modRSW   : integrates forward one time step (forward euler) using NCPflux4d
 > heaviside             : vector-aware implementation of heaviside (also works for scalars).
 > ens_forecast_topog    : for use in parallel ensemble forecasting
 '''
-    
+
 import math as m
 import numpy as np
 from parameters import *
 
 ##################################################################
 #'''-------------- Create mesh at given resolution --------------'''
-##################################################################  
+##################################################################
 
 # domain [0,L]
 def make_grid(Nk,L):
@@ -42,24 +42,24 @@ def make_grid_2(Nk,L):
 
 ##################################################################
 #'''----------------- NCP flux function -----------------'''
-##################################################################        
+##################################################################
 def NCPflux4d(UL,UR,Hr,Hc,c2,beta,g):
 
 ### INPUT ARGS:
-# UL: left state 4-vector       e.g.: UL = np.array([1,2,0,1]) 
+# UL: left state 4-vector       e.g.: UL = np.array([1,2,0,1])
 # UR: right state 4-vector      e.g.: UR = np.array([1.1,1.5,0,0.9])
 # Hr: threshold height r        e.g.: Hr = 1.15 (note that Hc < Hr)
 # Hc: threshold height c        e.g.: Hc = 1.02
 # c2: constant for rain geop.   e.g.: c2 = 9.8*Hr/400
 # beta: constant for hr eq.     e.g.: beta = 1
-# g: scaled gravity             e.g.: g = 1/(Fr**2) 
+# g: scaled gravity             e.g.: g = 1/(Fr**2)
 
 ### OUTPUT:
 # Flux: 4-vector of flux values between left and right states
 # VNC : 4-vector of VNC values due to NCPs
 
-    # isolate variables for flux calculation    
-    hL = UL[0] 
+    # isolate variables for flux calculation
+    hL = UL[0]
     hR = UR[0]
     uL = UL[1]/hL;
     uR = UR[1]/hR;
@@ -81,12 +81,12 @@ def NCPflux4d(UL,UR,Hr,Hc,c2,beta,g):
     if a == 0:
         Ibeta = beta*heaviside(uL-uR)*heaviside(b)
         Itaubeta = 0.5*beta*heaviside(uL-uR)*heaviside(b)
-    else:    
+    else:
         d = (a+b)/a
         e = (a**2 - b**2)/a**2
         Ibeta = beta*heaviside(uL-uR)*(d*heaviside(a+b) - (b/a)*heaviside(b))
         Itaubeta = 0.5*beta*heaviside(uL-uR)*(e*heaviside(a+b) + (b**2/a**2)*heaviside(b))
-    
+
 
     #    '''%%%----- VNC component -----%%%'''
     VNC1 = 0
@@ -95,7 +95,7 @@ def NCPflux4d(UL,UR,Hr,Hc,c2,beta,g):
     VNC4 = 0
 
     VNC = np.array([VNC1, VNC2, VNC3, VNC4])
-    
+
     #   '''%%%----- Vector flux P^NC in the theory -----%%%'''
     if SL > 0:
         PhL = 0.5*g*(hL**2 + (Hc**2 - hL**2)*heaviside(hL-Hc))
@@ -139,7 +139,7 @@ def NCPflux_topog(UL,UR,BL,BR,Hr,Hc,c2,beta,g):
     # isolate variables for flux calculation
     hL = UL[0]
     hR = UR[0]
-    
+
     if hL < 1e-9:
         uL = 0
         rL = 0
@@ -231,7 +231,7 @@ def time_step(U,Kk,cfl):
     lam1 = abs(U[1,:]/U[0,:] - np.sqrt(cc2*beta + g*U[0,:]))
     lam2 = abs(U[1,:]/U[0,:] + np.sqrt(cc2*beta + g*U[0,:]))
     denom = np.maximum(lam1,lam2)
-    
+
     dt = cfl*min(Kk/denom)
 
     return dt
@@ -255,8 +255,8 @@ def step_forward_modRSW(U,dt,Nk,Kk):
     S[0,:] = 0
     S[1,:] = (1/Ro)*U[3,:]
     S[2,:] = -alpha2*U[2,:]
-    S[3,:] = -(1/Ro)*U[1,:]    
- 
+    S[3,:] = -(1/Ro)*U[1,:]
+
 
     #''' %%%----- Determine intercell fluxes using numerical flux function -----%%%'''
     Flux = np.empty((Neq,Nk+1))
@@ -266,14 +266,14 @@ def step_forward_modRSW(U,dt,Nk,Kk):
         Flux[:,Nk], VNC[:,Nk] = NCPflux4d(U[:,Nk-1],U[:,0],Hr,Hc,cc2,beta,g)
         Flux[:,0] = Flux[:,Nk]  # periodic
         VNC[:,0] = VNC[:,Nk]  # periodic
- 
+
     Pp = 0.5*VNC + Flux
     Pm = -0.5*VNC + Flux
     #'''%%%----- step forward in time -----%%%'''
 
 
     UU = U - dt*(Pp[:,1:Nk+1] - Pm[:,0:Nk])/Kk + dt*S
-    
+
     return UU
 
 ##################################################################
@@ -289,49 +289,49 @@ def step_forward_topog(U,B,dt,tn,Nk,Kk):
 
     left = range(0,Nk)
     right = np.append(range(1,Nk),0)
-    
+
     h = U[0,:]
     h[h<1e-9] =0
     hu = U[1,:]
     hu[h<1e-9] = 0
     U[1,:] = hu
-    
+
     Bstar = np.maximum(B[left],B[right])
     hminus = np.maximum(U[0,left] + B[left] - Bstar,0)
     hplus = np.maximum(U[0,right] + B[right] - Bstar,0)
-    
+
     uminus = U[1,left]/U[0,left]
     uminus[np.isnan(uminus)] = 0
     uplus = U[1,right]/U[0,right]
     uplus[np.isnan(uplus)] = 0
-    
+
     U[2,:] = np.maximum(U[2,:],0)
     rminus = U[2,left]/U[0,left]
     rminus[np.isnan(rminus)] = 0
     rplus = U[2,right]/U[0,right]
     rplus[np.isnan(rplus)] = 0
-    
+
     huminus = hminus*uminus
     huminus = np.append(huminus[-1], huminus)
     huplus = hplus*uplus
     huplus = np.append(huplus[-1], huplus)
-    
+
     hrminus = hminus*rminus
     hrminus = np.append(hrminus[-1], hrminus)
     hrplus = hplus*rplus
     hrplus = np.append(hrplus[-1], hrplus)
-   
+
     hminus = np.append(hminus[-1], hminus)
     hplus = np.append(hplus[-1], hplus)
-    
+
     Bminus = np.append(B[-1],B)
     Bplus = np.append(B[0],B[right])
-    
+
     # reconstructed states
     Uminus = np.array([hminus, huminus, hrminus])
     Uplus = np.array([hplus, huplus, hrplus])
 
-    
+
     Flux = np.empty((Neq,Nk+1))
     VNC = np.empty((Neq,Nk+1))
     SL = np.empty(Nk+1)
@@ -339,18 +339,18 @@ def step_forward_topog(U,B,dt,tn,Nk,Kk):
     S = np.zeros((Neq,Nk))
     Sb = np.zeros((Neq,Nk))
     UU = np.empty(np.shape(U))
-    
+
     # determine fluxes ...
     for j in range(0,Nk+1):
         Flux[:,j], SL[j], SR[j], VNC[:,j] = NCPflux_topog(Uminus[:,j],Uplus[:,j],Bminus[j],Bplus[j],Hr,Hc,cc2,beta,g)
-    
-    
+
+
     # compute topographic terms as per Audusse et al...
     for jj in range(0,Nk):
-        
+
         zminus = Uminus[0,jj+1] + Bminus[jj+1]
         zplus = Uplus[0,jj] + Bplus[jj]
-        
+
         if zminus <= Hc and zplus <= Hc:
             Sb[1,jj] = 0.5*g*(Uminus[0,jj+1]**2 - Uplus[0,jj]**2)
         elif zminus <= Hc and zplus > Hc:
@@ -359,18 +359,18 @@ def step_forward_topog(U,B,dt,tn,Nk,Kk):
             Sb[1,jj] = 0.5*g*((Hc - Bminus[jj+1])**2 - Uplus[0,jj]**2)
         elif zminus > Hc and zplus > Hc:
             Sb[1,jj] = 0.5*g*((Hc - Bminus[jj+1])**2 - (Hc - Bplus[jj])**2)
-    
+
 #    Sb[1,:] = 0.5*g*(Uminus[0,1:]**2 - Uplus[0,:-1]**2)
 
     # compute extraneous forcing terms
     S[0,:] = 0
     S[1,:] = 0*U[0,:]*0.5*(np.sin(10*tn)+1)
     S[2,:] = -alpha2*U[2,:]
-    
+
     # DG flux terms
     Pp = 0.5*VNC + Flux;
     Pm = -0.5*VNC + Flux;
-    
+
 #    # non-neg time-step:
 #    dt, dt_el = dt_nonneg_SW(Uminus, Uplus, h, uminus, uplus, SL, SR, Kk)
 #    dt = cfl_fc*dt
@@ -378,7 +378,7 @@ def step_forward_topog(U,B,dt,tn,Nk,Kk):
     #integrate forward to next time level
     BC = 1
     if BC == 1: #PERIODIC
-        
+
         UU = U - dt*(Pp[:,1:] - Pm[:,:-1])/Kk + dt*Sb/Kk + dt*S
 
     elif BC == 2: #NEUMAN (need to check this)
@@ -413,10 +413,10 @@ def dt_nonneg_SW(Uminus, Uplus, h, uminus, uplus, SL, SR, Kk):
 
     hminus = Uminus[0,:]
     hplus = Uplus[0,:]
-    
+
     uminus = Uminus[1,:]/Uminus[0,:]
     uplus = Uplus[1,:]/Uplus[0,:]
-    
+
     SLu = uminus - SL
     SRu = uplus - SR
     dS = SR - SL
@@ -441,7 +441,7 @@ def dt_nonneg_SW(Uminus, Uplus, h, uminus, uplus, SL, SR, Kk):
             dt_el[k] = Kk*h[k]/denom
 
         elif SL[k] < 0 and SR[k] > 0:
-                  
+
             denom = SL[k]*SRu[k]*hplus[k]/dS[k]
             dt_el[k] = Kk*h[k]/denom
 
@@ -452,7 +452,7 @@ def dt_nonneg_SW(Uminus, Uplus, h, uminus, uplus, SL, SR, Kk):
     dt_el[np.isnan(dt_el)]= 99999
 
     dt = np.min(dt_el[dt_el>1e-6])
-    
+
     return dt, dt_el
 
 ##################################################################
@@ -472,80 +472,76 @@ end
 
 Alternative:
 
-from joblib import Parallel, delayed  
+from joblib import Parallel, delayed
 import multiprocessing
 
-# what are your inputs, and what operation do you want to 
+# what are your inputs, and what operation do you want to
 # perform on each input. For example...
-inputs = range(10)  
-def processInput(i):  
+inputs = range(10)
+def processInput(i):
     return i * i
 
 num_cores = multiprocessing.cpu_count()
 
-results = Parallel(n_jobs=num_cores)(delayed(processInput)(i) for i in inputs)  
+results = Parallel(n_jobs=num_cores)(delayed(processInput)(i) for i in inputs)
 
 results is now [1, 4, 9 ... ]
-''' 
+'''
 '''
 My loop:
 for N in range(0,n_ens):
     tn = assim_time[index]
-    
+
     #print 'Integrating ensemble member N =', N+1, 'of', n_ens, 'from time =', assim_time[index],' to',assim_time[index+1]
 
     while tn < tmeasure:
-        
+
         dt = time_step(U[:,:,N],Kk_fc) # compute stable time step
         tn = tn + dt
 
         if tn > tmeasure:
             dt = dt - (tn - tmeasure) + 1e-12
             tn = tmeasure + 1e-12
-        
+
         U[:,:,N] = step_forward_modRSW(U[:,:,N],dt,Nk_fc,Kk_fc)
-        
+
 '''
 ##################################################################
 
 def ens_forecast(N, U, Nk_fc, Kk_fc, assim_time, index, tmeasure):
-    
+
     tn = assim_time[index]
-    
+
     while tn < tmeasure:
-        
+
         dt = time_step(U[:,:,N],Kk_fc,cfl_fc) # compute stable time step
         tn = tn + dt
 
         if tn > tmeasure:
             dt = dt - (tn - tmeasure) + 1e-12
             tn = tmeasure + 1e-12
-        
+
         U[:,:,N] = step_forward_modRSW(U[:,:,N],dt,Nk_fc,Kk_fc)
-   
+
     return U[:,:,N]
 
 ##################################################################
 
 def ens_forecast_topog(N, U, B, Nk_fc, Kk_fc, assim_time, index, tmeasure):
-    
+
     tn = assim_time[index]
-       
+
     while tn < tmeasure:
-        
+
         dt = time_step(U[:,:,N],Kk_fc,cfl_fc) # compute stable time step
         tn = tn + dt
-        
+
         if tn > tmeasure:
             dt = dt - (tn - tmeasure) + 1e-12
             tn = tmeasure + 1e-12
-        
+
         U[:,:,N] = step_forward_topog(U[:,:,N],B,dt,tn,Nk_fc,Kk_fc)
-    
+
     return U[:,:,N]
 
 ##################################################################
-
-
-
-

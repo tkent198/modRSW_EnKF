@@ -1,6 +1,6 @@
 #######################################################################
 # Investigating effect of localisation lengthscale
-# (T. Kent: mmtk@leeds.ac.uk)
+# (T. Kent: amttk@leeds.ac.uk)
 #######################################################################
 '''
 5.2.16
@@ -9,12 +9,12 @@ import math as m
 import numpy as np
 import matplotlib.pyplot as plt
 from parameters import *
-import os    
+import os
 import errno
-    
+
 ##################################################################
 # GASPARI-COHN TAPER FUNCTION FOR COV LOCALISATION
-################################################################    
+################################################################
 def gaspcohn(r):
     # Gaspari-Cohn taper function.
     # very close to exp(-(r/c)**2), where c = sqrt(0.15)
@@ -28,7 +28,7 @@ def gaspcohn(r):
     taper = np.where(np.logical_and(r>0.5,r<1.), \
                     ( ( ( ( rr/12.0 -0.5 )*rr +0.625 )*rr +5.0/3.0 )*rr -5.0 )*rr \
                     + 4.0 - 2.0 / (3.0 * rr), taper)
-    return taper    
+    return taper
 
 ##################################################################
 # LOCALISATION PROPERTIES
@@ -68,18 +68,18 @@ Xan = np.load(str(dirn+'/Xan_array.npy')) # an ensembles
 Y_obs = np.load(str(dirn+'/Y_obs_array.npy')) # obs ensembles
 OI = np.load(str(dirn+'/OI.npy')) # obs ensembles
 
-print 'X_array shape (n_d,n_ens,T)      : ', np.shape(X) 
-print 'X_tr_array shape (n_d,1,T)       : ', np.shape(X_tr) 
-print 'Xan_array shape (n_d,n_ens,T)    : ', np.shape(Xan) 
-print 'Y_obs_array shape (p,n_ens,T)    : ', np.shape(Y_obs) 
-print 'OI shape (Neq + 1,T)             : ', np.shape(OI) 
+print 'X_array shape (n_d,n_ens,T)      : ', np.shape(X)
+print 'X_tr_array shape (n_d,1,T)       : ', np.shape(X_tr)
+print 'Xan_array shape (n_d,n_ens,T)    : ', np.shape(Xan)
+print 'Y_obs_array shape (p,n_ens,T)    : ', np.shape(Y_obs)
+print 'OI shape (Neq + 1,T)             : ', np.shape(OI)
 
 ##################################################################
 
 Neq = Neq = np.shape(OI)[0] - 1
-n_d = np.shape(X)[0] 
+n_d = np.shape(X)[0]
 Nk_fc = n_d/Neq
-Kk_fc = 1./Nk_fc 
+Kk_fc = 1./Nk_fc
 n_ens = np.shape(X)[1]
 n_obs = np.shape(Y_obs)[0]
 obs_dens = n_d/n_obs
@@ -135,7 +135,7 @@ Cf = np.corrcoef(Xdev[:,:,T])
 taper = np.zeros([Nk_fc,len(loc)])
 for ii in range(0,len(loc)):
     loc_rho = loc[ii] # loc_rho is form of lengthscale.
-    rr = np.arange(0,loc_rho,loc_rho/Nk_fc) 
+    rr = np.arange(0,loc_rho,loc_rho/Nk_fc)
     taper[:,ii] = gaspcohn(rr)
 
 ## print ' *** PLOT: localisation taper function ***'

@@ -1,10 +1,10 @@
 ##################################################################
 #--------- Plot err doub time histogram from EFS stats -----------
-#                   (T. Kent: mmtk@leeds.ac.uk)
+#                   (T. Kent:  amttk@leeds.ac.uk)
 ##################################################################
 '''
     Plots error doubling time histograms from saved data <err_doub_Tn.npy>
-    
+
     '''
 
 

@@ -1,6 +1,6 @@
 ##################################################################
 #- Compute the CRPS at a given time as a function of space       -
-#                   (T. Kent: mmtk@leeds.ac.uk)
+#                   (T. Kent: amttk@leeds.ac.uk)
 ##################################################################
 '''
 
@@ -153,5 +153,3 @@ plt.show()
 
 print np.mean(CRPSh)
 print np.mean(CRPS_fc[0,:])
-
-
