@@ -169,13 +169,14 @@ Init. cond. | ic  | init_cond_topog_cos
 Boundary cond. | BC | 1
 
 NOTE on BCs: there are currently three options for boundary conditions, as follows.
+
 BC | Type    | Notes
 ------------- | ------------- | -------------
-1 | periodic  | -
+1 | Periodic  | -
 2 | Outflow  | Neumann (zero derivative at x = 0 and L)
 3 | Specified inflow  | Dirichlet at x=0, outlow at x = L
 
-The case BC = 3: currently set up to specify hu(0,t) -- see ```step_forward_topog``` in ```f_modRSW.py```.
+For BC = 3: currently set up to specify hu(0,t) -- see ```step_forward_topog``` in ```f_modRSW.py```.
 
 To run this from the terminal:
 ```
