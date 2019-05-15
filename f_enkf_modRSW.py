@@ -38,7 +38,7 @@ def generate_truth(U_tr_array, B_tr, Nk_tr, tr_grid, assim_time, f_path_name):
 
     index = 1 # for U_tr_array (start from 1 as 0 contains IC).
     while tn < tmax:
-        dt = time_step(U_tr,Kk_tr,cfl_tr)
+        dt = time_step(U_tr,B_tr,Kk_tr,cfl_tr)
         tn = tn + dt
 
         if tn > tmeasure:
