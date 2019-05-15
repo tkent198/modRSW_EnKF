@@ -392,7 +392,7 @@ The CRPS is calculated for each variable at each grid point at the given time (s
 
 ![T3_crps.png](figs/T3_crps.png)
 
-CRPS as a function of x at T=36: forecast (red) and analysis (blue) ensemble.
+CRPS as a function of x at T=3: forecast (red) and analysis (blue) ensemble.
 Generally, the ensembles are less reliable (higher CRPS values) in regions of convection and precipitation (again, around x=0.05 here). Domain-averaged values are given in the top-right corner.
 
 ***NOTE AGAIN: this is a test case, not a well-tuned experiment! See chapter 6 (specifically figs. 6.10-6.12) of Kent (2016) for an example of a well-tuned experiment with comparable spread and error, reasonable OID and CRPS.***
