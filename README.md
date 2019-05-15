@@ -7,7 +7,7 @@ This repository aims to facilitate the transfer of knowledge and continued use o
 
 How to get started with the source code and files is outlined below. A brief overview of each file is given and there are some model-only and forecast-assimilation test cases to check things are up and running properly. Further details, including what should be modified in the scripts for different experimental set-ups, are given in the test cases.
 
-***NOTE FOR (POTENTIAL) USERS (May 2019): improvements to the assimilation algorithm are currently being developed offline; git update expected here to the EnKf during latter part of 2019 -- in the meantime, everything still works fine..! Comments/suggestions/feedback always welcome...***
+***NOTE FOR (POTENTIAL) USERS (May 2019): improvements to the assimilation algorithm are currently being developed offline; git update expected here during latter part of 2019 -- in the meantime, everything still works fine..! Comments/suggestions/feedback always welcome...***
 
 ## Background
 Numerical Weather Prediction (NWP) can be thought of as initial value problem comprising a forecast model and suitable initial conditions, with its accuracy depending critically on both. Data Assimilation (DA) attempts to provide the optimal initial conditions for the forecast model by estimating the state of the atmosphere and its uncertainty using a combination of forecast and observational information whilst taking into account their respective uncertainties. Optimality of the initial state is crucial in such a highly nonlinear system with limited predictability, and the forecast models need regular reinitialisation to prevent divergence from the true solution.
