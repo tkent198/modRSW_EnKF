@@ -3,7 +3,7 @@
 #                   (T. Kent:  amttk@leeds.ac.uk)
 ##################################################################
 '''
-Uses simulation data generated in run_modRSW.py test cases. Goal: compare low- and high-res. simulations.
+Uses simulation data generated in run_modRSW.py test cases. Goal: compare simulations with different Nk.
     '''
 
 # generic modules
@@ -40,7 +40,7 @@ time = np.shape(U_fc)[2]
 for T in range(0,time):
 
     ### 6 panel subplot
-    print ' *** PLOT: trajectories for Nk = 200 and 800 ***'
+    print ' *** PLOT: trajectories for Nk = 200, 800 ***'
     fig, axes = plt.subplots(Neq, 2, figsize=(15,10))
     plt.suptitle("Comparing trajectories for Nk = 200 (left) and Nk = 800 (right)",fontsize=18)
 

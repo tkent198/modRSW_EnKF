@@ -49,9 +49,7 @@ BC = 1 #periodic
 n_ens = 20                              # number of ensembles
 Nmeas = 6                               # number of cycles
 tn = 0.0                                # initial time
-#tmax = Nmeas*0.144                      # end time = Nmeas*1hr real time
-#dtmeasure = tmax/Nmeas                  # length of each window
-dtmeasure = 0.144
+dtmeasure = 0.144                       # ~ 1 hr in nondimensional time (L ~ 500km and V ~ 20m/s implies T ~ 25000s ~ 6.94hrs)
 tmax = Nmeas*dtmeasure
 tmeasure = dtmeasure
 assim_time = np.linspace(tn,tmax,Nmeas+1) # vector of times when system is observed

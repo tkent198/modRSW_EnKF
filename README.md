@@ -188,7 +188,7 @@ First, the initial condition is generated and a figure saved in  ```cwd/test_mod
 CHECK data value: maximum h(x) at t = 0.288: 1.67033351233  at x =  0.8825
 ```
 
-Also check the saved figures in the directory ```test_model```. Compare with the figure below (```t2_Nk200```), and note the maximum h value and its location, as given above.
+Also check the saved figures in the directory ```test_model```. Compare with the figure below (```t2_Nk200```), and note the maximum h value and its location, as given above. The red dashed lines are the threshold heights Hc < Hr.
 
 ![t2_Nk200](figs/t2_Nk200.png)
 
@@ -198,7 +198,7 @@ python run_modRSW.py
 ```
 This simulation will take longer since the smaller grid-length requires a smaller time step for stability. As before, verify that the same numerical value for the height variable is obtained:
 ```
-CHECK data value: maximum h(x) at t = 0.288: 2.15336146511  at x =  0.888125
+CHECK data value: maximum h(x) at t = 0.288: 2.04596567749  at x =  0.888125
 ```
 Also check the saved figures, and compare with the figure below (```t2_Nk800```), again noting the maximum h value.
 
