@@ -3,11 +3,11 @@
 
 This repository aims to facilitate the transfer of knowledge and continued use of a basic convective-scale forecast-assimilation system developed during TK's PhD (Kent 2016). The forecast component comes from an idealised fluid model of convective-scale Numerical Weather Prediction (modRSW; Kent et al. 2017) and the assimilation algorithm is the perturbed-observation Ensemble Kalman Filter (EnKF). The following document should contain sufficient instruction for users to download, implement and adapt the source code, which briefly comprises Python scripts for the numerical solver, idealised forecast-assimilation routines, plotting and data analysis.
 
-***CAVEAT: this is not a black-box model and should accordingly be used with care and curiosity!***
+***CAVEAT: this is not a black-box model and should accordingly be used with care and curiosity! Comments/suggestions welcome...***
 
 How to get started with the source code and files is outlined below. A brief overview of each file is given and there are some model-only and forecast-assimilation test cases to check things are up and running properly. Further details, including what should be modified in the scripts for different experimental set-ups, are given in the test cases.
 
-***NOTE FOR (POTENTIAL) USERS (Aug 2018): improvements to the assimilation algorithm are currently being developed offline; git update expected here during 2019 -- in the meantime, everything still works fine!***
+***NOTE FOR (POTENTIAL) USERS (May 2019): improvements to the assimilation algorithm are currently being developed offline; git update expected here to the EnKf during latter part of 2019 -- in the meantime, everything still works fine..!***
 
 ## Background
 Numerical Weather Prediction (NWP) can be thought of as initial value problem comprising a forecast model and suitable initial conditions, with its accuracy depending critically on both. Data Assimilation (DA) attempts to provide the optimal initial conditions for the forecast model by estimating the state of the atmosphere and its uncertainty using a combination of forecast and observational information whilst taking into account their respective uncertainties. Optimality of the initial state is crucial in such a highly nonlinear system with limited predictability, and the forecast models need regular reinitialisation to prevent divergence from the true solution.
