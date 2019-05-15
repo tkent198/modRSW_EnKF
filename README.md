@@ -140,7 +140,7 @@ To kill at any point, press ```Ctrl+c```, or kill the active processes using ```
 
 ### 1. Model only: integration and dynamics
 
-Given a computational mesh, model parameters, and an initial condition and specified boundary conditions, the model can be integrated to a specified finite time. The ```run_modRSW.py``` script achieves this, using functions from ```f_modRSW.py```, initial conditions from ```init_cond_modRSW.py``` and parameters from ```parameters.py```, plotting the variables at given times.
+Given a computational mesh, model parameters, and an initial condition and specified boundary conditions, the model can be integrated to a specified finite time. The ```run_modRSW.py``` script achieves this, using functions from ```f_modRSW.py```, initial conditions from ```init_cond_modRSW.py``` and parameters from ```parameters.py```; it saves the data and produces a figure at given times (determined by `Nmeas`).
 
 ***NOTE: the model integrates the flux variables [h,hu,hr]; for plotting, and later DA, we use [h,u,r].***
 
@@ -185,7 +185,7 @@ python run_modRSW.py
 
 First, the initial condition is generated and a figure saved in  ```cwd/test_model```. Then the integration starts and figures and simulation data are saved in  ```cwd/test_model``` at the given times. This should be clear from the text that is printed to the terminal. When ```tmax``` is reached, the integration stops and a summary of the simulation is printed to the terminal. Just above the summary on the terminal, the maximum value of h(x) at time t=0.288 is given; verify that the same numerical value is obtained:
 ```
-CHECK data value: maximum h(x) at t = 0.288: 1.70591737156  at x =  0.8875
+CHECK data value: maximum h(x) at t = 0.288: 1.67033351233  at x =  0.8825
 ```
 
 Also check the saved figures in the directory ```test_model```. Compare with the figure below (```t2_Nk200```), and note the maximum h value and its location, as given above.

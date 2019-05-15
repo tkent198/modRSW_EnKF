@@ -519,7 +519,7 @@ def ens_forecast(N, U, Nk_fc, Kk_fc, assim_time, index, tmeasure):
 
     while tn < tmeasure:
 
-        dt = time_step(U[:,:,N],Kk_fc,cfl_fc) # compute stable time step
+        dt = time_step(U[:,:,N],B,Kk_fc,cfl_fc) # compute stable time step
         tn = tn + dt
 
         if tn > tmeasure:
@@ -538,7 +538,7 @@ def ens_forecast_topog(N, U, B, Nk_fc, Kk_fc, assim_time, index, tmeasure):
 
     while tn < tmeasure:
 
-        dt = time_step(U[:,:,N],Kk_fc,cfl_fc) # compute stable time step
+        dt = time_step(U[:,:,N],B,Kk_fc,cfl_fc) # compute stable time step
         tn = tn + dt
 
         if tn > tmeasure:

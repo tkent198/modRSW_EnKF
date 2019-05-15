@@ -47,7 +47,7 @@ BC = 1 #periodic
 ''' FILTER PARAMETERS '''
 
 n_ens = 20                              # number of ensembles
-Nmeas = 10                               # number of cycles
+Nmeas = 6                               # number of cycles
 tn = 0.0                                # initial time
 #tmax = Nmeas*0.144                      # end time = Nmeas*1hr real time
 #dtmeasure = tmax/Nmeas                  # length of each window
