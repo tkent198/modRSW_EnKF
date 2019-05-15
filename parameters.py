@@ -17,8 +17,8 @@ Nk_fc = 200                                 # forecast resolution
 dres = 4                                     # refinement factor for truth gridsize
 Nk_tr = dres*Nk_fc                           # truth resolution
 
-cfl_fc = 1. # Courant Friedrichs Lewy number for time stepping
-cfl_tr = 1.
+cfl_fc = 0.5 # Courant Friedrichs Lewy number for time stepping
+cfl_tr = 0.5
 
 Ro = 'Inf'          # Rossby no. Ro ~ V0/(f*L0)
 Fr = 1.1            # froude no.
@@ -26,21 +26,28 @@ g = Fr**(-2) 		# effective gravity, determined by scaling.
 A = 0.1
 V = 1.
 
-# threshold heights
+### threshold heights
 H0 = 1.0
 Hc = 1.02
 Hr = 1.05
 
-# remaining parameters related to hr
-beta = 0.2
-alpha2 = 10
-c2 = g*Hr
+### remaining parameters related to hr
+beta = 0.2 #controls
+alpha2 = 10 #controls strength of removal from the system
+c2 = g*Hr #controls strength of convective downdraft
 cc2 = 0.1*c2
+
+### BCs
+BC = 1 #periodic
+# BC = 2 #outflow (Neumann BCS with derivative=0 at boundaries)
+# BC = 3 #specified inflow at x = 0 (Dirichlet), outflow at x = L.
+# NOTE when BC=3: to specify inflow, see step_forward routine in f_modRSW.py
+
 
 ''' FILTER PARAMETERS '''
 
 n_ens = 20                              # number of ensembles
-Nmeas = 3                               # number of cycles
+Nmeas = 10                               # number of cycles
 tn = 0.0                                # initial time
 #tmax = Nmeas*0.144                      # end time = Nmeas*1hr real time
 #dtmeasure = tmax/Nmeas                  # length of each window

@@ -140,9 +140,9 @@ To kill at any point, press ```Ctrl+c```, or kill the active processes using ```
 
 ### 1. Model only: integration and dynamics
 
-Given a computational mesh, model parameters, and an initial condition, the model can be integrated to a specified finite time. The ```run_modRSW.py``` script achieves this, using functions from ```f_modRSW.py```, initial conditions from ```init_cond_modRSW.py``` and parameters from ```parameters.py```, plotting the variables at given times.
+Given a computational mesh, model parameters, and an initial condition and specified boundary conditions, the model can be integrated to a specified finite time. The ```run_modRSW.py``` script achieves this, using functions from ```f_modRSW.py```, initial conditions from ```init_cond_modRSW.py``` and parameters from ```parameters.py```, plotting the variables at given times.
 
-***NOTE: the model integrates the flux variables [h,hu,hr]; for plotting purposes, we use [h,u,r].***
+***NOTE: the model integrates the flux variables [h,hu,hr]; for plotting, and later DA, we use [h,u,r].***
 
 The default model parameters are:
 
@@ -157,17 +157,25 @@ beta | beta | 0.2
 alpha | alpha | 10
 c2 | c2  | 0.1Hr/(Fr)^2
 
-In  ```run_modRSW.py```, the user can specify the resolution ```Nk```, initial condition ```ic```, and the number of "hours" to integrate ```Nmeas```. The routine then integrates the initial condition from ```tn=0``` to ```tmax``` and saves figures of the plotted ```Nmeas``` solutions in the created directory  ```cwd/test_model```.
+In  ```run_modRSW.py```, the user can specify the resolution ```Nk```, initial condition ```ic```, and the number of "hours" to integrate ```Nmeas```. The script then integrates the initial condition from ```tn=0``` to ```tmax``` and saves figures of the plotted ```Nmeas``` solutions in the created directory  ```cwd/test_model```.
 
 Default setting:
 
 Name | Parameters    | Values
 ------------- | ------------- | -------------
 No. of elements | Nk  | 200
+No. of cycles | Nmeas  | 6
 Init. cond. | ic  | init_cond_topog_cos
-No. of cycles | Nmeas  | 3
+Boundary cond. | BC | 1
 
-NOTE: periodic BCs.
+NOTE on BCs: there are currently three options for boundary conditions, as follows.
+BC | Type    | Notes
+------------- | ------------- | -------------
+1 | periodic  | -
+2 | Outflow  | Neumann (zero derivative at x = 0 and L)
+3 | Specified inflow  | Dirichlet at x=0, outlow at x = L
+
+The case BC = 3: currently set up to specify hu(0,t) -- see ```step_forward_topog``` in ```f_modRSW.py```.
 
 To run this from the terminal:
 ```

@@ -219,17 +219,19 @@ def heaviside(x):
 #'''--------- Compute stable timestep ---------'''
 ##################################################################
 
-def time_step(U,Kk,cfl):
+def time_step(U,B,Kk,cfl):
 ### INPUT ARGS:
 # U: array of variarible values at t
+# B: topog
 # Kk: grid size
+# cfl number
 
 ### OUTPUT:
 # dt: stable timestep (h>0 only)
 
-    # signal velocties (calculated from eigenvalues)
-    lam1 = abs(U[1,:]/U[0,:] - np.sqrt(cc2*beta + g*U[0,:]))
-    lam2 = abs(U[1,:]/U[0,:] + np.sqrt(cc2*beta + g*U[0,:]))
+    # signal velocties (determined by eigenvalues of modRSW matrix)
+    lam1 = abs(U[1,:]/U[0,:] - np.sqrt(cc2*beta*heaviside(U[0,:] + B - Hr) + g*U[0,:]**heaviside(-U[0,:] - B + Hc)))
+    lam2 = abs(U[1,:]/U[0,:] + np.sqrt(cc2*beta*heaviside(U[0,:] + B - Hr) + g*U[0,:]**heaviside(-U[0,:] - B + Hc)))
     denom = np.maximum(lam1,lam2)
 
     dt = cfl*min(Kk/denom)
@@ -364,32 +366,35 @@ def step_forward_topog(U,B,dt,tn,Nk,Kk):
 
     # compute extraneous forcing terms
     S[0,:] = 0
-    S[1,:] = 0*U[0,:]*0.5*(np.sin(10*tn)+1)
+    S[1,:] = 0
     S[2,:] = -alpha2*U[2,:]
 
     # DG flux terms
     Pp = 0.5*VNC + Flux;
     Pm = -0.5*VNC + Flux;
 
-#    # non-neg time-step:
+#    # non-neg time-step: (not needed if  h > 0 )
 #    dt, dt_el = dt_nonneg_SW(Uminus, Uplus, h, uminus, uplus, SL, SR, Kk)
 #    dt = cfl_fc*dt
 
     #integrate forward to next time level
-    BC = 1
+    # BC = 2
     if BC == 1: #PERIODIC
 
         UU = U - dt*(Pp[:,1:] - Pm[:,:-1])/Kk + dt*Sb/Kk + dt*S
 
-    elif BC == 2: #NEUMAN (need to check this)
+    elif BC == 2: #NEUMAN
 
-#        UU(:,2:end-1) = U(:,2:end-1) - dt*(Pp(:,3:Nk) - Pm(:,2:Nk-1))./Kk ...
-#             + dt*Sb(:,2:end-1)./Kk + dt*S(:,2:end-1);
-#        UU(:,1) = UU(:,2);
-#        UU(:,Nk) = UU(:,Nk-1);
-
-        UU[:,1:] = U[:,1:] - dt*(Pp[:,2:] - Pm[:,1:-1])/Kk + dt*Sb[:,1:]/Kk + dt*S[:,1:]
+        UU[:,1:-1] = U[:,1:-1] - dt*(Pp[:,2:-1] - Pm[:,1:-2])/Kk + dt*Sb[:,1:-1]/Kk + dt*S[:,1:-1]
         UU[:,0] = UU[:,1]
+        UU[:,-1] = UU[:,-2]
+
+    elif BC == 3: #specified inflow (e.g., vary hu at the left boundary -- U[1,0] -- a la wavemaker)
+
+        UU[:,1:-1] = U[:,1:-1] - dt*(Pp[:,2:-1] - Pm[:,1:-2])/Kk + dt*Sb[:,1:-1]/Kk + dt*S[:,1:-1]
+        UU[:,0] = UU[:,1]
+        UU[:,-1] = UU[:,-2]
+        UU[1,0] = 1+0.5*np.sin(10*m.pi*tn)*np.sin(2*m.pi*tn)*np.sin(8*m.pi*tn); # hu
 
     return UU
 

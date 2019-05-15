@@ -97,8 +97,8 @@ print ' '
 U = np.empty([Neq,Nk])
 U = U0
 tn = 0
-hour = 0.144
-Nmeas = 3. # determined by Ro and Fr scaling (see note in README)
+hour = 0.144 # determined by Ro and Fr scaling (***see note in README***)
+Nmeas = 6. # no. of cycles to output data/plots
 tmax = Nmeas*hour
 dtmeasure = tmax/Nmeas
 tmeasure = dtmeasure
@@ -114,16 +114,16 @@ print ' '
 print 'Integrating forward from t =', tn, 'to', tmeasure,'...'
 while tn < tmax:
 
-    dt = time_step(U,Kk,cfl_fc)
+    dt = time_step(U,B,Kk,cfl_fc)
     tn = tn + dt
 
-    if tn > tmeasure:
+    if tn > tmeasure: # to land on tmeasure
 	dt = dt - (tn - tmeasure) + 1e-12
         tn = tmeasure + 1e-12
 
     U = step_forward_topog(U,B,dt,tn,Nk,Kk)
 
-    if tn > tmeasure:
+    if tn > tmeasure: # if at tmeasure, save/plot data
         print ' '
         print 'Plotting at time =',tmeasure
 
@@ -157,10 +157,12 @@ while tn < tmax:
 
         index = index + 1
         tmeasure = tmeasure + dtmeasure
-        print ' '
-        print 'Integrating forward from t =', tmeasure-dtmeasure, 'to', tmeasure,'...'
+        if tmeasure <= tmax:
+            print ' '
+            print 'Integrating forward from t =', tmeasure-dtmeasure, 'to', tmeasure,'...'
+        else:
+            print ' '
 
-print ' '
 print '***** DONE: end of simulation at time:', tn
 print ' '
 
