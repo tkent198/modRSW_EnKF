@@ -220,8 +220,9 @@ Conceptually, the basic data assimilation problem can be summarised using this f
 
 Dynamics only:
 * Implement alternative initial/boundary conditions. What would be a good candidate for specified chaotic/aperiodic inflow conditions?
-* Run for longer times (increase `Nmeas`)
+* Run for longer times (increase `Nmeas`) and different resolutions (vary `Nk`)
 * Investigate the effect of varying parameters pertaining to convection/precipitation (i.e., alpha, beta, c02)
+* Reproduce steady state results from the classical shallow water theory for flow over topography -- specify parabolic topography (see `init_cond_modRSW.py`), adjust threshold heights and BCs in `parameters.py`.
 * ...
 
 ### 2. Idealised forecast-assimilation experiments
@@ -230,7 +231,7 @@ Dynamics only:
 
 The main run program for idealised forecast-assimilation experiments is ```main_p.py```. Its workhorse is the subroutine function ```run_enkf()``` in the ```subr_enkf_modRSW_p```, which carries out each experiment, i.e., the ensemble forecasts and analysis steps for the given outer loop parameters. The combination of outer loop parameters define a single experiment.
 
-The default model parameters are (see ```parameters.py```):
+The default model parameters are (see `parameters.py):
 
 Name | Parameter      | Values
 ------------- | ------------- | -------------
