@@ -26,7 +26,7 @@ from init_cond_modRSW import init_cond_topog_cos, init_cond_topog
 
 
 # CHOOSE resolution
-Nk = 800
+Nk = 200
 # CHOOSE INITIAL PROFILE FROM init_cond_modRSW:
 ic = init_cond_topog_cos
 
@@ -98,7 +98,7 @@ U = np.empty([Neq,Nk])
 U = U0
 tn = 0
 hour = 0.144 # determined by Ro and Fr scaling (***see note in README***)
-Nmeas = 6. # no. of cycles to output data/plots
+Nmeas = 6 # no. of cycles to output data/plots
 tmax = Nmeas*hour
 dtmeasure = tmax/Nmeas
 tmeasure = dtmeasure
