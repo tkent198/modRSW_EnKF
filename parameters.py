@@ -21,7 +21,7 @@ cfl_fc = 0.5 # Courant Friedrichs Lewy number for time stepping
 cfl_tr = 0.5
 
 Ro = 'Inf'          # Rossby no. Ro ~ V0/(f*L0)
-Fr = 1.1            # froude no.
+Fr = 0.4            # froude no.
 g = Fr**(-2) 		# effective gravity, determined by scaling.
 A = 0.1
 V = 1.

@@ -85,7 +85,7 @@ To kill at any point, press ```Ctrl+c```, or kill the active processes using ```
 * ```NCPflux_topog()```       : calculates numerical flux as per the theory of Kent et al., 2017
 * ```time_step()```           : calculates stable time step for integration
 * ```step_forward_topog()```  : integrates forward one time step (forward euler) using NCP-Audusse
-* ```heaviside()```           : vector-aware implementation of heaviside (also works for scalars
+* ```heaviside()```           : vector-aware implementation of heaviside (also works for scalars)
 
 ### Assimilation framework
 
