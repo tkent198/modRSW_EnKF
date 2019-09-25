@@ -229,9 +229,20 @@ def time_step(U,B,Kk,cfl):
 ### OUTPUT:
 # dt: stable timestep (h>0 only)
 
+    u = U[1,:]/U[0,:]
+    # uleft = np.append(u[-1],u[0:-1])
+    # uright = u
+    uleft = u
+    uright = np.append(u[1:],u[0])
+
     # signal velocties (determined by eigenvalues of modRSW matrix)
-    lam1 = abs(U[1,:]/U[0,:] - np.sqrt(cc2*beta*heaviside(U[0,:] + B - Hr) + g*U[0,:]**heaviside(-U[0,:] - B + Hc)))
-    lam2 = abs(U[1,:]/U[0,:] + np.sqrt(cc2*beta*heaviside(U[0,:] + B - Hr) + g*U[0,:]**heaviside(-U[0,:] - B + Hc)))
+    lam1 = abs(U[1,:]/U[0,:] - np.sqrt(cc2*beta*heaviside(uleft - uright)*heaviside(U[0,:] + B - Hr) + g*U[0,:]*heaviside(-U[0,:] - B + Hc)))
+    lam2 = abs(U[1,:]/U[0,:] + np.sqrt(cc2*beta*heaviside(uleft - uright)*heaviside(U[0,:] + B - Hr) + g*U[0,:]*heaviside(-U[0,:] - B + Hc)))
+    # lam1 = abs(U[1,:]/U[0,:] - np.sqrt(cc2*beta*heaviside(U[0,:] + B - Hr) + g*U[0,:]*heaviside(-U[0,:] - B + Hc)))
+    # lam2 = abs(U[1,:]/U[0,:] + np.sqrt(cc2*beta*heaviside(U[0,:] + B - Hr) + g*U[0,:]*heaviside(-U[0,:] - B + Hc)))
+    # lam1 = abs(U[1,:]/U[0,:] - np.sqrt(cc2*beta + g*U[0,:]))
+    # lam2 = abs(U[1,:]/U[0,:] + np.sqrt(cc2*beta + g*U[0,:]))
+
     denom = np.maximum(lam1,lam2)
 
     dt = cfl*min(Kk/denom)
