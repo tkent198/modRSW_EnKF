@@ -3,7 +3,8 @@
 #                   (T. Kent:  amttk@leeds.ac.uk)
 ##################################################################
 '''
-Uses simulation data generated in run_modRSW.py test cases. Goal: compare simulations with different Nk.
+Uses simulation data generated in run_modRSW.py test cases.
+Goal: compare simulations with different Nk.
     '''
 
 # generic modules
