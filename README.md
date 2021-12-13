@@ -23,7 +23,7 @@ One example of a potential configuration of the model and assimilation algorithm
 
 * Kent, T., Bokhove, O., Tobias, S.M. (2017): Dynamics of an idealized fluid model for investigating convective-scale data assimilation. *Tellus A: Dynamic Meteorology and Oceanography*, 69(1), 1369332. [DOI](https://doi.org/10.1080/16000870.2017.1369332).
 
-* Kent, T., Cantarello, L., Inverarity, G., Tobias, S.M., Bokhove, O. (2019): Idealized forecast-assimilation experiments for convective-scale Numerical Weather Prediction. *In prep.: Tellus A*.
+* Kent, T., Cantarello, L., Inverarity, G.W., Tobias, S.M., Bokhove, O. (2020): Idealised forecast-assimilation experiments for convective-scale Numerical Weather Prediction. *EarthArXiv*, [DOI](https://eartharxiv.org/repository/view/1921/). 
 
 ## Slides
 Two talks from 2019: (i) concerning the model only and (ii) on data assimilation with the model.
